@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
-class LoginActivity extends StatefulWidget {
-  const LoginActivity({Key? key});
+class UserRegistration extends StatefulWidget {
+  const UserRegistration({Key? key}) : super(key: key);
 
   @override
-  _LoginActivityState createState() => _LoginActivityState();
+  _UserRegistrationState createState() => _UserRegistrationState();
 }
 
-class _LoginActivityState extends State<LoginActivity>
-    with SingleTickerProviderStateMixin {
+class _UserRegistrationState extends State<UserRegistration> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
@@ -145,156 +145,222 @@ class _LoginActivityState extends State<LoginActivity>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('icons/heart.png', package: 'my_icons'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Card(
-            margin: EdgeInsets.all(30),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            elevation: 10,
-            child: Padding(
-              padding: EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.cyan,
-                    tabs: [
-                      Tab(text: 'Log In'),
-                      Tab(text: 'Sign Up'),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        Column(
-                          children: [
-                            TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                              ),
-                            ),
-                            TextFormField(
-                              controller: passwordController,
-                              obscureText: passwordVisibility,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    passwordVisibility
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      passwordVisibility = !passwordVisibility;
-                                    });
-                                  },
+      appBar: null,
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Card(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.cyan.withOpacity(0.5),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 30.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30.0),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1.0,
                                 ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                // Handle forgot password functionality
-                              },
-                              child: Text('Forgot Password?'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                loginWithEmailAndPassword(context);
-                              },
-                              child: Text('Log In'),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            TextFormField(
-                              controller: nameController,
-                              decoration: InputDecoration(
-                                labelText: 'Name',
-                              ),
-                            ),
-                            TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                              ),
-                            ),
-                            TextFormField(
-                              controller: phoneController,
-                              decoration: InputDecoration(
-                                labelText: 'Phone',
-                              ),
-                            ),
-                            TextFormField(
-                              controller: passwordController,
-                              obscureText: passwordVisibility,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    passwordVisibility
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                              child: TabBar(
+                                controller: _tabController,
+                                tabs: const [
+                                  Tab(
+                                    text: 'Login',
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      passwordVisibility = !passwordVisibility;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            TextFormField(
-                              controller: cpasswordController,
-                              obscureText: cpasswordVisibility,
-                              decoration: InputDecoration(
-                                labelText: 'Confirm Password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    cpasswordVisibility
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                                  Tab(
+                                    text: 'Sign Up',
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      cpasswordVisibility =
-                                      !cpasswordVisibility;
-                                    });
-                                  },
+                                ],
+                                indicator: BoxDecoration(
+                                  color: Colors.cyanAccent,
+                                  // Set background color for selected tab
+                                  borderRadius: BorderRadius.circular(30.0),
                                 ),
+                                labelColor: Colors.black,
+                                unselectedLabelColor: Colors
+                                    .grey, // Set text color for unselected tab
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                signUpWithEmail(context);
-                              },
-                              child: Text('Sign Up'),
+                          ),
+                          SizedBox(height: 16.0),
+                          Flexible( // Wrap TabBarView with Flexible
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                // Login tab content
+                                SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Email',
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: passwordController,
+                                        obscureText: passwordVisibility,
+                                        decoration: InputDecoration(
+                                          labelText: 'Password',
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              passwordVisibility
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                passwordVisibility =
+                                                !passwordVisibility;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          // Handle forgot password functionality
+                                        },
+                                        child: Text('Forgot Password?'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          loginWithEmailAndPassword(context);
+                                        },
+                                        child: Text('Log In'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                // Sign Up tab content
+                                SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: nameController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Name',
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: emailController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Email',
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: phoneController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Phone',
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: passwordController,
+                                        obscureText: passwordVisibility,
+                                        decoration: InputDecoration(
+                                          labelText: 'Password',
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              passwordVisibility
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                passwordVisibility =
+                                                !passwordVisibility;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      TextFormField(
+                                        controller: cpasswordController,
+                                        obscureText: cpasswordVisibility,
+                                        decoration: InputDecoration(
+                                          labelText: 'Confirm Password',
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              cpasswordVisibility
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                cpasswordVisibility =
+                                                !cpasswordVisibility;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          signUpWithEmail(context);
+                                        },
+                                        child: Text('Sign Up'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.cyan.withOpacity(0.5),
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      // Handle floating action button press
+                    },
+                    elevation: 0,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    child: Icon(FontAwesome.google),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

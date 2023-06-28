@@ -42,7 +42,7 @@ class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
         // Navigate to login screen
         Navigator.push(
           widget.context,
-          MaterialPageRoute(builder: (context) => LoginActivity()),
+          MaterialPageRoute(builder: (context) => UserRegistration()),
         );
       }
     });
@@ -64,15 +64,6 @@ class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
     ),
   ];
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: GestureDetector(
-  //       onTap: _nextScreen,
-  //       child: splashScreens[_currentScreenIndex],
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +81,6 @@ class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
       ),
     );
   }
-
 }
 
 class SlidableSplashScreen extends StatelessWidget {
@@ -109,14 +99,37 @@ class SlidableSplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: color,
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 24, color: Colors.white),
-        ),
+      child: Stack(
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 24, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          if (isLastScreen)
+            Positioned(
+              bottom: 16.0,
+              right: 16.0,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserRegistration()),
+                  );
+                },
+                icon: Icon(Icons.arrow_forward),
+                label: Text('Continue'),
+              ),
+            ),
+        ],
       ),
     );
   }
 }
-
 
