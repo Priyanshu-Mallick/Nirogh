@@ -56,6 +56,7 @@ dev_dependencies:
 flutter:
   assets:
     - lib/Assets/login page-image.jpg
+    - lib/Assets/google.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

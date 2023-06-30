@@ -19,6 +19,8 @@ class _UserRegistrationState extends State<UserRegistration>
   TextEditingController cpasswordController = TextEditingController();
   bool passwordVisibility = true;
   bool cpasswordVisibility = true;
+  Color customColor1 = Color.fromRGBO(176,248,224,255);
+  Color customColor2 = Color.fromRGBO(247,251,249,255);
 
   @override
   void initState() {
@@ -190,7 +192,7 @@ class _UserRegistrationState extends State<UserRegistration>
                             borderRadius: BorderRadius.circular(30.0),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.cyan.withOpacity(0.5),
+                                color: customColor1.withOpacity(1),
                                 blurRadius: 10,
                                 spreadRadius: 1,
                               ),
@@ -346,7 +348,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 20.0),
+                                            SizedBox(height: 25.0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -360,7 +362,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   child: Text(
                                                     'OR',
                                                     style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 15,
                                                       color: Colors.black,
                                                     ),
                                                   ),
@@ -369,17 +371,17 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: 20.0),
                                             Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.cyan
-                                                        .withOpacity(0.5),
-                                                    blurRadius: 10,
-                                                    spreadRadius: 2,
-                                                  ),
-                                                ],
-                                              ),
+                                              // decoration: BoxDecoration(
+                                              //   shape: BoxShape.circle,
+                                              //   boxShadow: [
+                                              //     BoxShadow(
+                                              //       color: Colors.cyan
+                                              //           .withOpacity(0.5),
+                                              //       blurRadius: 10,
+                                              //       spreadRadius: 2,
+                                              //     ),
+                                              //   ],
+                                              // ),
                                               child: FloatingActionButton(
                                                 onPressed: () {
                                                   // Handle floating action button press
@@ -387,10 +389,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
-                                                child: Icon(AntDesign.google),
+                                                child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                               ),
                                             ),
-                                            SizedBox(height: 20.0),
+                                            SizedBox(height: 10.0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -572,7 +574,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   child: Text(
                                                     'OR',
                                                     style: TextStyle(
-                                                      fontSize: 10,
+                                                      fontSize: 15,
                                                       color: Colors.black,
                                                     ),
                                                   ),
@@ -581,17 +583,17 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: 15.0),
                                             Container(
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.cyan
-                                                        .withOpacity(0.5),
-                                                    blurRadius: 10,
-                                                    spreadRadius: 2,
-                                                  ),
-                                                ],
-                                              ),
+                                              // decoration: BoxDecoration(
+                                              //   shape: BoxShape.circle,
+                                              //   boxShadow: [
+                                              //     BoxShadow(
+                                              //       color: Colors.cyan
+                                              //           .withOpacity(0.5),
+                                              //       blurRadius: 10,
+                                              //       spreadRadius: 2,
+                                              //     ),
+                                              //   ],
+                                              // ),
                                               child: FloatingActionButton(
                                                 onPressed: () {
                                                   // Handle floating action button press
@@ -599,10 +601,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
-                                                child: Icon(AntDesign.google),
+                                                child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                               ),
                                             ),
-                                            SizedBox(height: 15.0),
+                                            SizedBox(height: 5.0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
