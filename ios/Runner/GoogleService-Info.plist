@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>639164515448-b8f2rmm5b4cbo9ca9tle3fva9jsjqmds.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.639164515448-b8f2rmm5b4cbo9ca9tle3fva9jsjqmds</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBrFGCAVDDK74Quq7GAwnTywe8_UfRktzw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>639164515448</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.nirogh</string>
+	<key>PROJECT_ID</key>
+	<string>nirogh-355e2</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nirogh-355e2.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:639164515448:ios:4f32d3d11c16890fdf998d</string>
+</dict>
+</plist>

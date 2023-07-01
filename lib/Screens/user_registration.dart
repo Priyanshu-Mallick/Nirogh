@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:nirogh/services/auth_service.dart';
+import 'package:nirogh/firebase_options.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 
 class UserRegistration extends StatefulWidget {
   const UserRegistration({Key? key}) : super(key: key);
@@ -22,10 +28,18 @@ class _UserRegistrationState extends State<UserRegistration>
   Color customColor1 = Color.fromRGBO(176,248,224,255);
   Color customColor2 = Color.fromRGBO(247,251,249,255);
 
+  // For firebase state management
   @override
   void initState() {
     super.initState();
+    initializeFirebase();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  // Initialize the firebase
+  Future<void> initializeFirebase() async {
+    await Firebase.initializeApp();
+    // _firestore = FirebaseFirestore.instance;
   }
 
   @override
@@ -34,72 +48,33 @@ class _UserRegistrationState extends State<UserRegistration>
     super.dispose();
   }
 
-  void loginWithEmailAndPassword(BuildContext context) {
+  Future<void> loginWithEmailAndPassword(BuildContext context) async {
     String email = emailController.text;
     String password = passwordController.text;
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Perform login logic here
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Login Successful'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Please enter email and password'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
 
-  void signUpWithEmail(BuildContext context) {
-    String name = nameController.text;
-    String email = emailController.text;
-    String phone = phoneController.text;
-    String password = passwordController.text;
-    String cpassword = cpasswordController.text;
+    try {
+      if (email.isNotEmpty && password.isNotEmpty) {
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
 
-    if (name.isNotEmpty &&
-        email.isNotEmpty &&
-        phone.isNotEmpty &&
-        password.isNotEmpty &&
-        cpassword.isNotEmpty) {
-      if (password == cpassword) {
-        // Perform signup logic here
+        // Perform additional logic after successful login
+
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Registration Successful'),
+              title: Text('Login Successful'),
               actions: <Widget>[
                 TextButton(
                   child: Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
                   },
                 ),
               ],
@@ -112,7 +87,7 @@ class _UserRegistrationState extends State<UserRegistration>
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Error'),
-              content: Text('Passwords do not match'),
+              content: Text('Please enter email and password'),
               actions: <Widget>[
                 TextButton(
                   child: Text('OK'),
@@ -125,13 +100,13 @@ class _UserRegistrationState extends State<UserRegistration>
           },
         );
       }
-    } else {
+    } catch (e) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Error'),
-            content: Text('Please fill all the fields'),
+            content: Text(e.toString()),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -145,6 +120,261 @@ class _UserRegistrationState extends State<UserRegistration>
       );
     }
   }
+
+  Future<void> signUpWithEmail(BuildContext context) async {
+    String name = nameController.text;
+    String email = emailController.text;
+    String phone = phoneController.text;
+    String password = passwordController.text;
+    String cpassword = cpasswordController.text;
+
+    try {
+      if (name.isNotEmpty &&
+          email.isNotEmpty &&
+          phone.isNotEmpty &&
+          password.isNotEmpty &&
+          cpassword.isNotEmpty) {
+        if (password == cpassword) {
+          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          // Perform additional logic after successful signup
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Registration Successful'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Passwords do not match'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Please fill all the fields'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text(e.toString()),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void _showVerifyDialog(String email, String phoneNumber) {
+    if (email.isNotEmpty && phoneNumber.isNotEmpty) {
+      // Phone number validation
+      if (phoneNumber.length == 10 && int.tryParse(phoneNumber) != null) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              child: Container(
+                width: 400, // Adjust the width as needed
+                height: 500, // Adjust the height as needed
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Email: $email',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Enter the OTP'),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        for (var i = 0; i < 4; i++)
+                          Container(
+                            width: 46,
+                            height: 46,
+                            margin: EdgeInsets.only(right: 10.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: TextField(
+                              maxLength: 1,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        TextButton(
+                          onPressed: () {
+                            // Handle OTP verification
+                          },
+                          child: Text(
+                            'Verify',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Phone: $phoneNumber',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 20),
+                    Text('Enter the OTP'),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        for (var i = 0; i < 4; i++)
+                          Container(
+                            width: 46,
+                            height: 46,
+                            margin: EdgeInsets.only(right: 10.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: TextField(
+                              maxLength: 1,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        TextButton(
+                          onPressed: () {
+                            // Handle OTP verification
+                          },
+                          child: Text(
+                            'Verify',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            // Handle sending OTP
+                          },
+                          child: Text('Send OTP'),
+                        ),
+                        SizedBox(width: 10),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the dialog
+                          },
+                          child: Text('Cancel'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Warning'),
+              content: Text('Invalid phone number. Please enter a 10-digit phone number.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Warning'),
+            content: Text('Please fill in both email and phone number fields.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -371,20 +601,34 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: 20.0),
                                             Container(
-                                              // decoration: BoxDecoration(
-                                              //   shape: BoxShape.circle,
-                                              //   boxShadow: [
-                                              //     BoxShadow(
-                                              //       color: Colors.cyan
-                                              //           .withOpacity(0.5),
-                                              //       blurRadius: 10,
-                                              //       spreadRadius: 2,
-                                              //     ),
-                                              //   ],
-                                              // ),
                                               child: FloatingActionButton(
-                                                onPressed: () {
-                                                  // Handle floating action button press
+                                                onPressed: () async {
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (BuildContext context) {
+                                                      return WillPopScope(
+                                                        onWillPop: () async => false, // Disable popping with back button
+                                                        child: Center(
+                                                          child: SpinKitFadingCircle(
+                                                            color: Theme.of(context).primaryColor,
+                                                            size: 50.0,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                  final user = await AuthService().signInWithGoogle();
+                                                  Navigator.pop(context); // Close the buffering animation dialog
+                                                  if (user != null) {
+                                                    final displayName = await AuthService().getUserDisplayName();
+                                                    final userName = await AuthService().getUniqueUsername(displayName!);
+                                                    await AuthService().storeUserDisplayName(displayName!, userName);
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                                    );
+                                                  }
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
@@ -437,32 +681,42 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: 0),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                               child: TextField(
                                                 controller: emailController,
                                                 decoration: InputDecoration(
                                                   labelText: 'Email',
+                                                  suffixIcon: InkWell(
+                                                    onTap: () {
+                                                      _showVerifyDialog(emailController.text, phoneController.text);
+                                                    },
+                                                    child: const Text(
+                                                      'Verify',
+                                                      style: TextStyle(color: Colors.green),
+                                                    ),
+                                                  ),
                                                 ),
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
+                                                style: TextStyle(fontSize: 15),
                                               ),
                                             ),
                                             SizedBox(height: 0),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                               child: TextField(
                                                 controller: phoneController,
                                                 decoration: InputDecoration(
                                                   labelText: 'Phone Number',
+                                                  suffixIcon: InkWell(
+                                                    onTap: () {
+                                                      _showVerifyDialog(emailController.text, phoneController.text);
+                                                    },
+                                                    child: const Text(
+                                                      'Verify',
+                                                      style: TextStyle(color: Colors.green),
+                                                    ),
+                                                  ),
                                                 ),
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
+                                                style: TextStyle(fontSize: 15),
                                               ),
                                             ),
                                             SizedBox(height: 0),
@@ -583,20 +837,34 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: 15.0),
                                             Container(
-                                              // decoration: BoxDecoration(
-                                              //   shape: BoxShape.circle,
-                                              //   boxShadow: [
-                                              //     BoxShadow(
-                                              //       color: Colors.cyan
-                                              //           .withOpacity(0.5),
-                                              //       blurRadius: 10,
-                                              //       spreadRadius: 2,
-                                              //     ),
-                                              //   ],
-                                              // ),
                                               child: FloatingActionButton(
-                                                onPressed: () {
-                                                  // Handle floating action button press
+                                                onPressed: () async {
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (BuildContext context) {
+                                                      return WillPopScope(
+                                                        onWillPop: () async => false, // Disable popping with back button
+                                                        child: Center(
+                                                          child: SpinKitFadingCircle(
+                                                            color: Theme.of(context).primaryColor,
+                                                            size: 50.0,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                  final user = await AuthService().signInWithGoogle();
+                                                  Navigator.pop(context); // Close the buffering animation dialog
+                                                  if (user != null) {
+                                                    final displayName = await AuthService().getUserDisplayName();
+                                                    final userName = await AuthService().getUniqueUsername(displayName!);
+                                                    await AuthService().storeUserDisplayName(displayName!, userName);
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                                    );
+                                                  }
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,

@@ -1,8 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nirogh/Screens/user_registration.dart';
+import 'package:nirogh/firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -42,7 +49,7 @@ class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
         // Navigate to login screen
         Navigator.push(
           widget.context,
-          MaterialPageRoute(builder: (context) => UserRegistration()),
+          MaterialPageRoute(builder: (context) => const UserRegistration()),
         );
       }
     });

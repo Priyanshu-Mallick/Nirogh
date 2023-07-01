@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "639164515448",
+    "project_id": "nirogh-355e2",
+    "storage_bucket": "nirogh-355e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639164515448:android:e2714bb6e79ce538df998d",
+        "android_client_info": {
+          "package_name": "com.example.nirogh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639164515448-m4lpgh6drq1pn8erl889t95riltb9m28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEi9lz6zOIViyT5c75CNHbdNLn7pFJspw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639164515448-bajg437op09vtdcstrc6kd7qpv7vfnba.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "639164515448-b8f2rmm5b4cbo9ca9tle3fva9jsjqmds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nirogh"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
