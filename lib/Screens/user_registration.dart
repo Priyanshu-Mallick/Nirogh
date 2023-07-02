@@ -3,10 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:nirogh/Screens/verify_screen.dart';
 import 'package:nirogh/services/auth_service.dart';
 import 'package:nirogh/firebase_options.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nirogh/Screens/home_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:math';
+
+
 
 class UserRegistration extends StatefulWidget {
   const UserRegistration({Key? key}) : super(key: key);
@@ -27,6 +32,8 @@ class _UserRegistrationState extends State<UserRegistration>
   bool cpasswordVisibility = true;
   Color customColor1 = Color.fromRGBO(176,248,224,255);
   Color customColor2 = Color.fromRGBO(247,251,249,255);
+  bool isOTPSent = false; // Add this variable to track whether OTP has been sent
+  FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
 
   // For firebase state management
   @override
@@ -225,115 +232,11 @@ class _UserRegistrationState extends State<UserRegistration>
     if (email.isNotEmpty && phoneNumber.isNotEmpty) {
       // Phone number validation
       if (phoneNumber.length == 10 && int.tryParse(phoneNumber) != null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Container(
-                width: 400, // Adjust the width as needed
-                height: 500, // Adjust the height as needed
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Email: $email',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    Text('Enter the OTP'),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        for (var i = 0; i < 4; i++)
-                          Container(
-                            width: 46,
-                            height: 46,
-                            margin: EdgeInsets.only(right: 10.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: TextField(
-                              maxLength: 1,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                        TextButton(
-                          onPressed: () {
-                            // Handle OTP verification
-                          },
-                          child: Text(
-                            'Verify',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Phone: $phoneNumber',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    Text('Enter the OTP'),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        for (var i = 0; i < 4; i++)
-                          Container(
-                            width: 46,
-                            height: 46,
-                            margin: EdgeInsets.only(right: 10.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: TextField(
-                              maxLength: 1,
-                              textAlign: TextAlign.center,
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                        TextButton(
-                          onPressed: () {
-                            // Handle OTP verification
-                          },
-                          child: Text(
-                            'Verify',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            // Handle sending OTP
-                          },
-                          child: Text('Send OTP'),
-                        ),
-                        SizedBox(width: 10),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context); // Close the dialog
-                          },
-                          child: Text('Cancel'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyScreen(email: email, phoneNumber: phoneNumber),
+          ),
         );
       } else {
         showDialog(
@@ -374,7 +277,6 @@ class _UserRegistrationState extends State<UserRegistration>
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -717,6 +619,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   ),
                                                 ),
                                                 style: TextStyle(fontSize: 15),
+                                                keyboardType: TextInputType.number,
                                               ),
                                             ),
                                             SizedBox(height: 0),
@@ -923,5 +826,44 @@ class _UserRegistrationState extends State<UserRegistration>
         ),
       ),
     );
+  }
+}
+class _DigitInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    final newText = _addSpacingToDigits(newValue.text);
+    return TextEditingValue(
+      text: newText,
+      selection: updateCursorPosition(oldValue, newValue),
+    );
+  }
+
+  String _addSpacingToDigits(String text) {
+    final digitRegex = RegExp(r'\d');
+    final digitsOnly = text.replaceAll(digitRegex, '');
+    final digitsSpaced = text.replaceAll(digitRegex, '  ');
+    return digitsSpaced + digitsOnly;
+  }
+
+  TextSelection updateCursorPosition(TextEditingValue oldValue, TextEditingValue newValue) {
+    final newTextLength = newValue.text.length;
+    final newCursorPosition = newValue.selection.baseOffset;
+    final oldCursorPosition = oldValue.selection.baseOffset;
+
+    final cursorDelta = newTextLength - oldValue.text.length;
+
+    var finalCursorPosition = newCursorPosition + cursorDelta;
+
+    // Adjust the cursor position based on the spacing added
+    final numberOfAddedSpaces = _countAddedSpaces(oldValue.text, newValue.text);
+    finalCursorPosition -= numberOfAddedSpaces;
+
+    return TextSelection.fromPosition(TextPosition(offset: finalCursorPosition));
+  }
+
+  int _countAddedSpaces(String oldText, String newText) {
+    final oldTextWithoutSpaces = oldText.replaceAll(' ', '');
+    final newTextWithoutSpaces = newText.replaceAll(' ', '');
+    return newTextWithoutSpaces.length - oldTextWithoutSpaces.length;
   }
 }
