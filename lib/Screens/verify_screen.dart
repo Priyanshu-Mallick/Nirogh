@@ -32,7 +32,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Verification Screen'),
+        title: const Text('Verification Screen'),
       ),
       body: Container(
         padding: EdgeInsets.all(20.0),
@@ -43,9 +43,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
               'Email: ${widget.email}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text('Enter the OTP'),
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
+            const Text('Enter the OTP'),
+            const SizedBox(height: 10),
             Row(
               children: [
                 for (var i = 0; i < 6; i++)
@@ -85,10 +85,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Center(
               child: isEmailVerified
-                  ? Icon(
+                  ? const Icon(
                 Icons.check_circle,
                 color: Colors.green,
                 size: 40,
@@ -112,20 +112,20 @@ class _VerifyScreenState extends State<VerifyScreen> {
                     });
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Verify',
                   style: TextStyle(color: Colors.green),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Phone: ${widget.phoneNumber}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text('Enter the OTP'),
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
+            const Text('Enter the OTP'),
+            const SizedBox(height: 10),
             Row(
               children: [
                 for (var i = 0; i < 6; i++)
@@ -152,7 +152,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       maxLength: 1,
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(vertical: 14),
                         counterText: '',
                       ),
@@ -165,10 +165,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Center(
               child: isPhoneVerified
-                  ? Icon(
+                  ? const Icon(
                 Icons.check_circle,
                 color: Colors.green,
                 size: 40,
@@ -193,7 +193,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
                   }
                 },
-                child: Text(
+                child: const Text(
                   'Verify',
                   style: TextStyle(color: Colors.green),
                 ),

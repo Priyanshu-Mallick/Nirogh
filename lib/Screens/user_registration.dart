@@ -30,7 +30,7 @@ class _UserRegistrationState extends State<UserRegistration>
   TextEditingController cpasswordController = TextEditingController();
   bool passwordVisibility = true;
   bool cpasswordVisibility = true;
-  Color customColor1 = Color.fromRGBO(176,248,224,255);
+  Color customColor1 = const Color.fromRGBO(176,248,224,255);
   Color customColor2 = Color.fromRGBO(247,251,249,255);
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
   FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
@@ -72,10 +72,10 @@ class _UserRegistrationState extends State<UserRegistration>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Login Successful'),
+              title: const Text('Login Successful'),
               actions: <Widget>[
                 TextButton(
-                  child: Text('OK'),
+                  child: const Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.pushReplacement(
@@ -156,7 +156,7 @@ class _UserRegistrationState extends State<UserRegistration>
                 title: const Text('Registration Successful'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.pushReplacement(
@@ -174,11 +174,11 @@ class _UserRegistrationState extends State<UserRegistration>
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Error'),
-                content: Text('Passwords do not match'),
+                title: const Text('Error'),
+                content: const Text('Passwords do not match'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('OK'),
+                    child: const Text('OK'),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -193,11 +193,11 @@ class _UserRegistrationState extends State<UserRegistration>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('Please fill all the fields'),
+              title: const Text('Error'),
+              content: const Text('Please fill all the fields'),
               actions: <Widget>[
                 TextButton(
-                  child: Text('OK'),
+                  child: const Text('OK'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -212,11 +212,11 @@ class _UserRegistrationState extends State<UserRegistration>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text(e.toString()),
             actions: <Widget>[
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -243,8 +243,8 @@ class _UserRegistrationState extends State<UserRegistration>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Warning'),
-              content: Text('Invalid phone number. Please enter a 10-digit phone number.'),
+              title: const Text('Warning'),
+              content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -262,8 +262,8 @@ class _UserRegistrationState extends State<UserRegistration>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Warning'),
-            content: Text('Please fill in both email and phone number fields.'),
+            title: const Text('Warning'),
+            content: const Text('Please fill in both email and phone number fields.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -281,7 +281,7 @@ class _UserRegistrationState extends State<UserRegistration>
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ),
@@ -295,7 +295,7 @@ class _UserRegistrationState extends State<UserRegistration>
           alignment: Alignment.topCenter,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(50.0),
                 bottomRight: Radius.circular(50.0),
               ),
@@ -310,7 +310,7 @@ class _UserRegistrationState extends State<UserRegistration>
             ),
             Center(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 130.0, 20.0, 30.0),
+                padding: const EdgeInsets.fromLTRB(20.0, 130.0, 20.0, 30.0),
                 child: Column(
                   children: [
                     Expanded(
@@ -385,11 +385,11 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   horizontal: 16.0),
                                               child: TextField(
                                                 controller: emailController,
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                   labelText:
                                                   'Enter email or username',
                                                 ),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -419,7 +419,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     },
                                                   ),
                                                 ),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -444,7 +444,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 50.0),
+                                            const SizedBox(height: 50.0),
                                             // ...
                                             Container(
                                               width: double.infinity,
@@ -470,7 +470,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       Colors.white,
                                                     ),
                                                   ),
-                                                  child: Text(
+                                                  child: const Text(
                                                     'Log In',
                                                     style: TextStyle(
                                                       fontSize: 20,
@@ -491,7 +491,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   onTap: () {
                                                     // Handle Forget Password click
                                                   },
-                                                  child: Text(
+                                                  child: const Text(
                                                     'OR',
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -549,7 +549,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   onTap: () {
                                                     // Handle Forget Password click
                                                   },
-                                                  child: Text(
+                                                  child: const Text(
                                                     'Sign Up With',
                                                     style: TextStyle(
                                                       fontSize: 12,
@@ -573,10 +573,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   horizontal: 16.0),
                                               child: TextField(
                                                 controller: nameController,
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                   labelText: 'Name',
                                                 ),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -647,7 +647,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     },
                                                   ),
                                                 ),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -678,7 +678,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     },
                                                   ),
                                                 ),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -707,7 +707,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       Colors.white,
                                                     ),
                                                   ),
-                                                  child: Text(
+                                                  child: const Text(
                                                     'Sign Up',
                                                     style: TextStyle(
                                                       fontSize: 20,
@@ -728,7 +728,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   onTap: () {
                                                     // Handle Forget Password click
                                                   },
-                                                  child: Text(
+                                                  child: const Text(
                                                     'OR',
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -775,7 +775,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                               ),
                                             ),
-                                            SizedBox(height: 5.0),
+                                            const SizedBox(height: 5.0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -786,7 +786,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   onTap: () {
                                                     // Handle Forget Password click
                                                   },
-                                                  child: Text(
+                                                  child: const Text(
                                                     'Sign Up With',
                                                     style: TextStyle(
                                                       fontSize: 10,
@@ -810,7 +810,7 @@ class _UserRegistrationState extends State<UserRegistration>
                         ),
                       ),
                     ),
-                    SizedBox(height: 10.0),
+                    const SizedBox(height: 10.0),
                     Text(
                       'Terms & Conditions | Privacy Policy',
                       style: TextStyle(
@@ -826,44 +826,5 @@ class _UserRegistrationState extends State<UserRegistration>
         ),
       ),
     );
-  }
-}
-class _DigitInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    final newText = _addSpacingToDigits(newValue.text);
-    return TextEditingValue(
-      text: newText,
-      selection: updateCursorPosition(oldValue, newValue),
-    );
-  }
-
-  String _addSpacingToDigits(String text) {
-    final digitRegex = RegExp(r'\d');
-    final digitsOnly = text.replaceAll(digitRegex, '');
-    final digitsSpaced = text.replaceAll(digitRegex, '  ');
-    return digitsSpaced + digitsOnly;
-  }
-
-  TextSelection updateCursorPosition(TextEditingValue oldValue, TextEditingValue newValue) {
-    final newTextLength = newValue.text.length;
-    final newCursorPosition = newValue.selection.baseOffset;
-    final oldCursorPosition = oldValue.selection.baseOffset;
-
-    final cursorDelta = newTextLength - oldValue.text.length;
-
-    var finalCursorPosition = newCursorPosition + cursorDelta;
-
-    // Adjust the cursor position based on the spacing added
-    final numberOfAddedSpaces = _countAddedSpaces(oldValue.text, newValue.text);
-    finalCursorPosition -= numberOfAddedSpaces;
-
-    return TextSelection.fromPosition(TextPosition(offset: finalCursorPosition));
-  }
-
-  int _countAddedSpaces(String oldText, String newText) {
-    final oldTextWithoutSpaces = oldText.replaceAll(' ', '');
-    final newTextWithoutSpaces = newText.replaceAll(' ', '');
-    return newTextWithoutSpaces.length - oldTextWithoutSpaces.length;
   }
 }

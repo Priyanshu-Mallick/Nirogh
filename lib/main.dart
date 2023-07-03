@@ -39,21 +39,6 @@ class SplashScreensAndLogin extends StatefulWidget {
 }
 
 class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
-  int _currentScreenIndex = 0;
-
-  void _nextScreen() {
-    setState(() {
-      if (_currentScreenIndex < splashScreens.length - 1) {
-        _currentScreenIndex++;
-      } else {
-        // Navigate to login screen
-        Navigator.push(
-          widget.context,
-          MaterialPageRoute(builder: (context) => const UserRegistration()),
-        );
-      }
-    });
-  }
 
   List<Widget> splashScreens = [
     const SlidableSplashScreen(
@@ -127,11 +112,11 @@ class SlidableSplashScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => UserRegistration()),
+                    MaterialPageRoute(builder: (context) => const UserRegistration()),
                   );
                 },
-                icon: Icon(Icons.arrow_forward),
-                label: Text('Continue'),
+                icon: const Icon(Icons.arrow_forward),
+                label: const Text('Continue'),
               ),
             ),
         ],
