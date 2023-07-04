@@ -31,7 +31,6 @@ class MyApp extends StatelessWidget {
 
 class SplashScreensAndLogin extends StatefulWidget {
   final BuildContext context;
-
   const SplashScreensAndLogin({Key? key, required this.context});
 
   @override
@@ -55,7 +54,7 @@ class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
       isLastScreen: true,
     ),
   ];
-
+  int _currentScreenIndex=0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
