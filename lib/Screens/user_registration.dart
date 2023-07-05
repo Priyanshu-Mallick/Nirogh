@@ -142,33 +142,50 @@ class _UserRegistrationState extends State<UserRegistration>
           password.isNotEmpty &&
           cpassword.isNotEmpty) {
         if (password == cpassword) {
-          UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
-          // Perform additional logic after successful signup
-
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Registration Successful'),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('OK'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                      );
-                    },
-                  ),
-                ],
+          // _showVerifyDialog(email, phone);
+          if (email.isNotEmpty && phone.isNotEmpty) {
+            // Phone number validation
+            if (phone.length == 10 && int.tryParse(phone) != null) {
+              _showVerifyDialog(email, phone);
+            } else {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Warning'),
+                    content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Close the dialog
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
               );
-            },
-          );
+            }
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Warning'),
+                  content: const Text(
+                      'Please fill in both email and phone number fields.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close the dialog
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         } else {
           showDialog(
             context: context,
@@ -229,54 +246,241 @@ class _UserRegistrationState extends State<UserRegistration>
   }
 
   void _showVerifyDialog(String email, String phoneNumber) {
-    if (email.isNotEmpty && phoneNumber.isNotEmpty) {
-      // Phone number validation
-      if (phoneNumber.length == 10 && int.tryParse(phoneNumber) != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerifyScreen(email: email, phoneNumber: phoneNumber),
-          ),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Warning'),
-              content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the dialog
-                  },
-                  child: Text('OK'),
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Email ID',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
-              ],
-            );
-          },
-        );
-      }
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Warning'),
-            content: const Text('Please fill in both email and phone number fields.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                },
-                child: Text('OK'),
+              ),
+              SizedBox(height: 8),
+              Text(email),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(
+                    'OTP',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                ],
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Phone Number',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(phoneNumber),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Text(
+                    'OTP',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  _buildOTPTextField(),
+                  SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      // Verify button logic
+                    },
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Send OTP button logic
+                    },
+                    child: Text('Send OTP'),
+                  ),
+                  SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the bottom sheet
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
               ),
             ],
-          );
-        },
-      );
-    }
+          ),
+        );
+      },
+    );
   }
+
+  Widget _buildOTPTextField() {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TextField(
+        keyboardType: TextInputType.number,
+        maxLength: 1,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+        decoration: InputDecoration(
+          counterText: '',
+          border: InputBorder.none,
+        ),
+      ),
+    );
+  }
+
+  // void _performFirebaseAuthentication(String email, String phoneNumber) async {
+  //   try {
+  //     // Perform any additional logic required before Firebase email authentication
+  //
+  //     UserCredential userCredential =
+  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //
+  //     // Perform additional logic after successful signup
+  //
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Registration Successful'),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //                 Navigator.pushReplacement(
+  //                   context,
+  //                   MaterialPageRoute(builder: (context) => HomeScreen()),
+  //                 );
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   } catch (e) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Error'),
+  //           content: Text(e.toString()),
+  //           actions: <Widget>[
+  //             TextButton(
+  //               child: const Text('OK'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop();
+  //               },
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
+
+
+  // void _showVerifyDialog(String email, String phoneNumber) {
+  //   if (email.isNotEmpty && phoneNumber.isNotEmpty) {
+  //     // Phone number validation
+  //     if (phoneNumber.length == 10 && int.tryParse(phoneNumber) != null) {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => VerifyScreen(email: email, phoneNumber: phoneNumber),
+  //         ),
+  //       );
+  //     } else {
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return AlertDialog(
+  //             title: const Text('Warning'),
+  //             content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
+  //             actions: [
+  //               TextButton(
+  //                 onPressed: () {
+  //                   Navigator.pop(context); // Close the dialog
+  //                 },
+  //                 child: Text('OK'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     }
+  //   } else {
+  //     showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AlertDialog(
+  //           title: const Text('Warning'),
+  //           content: const Text('Please fill in both email and phone number fields.'),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context); // Close the dialog
+  //               },
+  //               child: Text('OK'),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
