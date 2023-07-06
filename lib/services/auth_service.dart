@@ -150,16 +150,6 @@ class AuthService {
           textColor: Colors.white,
         );
       }
-
-      // // Update the button text to "Resend OTP"
-      // setState(() {
-      //   TextButton(
-      //     onPressed: () {
-      //       sendOTP(phoneNumber, email); // Call the sendOTP function
-      //     },
-      //     child: Text('Resend OTP'),
-      //   );
-      // });
       isOTPSent = true; // Update the OTP sent status
     }
   }
