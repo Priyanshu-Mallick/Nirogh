@@ -8,6 +8,8 @@ import 'package:nirogh/services/auth_service.dart';
 import 'package:nirogh/firebase_options.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nirogh/Screens/home_screen.dart';
+import 'package:nirogh/Screens/profile_setup.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:math';
 
@@ -80,7 +82,7 @@ class _UserRegistrationState extends State<UserRegistration>
                     Navigator.of(context).pop();
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => ProfileSetup()),
                     );
                   },
                 ),
@@ -280,6 +282,20 @@ class _UserRegistrationState extends State<UserRegistration>
                   _buildOTPTextField(),
                   _buildOTPTextField(),
                   _buildOTPTextField(),
+                  SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      // Verify button logic
+                    },
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 16),
@@ -732,7 +748,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     await AuthService().storeUserDisplayName(displayName!, userName);
                                                     Navigator.pushReplacement(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                                      MaterialPageRoute(builder: (context) => ProfileSetup()),
                                                     );
                                                   }
                                                 },
@@ -969,7 +985,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     await AuthService().storeUserDisplayName(displayName!, userName);
                                                     Navigator.pushReplacement(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                                      MaterialPageRoute(builder: (context) => ProfileSetup()),
                                                     );
                                                   }
                                                 },
