@@ -446,58 +446,6 @@ class _UserRegistrationState extends State<UserRegistration>
   //     );
   //   }
   // }
-
-
-  // void _showVerifyDialog(String email, String phoneNumber) {
-  //   if (email.isNotEmpty && phoneNumber.isNotEmpty) {
-  //     // Phone number validation
-  //     if (phoneNumber.length == 10 && int.tryParse(phoneNumber) != null) {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => VerifyScreen(email: email, phoneNumber: phoneNumber),
-  //         ),
-  //       );
-  //     } else {
-  //       showDialog(
-  //         context: context,
-  //         builder: (BuildContext context) {
-  //           return AlertDialog(
-  //             title: const Text('Warning'),
-  //             content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
-  //             actions: [
-  //               TextButton(
-  //                 onPressed: () {
-  //                   Navigator.pop(context); // Close the dialog
-  //                 },
-  //                 child: Text('OK'),
-  //               ),
-  //             ],
-  //           );
-  //         },
-  //       );
-  //     }
-  //   } else {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Warning'),
-  //           content: const Text('Please fill in both email and phone number fields.'),
-  //           actions: [
-  //             TextButton(
-  //               onPressed: () {
-  //                 Navigator.pop(context); // Close the dialog
-  //               },
-  //               child: Text('OK'),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

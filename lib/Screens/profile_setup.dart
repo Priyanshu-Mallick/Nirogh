@@ -32,7 +32,7 @@ class ProfileSetup extends StatelessWidget {
             const SizedBox(height: 20),
             Stack(
               alignment: Alignment.center,
-              children: [
+              children: const [
                 CircleAvatar(
                   radius: 60.0,
                   backgroundColor: Colors.white,
