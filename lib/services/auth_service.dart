@@ -119,7 +119,7 @@ class AuthService {
 
       // Send OTP to email
       String username = 'niroghcare@gmail.com'; // Replace with your email address
-      String password = 'apfypmeuftvbsdwa'; // Replace with your email password
+      String password = 'telkysvrewcbwkfk'; // Replace with your email password
 
       final smtpServer = gmail(username, password);
       final message = Message()

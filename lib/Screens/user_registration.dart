@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:nirogh/Screens/verify_screen.dart';
 import 'package:nirogh/services/auth_service.dart';
 import 'package:nirogh/firebase_options.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -148,6 +147,7 @@ class _UserRegistrationState extends State<UserRegistration>
           if (email.isNotEmpty && phone.isNotEmpty) {
             // Phone number validation
             if (phone.length == 10 && int.tryParse(phone) != null) {
+              // AuthService().sendOTP(phone,email);
               _showVerifyDialog(email, phone);
             } else {
               showDialog(
@@ -248,120 +248,173 @@ class _UserRegistrationState extends State<UserRegistration>
   }
 
   void _showVerifyDialog(String email, String phoneNumber) {
+    double sheetHeight = MediaQuery.of(context).size.height * 0.45;
+    double initialPosition = sheetHeight;
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Email ID',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return GestureDetector(
+              onVerticalDragUpdate: (details) {
+                setState(() {
+                  sheetHeight -= details.delta.dy;
+                });
+              },
+              onVerticalDragEnd: (details) {
+                if (details.primaryVelocity! > 0) {
+                  Navigator.pop(context);
+                } else if (sheetHeight < initialPosition) {
+                  setState(() {
+                    sheetHeight = initialPosition;
+                  });
+                }
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                height: sheetHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Email ID',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(email),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Text(
+                              'OTP',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            SizedBox(width: 16),
+                            TextButton(
+                              onPressed: () {
+                                // Verify button logic
+                              },
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'Phone Number',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(phoneNumber),
+                        SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Text(
+                              'OTP',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            _buildOTPTextField(),
+                            SizedBox(width: 16),
+                            TextButton(
+                              onPressed: () {
+                                // Verify button logic
+                              },
+                              child: Text(
+                                'Verify',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 32),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets
+                              .symmetric(horizontal: 16.0),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(
+                                  30.0),
+                              color: Colors.black,
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                              },
+                              style: ButtonStyle(
+                                foregroundColor:
+                                MaterialStateProperty
+                                    .all<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                              child: const Text(
+                                'Continue',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 8),
-              Text(email),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Text(
-                    'OTP',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  SizedBox(width: 16),
-                  TextButton(
-                    onPressed: () {
-                      // Verify button logic
-                    },
-                    child: Text(
-                      'Verify',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Text(
-                'Phone Number',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(phoneNumber),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Text(
-                    'OTP',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  _buildOTPTextField(),
-                  SizedBox(width: 16),
-                  TextButton(
-                    onPressed: () {
-                      // Verify button logic
-                    },
-                    child: Text(
-                      'Verify',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Send OTP button logic
-                    },
-                    child: Text('Send OTP'),
-                  ),
-                  SizedBox(width: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Close the bottom sheet
-                    },
-                    child: Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -756,15 +809,6 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 controller: emailController,
                                                 decoration: InputDecoration(
                                                   labelText: 'Email',
-                                                  suffixIcon: InkWell(
-                                                    onTap: () {
-                                                      _showVerifyDialog(emailController.text, phoneController.text);
-                                                    },
-                                                    child: const Text(
-                                                      'Verify',
-                                                      style: TextStyle(color: Colors.green),
-                                                    ),
-                                                  ),
                                                 ),
                                                 style: TextStyle(fontSize: 15),
                                               ),
@@ -776,15 +820,6 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 controller: phoneController,
                                                 decoration: InputDecoration(
                                                   labelText: 'Phone Number',
-                                                  suffixIcon: InkWell(
-                                                    onTap: () {
-                                                      _showVerifyDialog(emailController.text, phoneController.text);
-                                                    },
-                                                    child: const Text(
-                                                      'Verify',
-                                                      style: TextStyle(color: Colors.green),
-                                                    ),
-                                                  ),
                                                 ),
                                                 style: TextStyle(fontSize: 15),
                                                 keyboardType: TextInputType.number,
