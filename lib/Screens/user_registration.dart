@@ -9,11 +9,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
-import 'dart:math';
-
-
-
 class UserRegistration extends StatefulWidget {
   const UserRegistration({Key? key}) : super(key: key);
 
@@ -35,6 +30,23 @@ class _UserRegistrationState extends State<UserRegistration>
   Color customColor2 = Color.fromRGBO(247,251,249,255);
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
   FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
+
+
+  final eotpController1 = TextEditingController();
+  final eotpController2 = TextEditingController();
+  final eotpController3 = TextEditingController();
+  final eotpController4 = TextEditingController();
+  final eotpController5 = TextEditingController();
+  final eotpController6 = TextEditingController();
+  final otpController1 = TextEditingController();
+  final otpController2 = TextEditingController();
+  final otpController3 = TextEditingController();
+  final otpController4 = TextEditingController();
+  final otpController5 = TextEditingController();
+  final otpController6 = TextEditingController();
+
+  bool isEmailVerified = false;
+  bool isPhoneVerified = false;
 
   // For firebase state management
   @override
@@ -248,7 +260,7 @@ class _UserRegistrationState extends State<UserRegistration>
   }
 
   void _showVerifyDialog(String email, String phoneNumber) {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.45;
+    double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;
 
     showModalBottomSheet(
@@ -310,23 +322,75 @@ class _UserRegistrationState extends State<UserRegistration>
                               ),
                             ),
                             SizedBox(width: 8),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
+                            for (var i = 0; i < 6; i++)
+                              Container(
+                                width: 40,
+                                height: 40,
+                                margin: EdgeInsets.only(right: 1.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: TextField(
+                                  controller: i == 0
+                                      ? otpController1
+                                      : i == 1
+                                      ? otpController2
+                                      : i == 2
+                                      ? otpController3
+                                      : i == 3
+                                      ? otpController4
+                                      : i == 4
+                                      ? otpController5
+                                      : otpController6,
+                                  maxLength: 1,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                    counterText: '',
+                                  ),
+                                  onChanged: (value) {
+                                    if (value.length == 1 && i < 5) {
+                                      FocusScope.of(context).nextFocus();
+                                    }
+                                  },
+                                ),
+                              ),
                             SizedBox(width: 16),
-                            TextButton(
-                              onPressed: () {
-                                // Verify button logic
-                              },
-                              child: Text(
-                                'Verify',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                            Container(
+                              child: isEmailVerified
+                                  ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 40,
+                              )
+                                  : TextButton(
+                                onPressed: () {
+                                  // Handle OTP verification
+                                  String otp = eotpController1.text +
+                                      eotpController2.text +
+                                      eotpController3.text +
+                                      eotpController4.text +
+                                      eotpController5.text +
+                                      eotpController6.text;
+                                  if (otp.length == 6) {
+                                    // Perform OTP verification
+                                    bool isOTPVerified =
+                                    AuthService().verifyOTP(otp) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
+
+                                    setState(() {
+                                      isEmailVerified = isOTPVerified;
+                                    });
+                                  }
+                                },
+                                    child: const Text(
+                                      'Verify',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
                                 ),
                               ),
                             ),
@@ -353,23 +417,76 @@ class _UserRegistrationState extends State<UserRegistration>
                               ),
                             ),
                             SizedBox(width: 8),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
-                            _buildOTPTextField(),
+                            for (var i = 0; i < 6; i++)
+                              Container(
+                                width: 40,
+                                height: 40,
+                                margin: EdgeInsets.only(right: 1.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: TextField(
+                                  controller: i == 0
+                                      ? eotpController1
+                                      : i == 1
+                                      ? eotpController2
+                                      : i == 2
+                                      ? eotpController3
+                                      : i == 3
+                                      ? eotpController4
+                                      : i == 4
+                                      ? eotpController5
+                                      : eotpController6,
+                                  maxLength: 1,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                    counterText: '',
+                                  ),
+                                  onChanged: (value) {
+                                    if (value.length == 1 && i < 5) {
+                                      FocusScope.of(context).nextFocus();
+                                    }
+                                  },
+                                ),
+                              ),
                             SizedBox(width: 16),
-                            TextButton(
-                              onPressed: () {
-                                // Verify button logic
-                              },
-                              child: Text(
-                                'Verify',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                            Container(
+                              child: isPhoneVerified
+                                  ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 40,
+                              )
+                                  : TextButton(
+                                onPressed: () async {
+                                  // Handle OTP verification
+                                  String otp = otpController1.text +
+                                      otpController2.text +
+                                      otpController3.text +
+                                      otpController4.text +
+                                      otpController5.text +
+                                      otpController6.text;
+                                  if (otp.length == 6) {
+                                    // Perform OTP verification
+                                    bool verified = (await AuthService().verifyOTP(otp)) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
+                                    if (verified) {
+                                      // Perform necessary actions upon successful OTP verification
+                                    } else {
+                                      // Handle OTP verification failure
+                                    }
+
+                                  }
+                                },
+                                child: const Text(
+                                  'Verify',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ),
@@ -419,86 +536,6 @@ class _UserRegistrationState extends State<UserRegistration>
       },
     );
   }
-
-  Widget _buildOTPTextField() {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: TextField(
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        decoration: InputDecoration(
-          counterText: '',
-          border: InputBorder.none,
-        ),
-      ),
-    );
-  }
-
-  // void _performFirebaseAuthentication(String email, String phoneNumber) async {
-  //   try {
-  //     // Perform any additional logic required before Firebase email authentication
-  //
-  //     UserCredential userCredential =
-  //     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //
-  //     // Perform additional logic after successful signup
-  //
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Registration Successful'),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               child: const Text('OK'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //                 Navigator.pushReplacement(
-  //                   context,
-  //                   MaterialPageRoute(builder: (context) => HomeScreen()),
-  //                 );
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   } catch (e) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Error'),
-  //           content: Text(e.toString()),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               child: const Text('OK'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

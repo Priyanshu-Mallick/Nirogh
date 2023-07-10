@@ -194,4 +194,56 @@ class AuthService {
       throw Exception('User is not signed in.');
     }
   }
+// void _performFirebaseAuthentication(String email, String phoneNumber) async {
+//   try {
+//     // Perform any additional logic required before Firebase email authentication
+//
+//     UserCredential userCredential =
+//     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+//       email: email,
+//       password: password,
+//     );
+//
+//     // Perform additional logic after successful signup
+//
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text('Registration Successful'),
+//           actions: <Widget>[
+//             TextButton(
+//               child: const Text('OK'),
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//                 Navigator.pushReplacement(
+//                   context,
+//                   MaterialPageRoute(builder: (context) => HomeScreen()),
+//                 );
+//               },
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   } catch (e) {
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: const Text('Error'),
+//           content: Text(e.toString()),
+//           actions: <Widget>[
+//             TextButton(
+//               child: const Text('OK'),
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+// }
 }
