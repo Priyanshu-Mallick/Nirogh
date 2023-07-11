@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nirogh/services/auth_service.dart';
 import 'package:nirogh/firebase_options.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -44,6 +45,7 @@ class _UserRegistrationState extends State<UserRegistration>
   final otpController4 = TextEditingController();
   final otpController5 = TextEditingController();
   final otpController6 = TextEditingController();
+  int otp=0;
 
   bool isEmailVerified = false;
   bool isPhoneVerified = false;
@@ -159,8 +161,8 @@ class _UserRegistrationState extends State<UserRegistration>
           if (email.isNotEmpty && phone.isNotEmpty) {
             // Phone number validation
             if (phone.length == 10 && int.tryParse(phone) != null) {
-              // AuthService().sendOTP(phone,email);
-              _showVerifyDialog(email, phone);
+              otp=await AuthService().sendOTP(phone,email);
+              _showVerifyDialog(email, phone, otp);
             } else {
               showDialog(
                 context: context,
@@ -259,7 +261,7 @@ class _UserRegistrationState extends State<UserRegistration>
     }
   }
 
-  void _showVerifyDialog(String email, String phoneNumber) {
+  void _showVerifyDialog(String email, String phoneNumber, int OTP) {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;
 
@@ -333,16 +335,16 @@ class _UserRegistrationState extends State<UserRegistration>
                                 ),
                                 child: TextField(
                                   controller: i == 0
-                                      ? otpController1
+                                      ? eotpController1
                                       : i == 1
-                                      ? otpController2
+                                      ? eotpController2
                                       : i == 2
-                                      ? otpController3
+                                      ? eotpController3
                                       : i == 3
-                                      ? otpController4
+                                      ? eotpController4
                                       : i == 4
-                                      ? otpController5
-                                      : otpController6,
+                                      ? eotpController5
+                                      : eotpController6,
                                   maxLength: 1,
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.number,
@@ -359,15 +361,10 @@ class _UserRegistrationState extends State<UserRegistration>
                               ),
                             SizedBox(width: 16),
                             Container(
-                              child: isEmailVerified
-                                  ? const Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size: 40,
-                              )
-                                  : TextButton(
+                              child: TextButton(
                                 onPressed: () {
                                   // Handle OTP verification
+                                  print(eotpController1.text);
                                   String otp = eotpController1.text +
                                       eotpController2.text +
                                       eotpController3.text +
@@ -376,12 +373,25 @@ class _UserRegistrationState extends State<UserRegistration>
                                       eotpController6.text;
                                   if (otp.length == 6) {
                                     // Perform OTP verification
-                                    bool isOTPVerified =
-                                    AuthService().verifyOTP(otp) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
+                                    // bool isOTPVerified =
+                                    // AuthService().verifyOTP(otp) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
+                                    int d = AuthService().verifyOTP(otp,OTP);
+                                    if(d==1){
+                                      Fluttertoast.showToast(
+                                        msg: 'OTP verified successfully',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.grey[800],
+                                        textColor: Colors.white,
+                                      );
+                                    }
+                                    else{
+                                      print("Error");
+                                    }
 
-                                    setState(() {
-                                      isEmailVerified = isOTPVerified;
-                                    });
+                                    // setState(() {
+                                    //   isEmailVerified = isOTPVerified;
+                                    // });
                                   }
                                 },
                                     child: const Text(
@@ -428,16 +438,16 @@ class _UserRegistrationState extends State<UserRegistration>
                                 ),
                                 child: TextField(
                                   controller: i == 0
-                                      ? eotpController1
+                                      ? otpController1
                                       : i == 1
-                                      ? eotpController2
+                                      ? otpController2
                                       : i == 2
-                                      ? eotpController3
+                                      ? otpController3
                                       : i == 3
-                                      ? eotpController4
+                                      ? otpController4
                                       : i == 4
-                                      ? eotpController5
-                                      : eotpController6,
+                                      ? otpController5
+                                      : otpController6,
                                   maxLength: 1,
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.number,
@@ -471,12 +481,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                       otpController6.text;
                                   if (otp.length == 6) {
                                     // Perform OTP verification
-                                    bool verified = (await AuthService().verifyOTP(otp)) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
-                                    if (verified) {
-                                      // Perform necessary actions upon successful OTP verification
-                                    } else {
-                                      // Handle OTP verification failure
-                                    }
+                                    // bool verified = (await AuthService().verifyOTP(otp)) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
+                                    // if (verified) {
+                                    //   // Perform necessary actions upon successful OTP verification
+                                    // } else {
+                                    //   // Handle OTP verification failure
+                                    // }
 
                                   }
                                 },
@@ -536,6 +546,8 @@ class _UserRegistrationState extends State<UserRegistration>
       },
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(

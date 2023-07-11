@@ -13,6 +13,7 @@ class AuthService {
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
   FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
   String? verificationId;
+  int otp=0;
   signInWithGoogle() async {
     // begin interactive sign-in process
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -82,11 +83,11 @@ class AuthService {
       });
     }
   }
-  Future<void> sendOTP(String phoneNumber, String email) async {
+  Future<int> sendOTP(String phoneNumber, String email) async {
     if (!isOTPSent) {
       // Generate a random 4-digit OTP for email
       Random random = Random();
-      int otp = random.nextInt(900000) + 100000;
+      otp = random.nextInt(900000) + 100000;
 
       // Send OTP to phone number
       await auth.verifyPhoneNumber(
@@ -152,48 +153,57 @@ class AuthService {
       }
       isOTPSent = true; // Update the OTP sent status
     }
+    return otp;
   }
 
-  Future<bool> verifyOTP(String otp) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      try {
-        // Create a PhoneAuthCredential with the verification ID and the entered OTP
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId!, // Use the stored verification ID
-          smsCode: otp,
-        );
-
-        // Sign in the user with the credential
-        await auth.signInWithCredential(credential);
-
-        // Show the toast message
-        Fluttertoast.showToast(
-          msg: 'OTP verified successfully',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[800],
-          textColor: Colors.white,
-        );
-
-        return true; // OTP verification successful
-      } catch (e) {
-        // Handle OTP verification failure
-        print(e.toString());
-        Fluttertoast.showToast(
-          msg: 'Invalid OTP',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[800],
-          textColor: Colors.white,
-        );
-
-        return false; // OTP verification failed
-      }
-    } else {
-      throw Exception('User is not signed in.');
+  // Future<bool> verifyOTP(String otp) async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     try {
+  //       // Create a PhoneAuthCredential with the verification ID and the entered OTP
+  //       PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //         verificationId: verificationId!, // Use the stored verification ID
+  //         smsCode: otp,
+  //       );
+  //
+  //       // Sign in the user with the credential
+  //       await auth.signInWithCredential(credential);
+  //
+  //       // Show the toast message
+  //       Fluttertoast.showToast(
+  //         msg: 'OTP verified successfully',
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         backgroundColor: Colors.grey[800],
+  //         textColor: Colors.white,
+  //       );
+  //
+  //       return true; // OTP verification successful
+  //     } catch (e) {
+  //       // Handle OTP verification failure
+  //       print(e.toString());
+  //       Fluttertoast.showToast(
+  //         msg: 'Invalid OTP',
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.BOTTOM,
+  //         backgroundColor: Colors.grey[800],
+  //         textColor: Colors.white,
+  //       );
+  //
+  //       return false; // OTP verification failed
+  //     }
+  //   } else {
+  //     throw Exception('User is not signed in.');
+  //   }
+  // }
+  int verifyOTP(String OTP, int otp){
+    int totp = int.parse(OTP);
+    if(otp==totp){
+      return 1;
     }
+    return 0;
   }
+
 // void _performFirebaseAuthentication(String email, String phoneNumber) async {
 //   try {
 //     // Perform any additional logic required before Firebase email authentication
