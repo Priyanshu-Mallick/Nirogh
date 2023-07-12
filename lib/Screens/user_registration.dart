@@ -161,8 +161,11 @@ class _UserRegistrationState extends State<UserRegistration>
           if (email.isNotEmpty && phone.isNotEmpty) {
             // Phone number validation
             if (phone.length == 10 && int.tryParse(phone) != null) {
-              otp=await AuthService().sendOTP(phone,email);
-              _showVerifyDialog(email, phone, otp);
+              Map<String, dynamic> otpData = await AuthService().sendOTP(phone, email);
+              int emailOTP = otpData['emailOTP'];
+              String phoneOTP = otpData['phoneVerificationId'];
+              print(phoneOTP);
+              _showVerifyDialog(email, phone, emailOTP, phoneOTP);
             } else {
               showDialog(
                 context: context,
@@ -261,7 +264,7 @@ class _UserRegistrationState extends State<UserRegistration>
     }
   }
 
-  void _showVerifyDialog(String email, String phoneNumber, int OTP) {
+  void _showVerifyDialog(String email, String phoneNumber, int E_OTP, String phoneOTP) {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;
 
@@ -375,7 +378,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                     // Perform OTP verification
                                     // bool isOTPVerified =
                                     // AuthService().verifyOTP(otp) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
-                                    int d = AuthService().verifyOTP(otp,OTP);
+                                    int d = AuthService().verifyOTP(otp,E_OTP);
                                     if(d==1){
                                       Fluttertoast.showToast(
                                         msg: 'OTP verified successfully',
@@ -464,13 +467,7 @@ class _UserRegistrationState extends State<UserRegistration>
                               ),
                             SizedBox(width: 16),
                             Container(
-                              child: isPhoneVerified
-                                  ? const Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size: 40,
-                              )
-                                  : TextButton(
+                              child: TextButton(
                                 onPressed: () async {
                                   // Handle OTP verification
                                   String otp = otpController1.text +
@@ -479,15 +476,18 @@ class _UserRegistrationState extends State<UserRegistration>
                                       otpController4.text +
                                       otpController5.text +
                                       otpController6.text;
-                                  if (otp.length == 6) {
-                                    // Perform OTP verification
-                                    // bool verified = (await AuthService().verifyOTP(otp)) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
-                                    // if (verified) {
-                                    //   // Perform necessary actions upon successful OTP verification
-                                    // } else {
-                                    //   // Handle OTP verification failure
-                                    // }
-
+                                  int d = await AuthService().verifyPOTP(otp, phoneOTP);
+                                  if(d==1){
+                                    Fluttertoast.showToast(
+                                      msg: 'OTP verified successfully',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      backgroundColor: Colors.grey[800],
+                                      textColor: Colors.white,
+                                    );
+                                  }
+                                  else{
+                                    print("Error");
                                   }
                                 },
                                 child: const Text(

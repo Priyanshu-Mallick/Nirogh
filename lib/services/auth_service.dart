@@ -83,11 +83,16 @@ class AuthService {
       });
     }
   }
-  Future<int> sendOTP(String phoneNumber, String email) async {
+  Future<Map<String, dynamic>> sendOTP(String phoneNumber, String email) async {
+    Map<String, dynamic> otpData = {
+      'emailOTP': 0,
+      'phoneVerificationId': '',
+    };
     if (!isOTPSent) {
       // Generate a random 4-digit OTP for email
       Random random = Random();
-      otp = random.nextInt(900000) + 100000;
+      int emailOTP = random.nextInt(900000) + 100000;
+      otpData['emailOTP'] = emailOTP;
 
       // Send OTP to phone number
       await auth.verifyPhoneNumber(
@@ -106,7 +111,8 @@ class AuthService {
           );
         },
         codeSent: (String verificationId, int? resendToken) {
-          this.verificationId = verificationId; // Store the verification ID
+          otpData['phoneVerificationId'] = verificationId;
+          // Store the verification ID
           Fluttertoast.showToast(
             msg: 'OTP sent successfully to phone number',
             toastLength: Toast.LENGTH_SHORT,
@@ -115,7 +121,9 @@ class AuthService {
             textColor: Colors.white,
           );
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
+        codeAutoRetrievalTimeout: (String verificationId) {
+          otpData['phoneVerificationId'] = verificationId;
+        },
       );
 
       // Send OTP to email
@@ -127,7 +135,7 @@ class AuthService {
         ..from = Address(username)
         ..recipients.add(email)
         ..subject = 'OTP for Verification'
-        ..text = 'Your OTP for verification: $otp';
+        ..text = 'Your OTP for verification: $emailOTP';
 
       try {
         send(message, smtpServer);
@@ -153,7 +161,7 @@ class AuthService {
       }
       isOTPSent = true; // Update the OTP sent status
     }
-    return otp;
+    return otpData;
   }
 
   // Future<bool> verifyOTP(String otp) async {
@@ -200,6 +208,25 @@ class AuthService {
     int totp = int.parse(OTP);
     if(otp==totp){
       return 1;
+    }
+    return 0;
+  }
+
+  Future<int> verifyPOTP(String OTP, String verificationId) async {
+    print(OTP);
+    print(verificationId);
+    int totp = int.parse(OTP);
+    if (OTP.length == 6) {
+      try {
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId,
+          smsCode: OTP,
+        );
+        await auth.signInWithCredential(credential);
+        return 1;
+      } catch (e) {
+        print(e.toString()); // Handle phone OTP verification failure
+      }
     }
     return 0;
   }
