@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nirogh/Screens/user_registration.dart';
 import 'package:nirogh/firebase_options.dart';
+import 'package:video_player/video_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,116 +11,270 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Set preferred orientations
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'My Flutter App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Builder(
-        builder: (context) => SplashScreensAndLogin(context: context),
-      ),
+      home: SplashScreen(),
     );
   }
 }
 
-class SplashScreensAndLogin extends StatefulWidget {
-  final BuildContext context;
-  const SplashScreensAndLogin({Key? key, required this.context});
-
+class SplashScreen extends StatefulWidget {
   @override
-  _SplashScreensAndLoginState createState() => _SplashScreensAndLoginState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreensAndLoginState extends State<SplashScreensAndLogin> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late VideoPlayerController _controller;
+  bool _isInitialized = false;
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
 
-  List<Widget> splashScreens = [
-    const SlidableSplashScreen(
-      color: Colors.blue,
-      text: 'Splash Screen 1',
-    ),
-    const SlidableSplashScreen(
-      color: Colors.green,
-      text: 'Splash Screen 2',
-    ),
-    const SlidableSplashScreen(
-      color: Colors.red,
-      text: 'Splash Screen 3',
-      isLastScreen: true,
-    ),
-  ];
-  int _currentScreenIndex=0;
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.asset('lib/Assets/splash_anim.mp4')
+      ..initialize().then((_) {
+        setState(() {
+          _isInitialized = true;
+          _controller.play();
+        });
+      })
+      ..setVolume(0.0);
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(-1.0, 0.0),
+    ).animate(_animationController);
+
+    _controller.addListener(() {
+      if (_controller.value.position == _controller.value.duration) {
+        _animationController.forward().then((_) {
+          _navigateToNextScreen();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _navigateToNextScreen() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => SlidableFlashScreens()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
-        itemCount: splashScreens.length,
-        itemBuilder: (context, index) {
-          return splashScreens[index];
-        },
-        onPageChanged: (index) {
-          setState(() {
-            _currentScreenIndex = index;
-          });
-        },
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          if (_isInitialized)
+            SlideTransition(
+              position: _slideAnimation,
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                ),
+              ),
+            ),
+          if (!_isInitialized)
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
       ),
     );
   }
 }
 
-class SlidableSplashScreen extends StatelessWidget {
-  final Color color;
-  final String text;
-  final bool isLastScreen;
+class SlidableFlashScreens extends StatefulWidget {
+  @override
+  _SlidableFlashScreensState createState() => _SlidableFlashScreensState();
+}
 
-  const SlidableSplashScreen({
-    Key? key,
-    required this.color,
-    required this.text,
-    this.isLastScreen = false,
-  }) : super(key: key);
+class _SlidableFlashScreensState extends State<SlidableFlashScreens> {
+  PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            children: [
+              FlashScreen(
+                imagePath: 'lib/Assets/Flash 1.png',
+                quote: '24 X 7 medical support and health care is a call away from you',
+                showBackwardButton: false,
+              ),
+              FlashScreen(
+                imagePath: 'lib/Assets/Flash 2.png',
+                quote: '100 percent accurate result with numerous tests under reasonable price',
+                showBackwardButton: true,
+              ),
+              FlashScreen(
+                imagePath: 'lib/Assets/Flash 3.png',
+                quote: 'Find your phlebotomist at your doorstep anytime',
+                showBackwardButton: true,
+              ),
+            ],
+          ),
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 20,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return Container(
+                  width: 10,
+                  height: 10,
+                  margin: EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _currentPage == index ? Color(0xFF2ED6ED) : Colors.grey,
+                  ),
+                );
+              }),
+            ),
+          ),
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              backgroundColor: Color(0xFF2ED6ED),
+              onPressed: () {
+                if (_currentPage < 2) {
+                  _pageController.nextPage(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                  );
+                } else {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => UserRegistration(),
+                    ),
+                  );
+                }
+              },
+              child: Icon(Icons.arrow_forward),
+            ),
+          ),
+          if (_currentPage > 0)
+            Positioned(
+              left: 20,
+              bottom: 20,
+              child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                foregroundColor: Color(0xFF2ED6ED),
+                onPressed: () {
+                  _pageController.previousPage(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                  );
+                },
+                child: Icon(Icons.arrow_back),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class FlashScreen extends StatelessWidget {
+  final String imagePath;
+  final String quote;
+  final bool showBackwardButton;
+
+  const FlashScreen({
+    required this.imagePath,
+    required this.quote,
+    required this.showBackwardButton,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: color,
-      child: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  text,
-                  style: TextStyle(fontSize: 24, color: Colors.white),
-                ),
-              ],
+      color: Colors.white, // Set the background color to white
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 200),
+        child: Stack(
+          children: [
+            Image.asset(
+              imagePath,
+              fit: BoxFit.contain,
             ),
-          ),
-          if (isLastScreen)
-            Positioned(
-              bottom: 16.0,
-              right: 16.0,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const UserRegistration()),
-                  );
-                },
-                icon: const Icon(Icons.arrow_forward),
-                label: const Text('Continue'),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 50),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  quote,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontFamily: 'Oswald',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-        ],
+
+            SizedBox(height: 20), // Add spacing below the quote
+
+            if (showBackwardButton)
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+          ],
+        ),
       ),
     );
   }

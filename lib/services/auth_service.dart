@@ -83,153 +83,270 @@ class AuthService {
       });
     }
   }
-  Future<Map<String, dynamic>> sendOTP(String phoneNumber, String email) async {
-    Map<String, dynamic> otpData = {
-      'emailOTP': 0,
-      'phoneVerificationId': '',
-    };
-    if (!isOTPSent) {
-      // Generate a random 4-digit OTP for email
-      Random random = Random();
-      int emailOTP = random.nextInt(900000) + 100000;
-      otpData['emailOTP'] = emailOTP;
 
-      // Send OTP to phone number
-      await auth.verifyPhoneNumber(
-        phoneNumber: '+91$phoneNumber',
-        verificationCompleted: (PhoneAuthCredential credential) {
-          auth.signInWithCredential(credential);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print(e.message);
-          Fluttertoast.showToast(
-            msg: 'Unknown Error occurred while sending OTP',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey[800],
-            textColor: Colors.white,
-          );
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          otpData['phoneVerificationId'] = verificationId;
-          // Store the verification ID
-          Fluttertoast.showToast(
-            msg: 'OTP sent successfully to phone number',
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey[800],
-            textColor: Colors.white,
-          );
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          otpData['phoneVerificationId'] = verificationId;
-        },
-      );
+  String _generateOTP(int length) {
+    // Generate a random OTP
+    final Random random = Random();
+    const String chars = '0123456789';
+    String otp = '';
 
-      // Send OTP to email
-      String username = 'niroghcare@gmail.com'; // Replace with your email address
-      String password = 'telkysvrewcbwkfk'; // Replace with your email password
-
-      final smtpServer = gmail(username, password);
-      final message = Message()
-        ..from = Address(username)
-        ..recipients.add(email)
-        ..subject = 'OTP for Verification'
-        ..text = 'Your OTP for verification: $emailOTP';
-
-      try {
-        send(message, smtpServer);
-
-        // Show the toast message
-        Fluttertoast.showToast(
-          msg: 'OTP sent successfully to email',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[800],
-          textColor: Colors.white,
-        );
-      } catch (e) {
-        // Handle OTP send failure
-        print(e.toString());
-        Fluttertoast.showToast(
-          msg: 'Unknown Error occure while sending OTP',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey[800],
-          textColor: Colors.white,
-        );
-      }
-      isOTPSent = true; // Update the OTP sent status
+    for (int i = 0; i < length; i++) {
+      otp += chars[random.nextInt(chars.length)];
     }
-    return otpData;
+
+    return otp;
   }
 
-  // Future<bool> verifyOTP(String otp) async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     try {
-  //       // Create a PhoneAuthCredential with the verification ID and the entered OTP
-  //       PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //         verificationId: verificationId!, // Use the stored verification ID
-  //         smsCode: otp,
-  //       );
+  Future<String> sendOTPToEmail(String email) async {
+    // Generate a random 6-digit OTP
+    String otp = _generateOTP(6);
+
+    // Send OTP to email
+    String username = 'niroghcare@gmail.com'; // Replace with your email address
+    String password = 'telkysvrewcbwkfk'; // Replace with your email password
+
+    final smtpServer = gmail(username, password);
+    final message = Message()
+      ..from = Address(username)
+      ..recipients.add(email)
+      ..subject = 'OTP for Verification'
+      ..text = 'Your OTP for verification: $otp';
+
+    try {
+      send(message, smtpServer);
+
+      // Show the toast message
+      Fluttertoast.showToast(
+        msg: 'OTP sent successfully to email',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+    } catch (e) {
+      // Handle OTP send failure
+      print(e.toString());
+      Fluttertoast.showToast(
+        msg: 'Unknown Error occurred while sending OTP',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+    }
+
+    return otp;
+  }
+
+  Future<String> sendOTPToPhone(String phoneNumber) async {
+    String verificationId = '';
+
+    verificationCompleted(PhoneAuthCredential credential) {
+      FirebaseAuth.instance.signInWithCredential(credential);
+    }
+
+    verificationFailed(FirebaseAuthException e) {
+      print(e.message);
+      Fluttertoast.showToast(
+        msg: 'Unknown Error occurred while sending OTP',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+    }
+
+    codeSent(String verificationId, int? resendToken) {
+      Fluttertoast.showToast(
+        msg: 'OTP sent successfully to phone number',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+      // Store the verification ID for later use
+      // This verification ID will be required to verify the OTP
+      // Save it to a state variable or any storage mechanism you prefer
+      // For example, you can store it in a variable named 'verificationId'
+      verificationId = verificationId;
+    }
+
+    codeAutoRetrievalTimeout(String verificationId) {}
+
+    try {
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '+91$phoneNumber',
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+      );
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(
+        msg: 'Unknown Error occurred while sending OTP',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+    }
+
+    return verificationId;
+  }
+
+  Future<int> verifyEmailOTP(String emailOTP, String enteredOTP) async {
+    if (emailOTP == enteredOTP) {
+      // OTP verification successful
+      return 1;
+    } else {
+      // OTP verification failed
+      return 0;
+    }
+  }
+
+  Future<int> verifyPhoneOTP(String verificationId, String enteredOTP) async {
+    print(verificationId);
+    print(enteredOTP);
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: enteredOTP,
+    );
+
+    try {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      // OTP verification successful
+      Fluttertoast.showToast(
+        msg: 'Phone OTP successfully Verified',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+      return 1;
+    } catch (e) {
+      // OTP verification failed
+      print(e.toString());
+      Fluttertoast.showToast(
+        msg: 'Unknown Error occurred while verifying OTP',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
+      return 0;
+    }
+  }
+
+
+
+// Future<Map<String, dynamic>> sendOTP(String phoneNumber, String email) async {
+  //   Map<String, dynamic> otpData = {
+  //     'emailOTP': 0,
+  //     'phoneVerificationId': '',
+  //   };
+  //   if (!isOTPSent) {
+  //     // Generate a random 4-digit OTP for email
+  //     Random random = Random();
+  //     int emailOTP = random.nextInt(900000) + 100000;
+  //     otpData['emailOTP'] = emailOTP;
   //
-  //       // Sign in the user with the credential
-  //       await auth.signInWithCredential(credential);
+  //     // Send OTP to phone number
+  //     await auth.verifyPhoneNumber(
+  //       phoneNumber: '+91$phoneNumber',
+  //       verificationCompleted: (PhoneAuthCredential credential) {
+  //         auth.signInWithCredential(credential);
+  //       },
+  //       verificationFailed: (FirebaseAuthException e) {
+  //         print(e.message);
+  //         Fluttertoast.showToast(
+  //           msg: 'Unknown Error occurred while sending OTP',
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.BOTTOM,
+  //           backgroundColor: Colors.grey[800],
+  //           textColor: Colors.white,
+  //         );
+  //       },
+  //       codeSent: (String verificationId, int? resendToken) {
+  //         otpData['phoneVerificationId'] = verificationId;
+  //         // Store the verification ID
+  //         Fluttertoast.showToast(
+  //           msg: 'OTP sent successfully to phone number',
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.BOTTOM,
+  //           backgroundColor: Colors.grey[800],
+  //           textColor: Colors.white,
+  //         );
+  //       },
+  //       codeAutoRetrievalTimeout: (String verificationId) {
+  //         otpData['phoneVerificationId'] = verificationId;
+  //       },
+  //     );
+  //
+  //     // Send OTP to email
+  //     String username = 'niroghcare@gmail.com'; // Replace with your email address
+  //     String password = 'telkysvrewcbwkfk'; // Replace with your email password
+  //
+  //     final smtpServer = gmail(username, password);
+  //     final message = Message()
+  //       ..from = Address(username)
+  //       ..recipients.add(email)
+  //       ..subject = 'OTP for Verification'
+  //       ..text = 'Your OTP for verification: $emailOTP';
+  //
+  //     try {
+  //       send(message, smtpServer);
   //
   //       // Show the toast message
   //       Fluttertoast.showToast(
-  //         msg: 'OTP verified successfully',
+  //         msg: 'OTP sent successfully to email',
   //         toastLength: Toast.LENGTH_SHORT,
   //         gravity: ToastGravity.BOTTOM,
   //         backgroundColor: Colors.grey[800],
   //         textColor: Colors.white,
   //       );
-  //
-  //       return true; // OTP verification successful
   //     } catch (e) {
-  //       // Handle OTP verification failure
+  //       // Handle OTP send failure
   //       print(e.toString());
   //       Fluttertoast.showToast(
-  //         msg: 'Invalid OTP',
+  //         msg: 'Unknown Error occure while sending OTP',
   //         toastLength: Toast.LENGTH_SHORT,
   //         gravity: ToastGravity.BOTTOM,
   //         backgroundColor: Colors.grey[800],
   //         textColor: Colors.white,
   //       );
-  //
-  //       return false; // OTP verification failed
   //     }
-  //   } else {
-  //     throw Exception('User is not signed in.');
+  //     isOTPSent = true; // Update the OTP sent status
   //   }
+  //   return otpData;
   // }
-  int verifyOTP(String OTP, int otp){
-    int totp = int.parse(OTP);
-    if(otp==totp){
-      return 1;
-    }
-    return 0;
-  }
 
-  Future<int> verifyPOTP(String OTP, String verificationId) async {
-    print(OTP);
-    print(verificationId);
-    int totp = int.parse(OTP);
-    if (OTP.length == 6) {
-      try {
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId,
-          smsCode: OTP,
-        );
-        await auth.signInWithCredential(credential);
-        return 1;
-      } catch (e) {
-        print(e.toString()); // Handle phone OTP verification failure
-      }
-    }
-    return 0;
-  }
+  // int verifyOTP(String OTP, int otp){
+  //   int totp = int.parse(OTP);
+  //   if(otp==totp){
+  //     return 1;
+  //   }
+  //   return 0;
+  // }
+  //
+  // Future<int> verifyPOTP(String OTP, String verificationId) async {
+  //   print(OTP);
+  //   print(verificationId);
+  //   int totp = int.parse(OTP);
+  //   if (OTP.length == 6) {
+  //     try {
+  //       PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  //         verificationId: verificationId,
+  //         smsCode: OTP,
+  //       );
+  //       await auth.signInWithCredential(credential);
+  //       return 1;
+  //     } catch (e) {
+  //       print(e.toString()); // Handle phone OTP verification failure
+  //     }
+  //   }
+  //   return 0;
+  // }
 
 // void _performFirebaseAuthentication(String email, String phoneNumber) async {
 //   try {

@@ -161,11 +161,15 @@ class _UserRegistrationState extends State<UserRegistration>
           if (email.isNotEmpty && phone.isNotEmpty) {
             // Phone number validation
             if (phone.length == 10 && int.tryParse(phone) != null) {
-              Map<String, dynamic> otpData = await AuthService().sendOTP(phone, email);
-              int emailOTP = otpData['emailOTP'];
-              String phoneOTP = otpData['phoneVerificationId'];
-              print(phoneOTP);
-              _showVerifyDialog(email, phone, emailOTP, phoneOTP);
+              // Generate and send OTP via email
+              String emailOTP = await AuthService().sendOTPToEmail(email);
+
+              // Generate and send OTP via phone
+              String verificationId = await AuthService().sendOTPToPhone(phone);
+
+              //call the showVerifyDialog
+              _showVerifyDialog(email, phone, emailOTP, verificationId);
+
             } else {
               showDialog(
                 context: context,
@@ -264,7 +268,7 @@ class _UserRegistrationState extends State<UserRegistration>
     }
   }
 
-  void _showVerifyDialog(String email, String phoneNumber, int E_OTP, String phoneOTP) {
+  void _showVerifyDialog(String email, String phoneNumber, String emailOTP, String verificationId) {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;
 
@@ -365,7 +369,7 @@ class _UserRegistrationState extends State<UserRegistration>
                             SizedBox(width: 16),
                             Container(
                               child: TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   // Handle OTP verification
                                   print(eotpController1.text);
                                   String otp = eotpController1.text +
@@ -375,10 +379,9 @@ class _UserRegistrationState extends State<UserRegistration>
                                       eotpController5.text +
                                       eotpController6.text;
                                   if (otp.length == 6) {
-                                    // Perform OTP verification
-                                    // bool isOTPVerified =
-                                    // AuthService().verifyOTP(otp) as bool; // Assuming AuthService().verifyOTP() returns a boolean indicating the verification status
-                                    int d = AuthService().verifyOTP(otp,E_OTP);
+                                    // Verify the entered OTP
+                                    int d = await AuthService().verifyEmailOTP(emailOTP, otp);
+                                    print(d);
                                     if(d==1){
                                       Fluttertoast.showToast(
                                         msg: 'OTP verified successfully',
@@ -391,10 +394,6 @@ class _UserRegistrationState extends State<UserRegistration>
                                     else{
                                       print("Error");
                                     }
-
-                                    // setState(() {
-                                    //   isEmailVerified = isOTPVerified;
-                                    // });
                                   }
                                 },
                                     child: const Text(
@@ -476,18 +475,22 @@ class _UserRegistrationState extends State<UserRegistration>
                                       otpController4.text +
                                       otpController5.text +
                                       otpController6.text;
-                                  int d = await AuthService().verifyPOTP(otp, phoneOTP);
-                                  if(d==1){
-                                    Fluttertoast.showToast(
-                                      msg: 'OTP verified successfully',
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.grey[800],
-                                      textColor: Colors.white,
-                                    );
-                                  }
-                                  else{
-                                    print("Error");
+                                  if (otp.length == 6) {
+                                    // Verify the entered OTP
+                                    int d = await AuthService().verifyPhoneOTP(verificationId, otp);
+                                    print(d);
+                                    if(d==1){
+                                      Fluttertoast.showToast(
+                                        msg: 'OTP verified successfully',
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        backgroundColor: Colors.grey[800],
+                                        textColor: Colors.white,
+                                      );
+                                    }
+                                    else{
+                                      print("Error");
+                                    }
                                   }
                                 },
                                 child: const Text(
@@ -756,19 +759,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   .symmetric(
                                                   horizontal: 16.0),
                                               child: Align(
-                                                alignment: Alignment.center,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    // Handle Forget Password click
-                                                  },
                                                   child: const Text(
-                                                    'OR',
+                                                    '------------OR Sign Up With------------',
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                ),
                                               ),
                                             ),
                                             SizedBox(height: 20.0),
@@ -815,12 +812,8 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   horizontal: 16.0),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    // Handle Forget Password click
-                                                  },
                                                   child: const Text(
-                                                    'Sign Up With',
+                                                    'Google',
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontWeight:
@@ -828,7 +821,6 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                ),
                                               ),
                                             ),
                                           ],
@@ -976,18 +968,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   horizontal: 16.0),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    // Handle Forget Password click
-                                                  },
                                                   child: const Text(
-                                                    'OR',
+                                                    '------------OR Sign Up With------------',
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                ),
                                               ),
                                             ),
                                             SizedBox(height: 15.0),
@@ -1034,20 +1021,15 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   horizontal: 16.0),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    // Handle Forget Password click
-                                                  },
                                                   child: const Text(
-                                                    'Sign Up With',
+                                                    'Google',
                                                     style: TextStyle(
-                                                      fontSize: 10,
+                                                      fontSize: 12,
                                                       fontWeight:
                                                       FontWeight.bold,
                                                       color: Colors.black,
                                                     ),
                                                   ),
-                                                ),
                                               ),
                                             ),
                                           ],
