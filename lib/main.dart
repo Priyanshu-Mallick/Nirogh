@@ -90,6 +90,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -100,7 +102,14 @@ class _SplashScreenState extends State<SplashScreen>
               child: Center(
                 child: AspectRatio(
                   aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: _controller.value.size?.width ?? 0,
+                      height: _controller.value.size?.height ?? 0,
+                      child: VideoPlayer(_controller),
+                    ),
+                  ),
                 ),
               ),
             ),

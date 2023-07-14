@@ -1,13 +1,15 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:math';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:nirogh/Screens/profile_setup.dart';
 
 class AuthService {
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
@@ -139,60 +141,41 @@ class AuthService {
   }
 
   Future<String> sendOTPToPhone(String phoneNumber) async {
-    String verificationId = '';
+    Completer<String> completer = Completer<String>(); // Create a Completer
 
-    verificationCompleted(PhoneAuthCredential credential) {
-      FirebaseAuth.instance.signInWithCredential(credential);
-    }
-
-    verificationFailed(FirebaseAuthException e) {
-      print(e.message);
-      Fluttertoast.showToast(
-        msg: 'Unknown Error occurred while sending OTP',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
-    }
-
-    codeSent(String verificationId, int? resendToken) {
-      Fluttertoast.showToast(
-        msg: 'OTP sent successfully to phone number',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
-      // Store the verification ID for later use
-      // This verification ID will be required to verify the OTP
-      // Save it to a state variable or any storage mechanism you prefer
-      // For example, you can store it in a variable named 'verificationId'
-      verificationId = verificationId;
-    }
-
-    codeAutoRetrievalTimeout(String verificationId) {}
-
-    try {
-      await FirebaseAuth.instance.verifyPhoneNumber(
+    String verificationID;
+    await auth.verifyPhoneNumber(
         phoneNumber: '+91$phoneNumber',
-        verificationCompleted: verificationCompleted,
-        verificationFailed: verificationFailed,
-        codeSent: codeSent,
-        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
-      );
-    } catch (e) {
-      print(e.toString());
-      Fluttertoast.showToast(
-        msg: 'Unknown Error occurred while sending OTP',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
-    }
-
-    return verificationId;
+        verificationCompleted: (credential) async {
+          await auth.signInWithCredential(credential);
+        },
+        codeSent: (verificationId, resendToken) {
+          verificationID = verificationId;
+          Fluttertoast.showToast(
+            msg: 'OTP sent successfully to phone number',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.grey[800],
+            textColor: Colors.white,
+          );
+          completer.complete(verificationID);
+        },
+        codeAutoRetrievalTimeout: (verificationId){
+          // verificationID = verificationId;
+        },
+        verificationFailed: (e){
+          print("Failed to send code ${e.message}");
+          Fluttertoast.showToast(
+            msg: 'Unknown Error occurred while sending OTP',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.grey[800],
+            textColor: Colors.white,
+          );
+          completer.completeError(e);
+        }
+    );
+    return completer.future; // Return the future from the completer
   }
 
   Future<int> verifyEmailOTP(String emailOTP, String enteredOTP) async {
@@ -206,7 +189,6 @@ class AuthService {
   }
 
   Future<int> verifyPhoneOTP(String verificationId, String enteredOTP) async {
-    print(verificationId);
     print(enteredOTP);
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -214,7 +196,7 @@ class AuthService {
     );
 
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await auth.signInWithCredential(credential);
       // OTP verification successful
       Fluttertoast.showToast(
         msg: 'Phone OTP successfully Verified',
@@ -237,167 +219,62 @@ class AuthService {
       return 0;
     }
   }
+  Future<void> performEmailVerification(BuildContext context, String name, String email, String phone, String password) async {
+    try {
+      // Perform any additional logic required before Firebase email authentication
 
+      UserCredential userCredential =
+      await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
+      // Perform additional logic after successful signup
+      // Store user data in Firestore
+      await FirebaseFirestore.instance.collection('User Data').doc(userCredential.user!.uid).set({
+        'name': name,
+        'email': email,
+        'phone': phone,
+      });
 
-// Future<Map<String, dynamic>> sendOTP(String phoneNumber, String email) async {
-  //   Map<String, dynamic> otpData = {
-  //     'emailOTP': 0,
-  //     'phoneVerificationId': '',
-  //   };
-  //   if (!isOTPSent) {
-  //     // Generate a random 4-digit OTP for email
-  //     Random random = Random();
-  //     int emailOTP = random.nextInt(900000) + 100000;
-  //     otpData['emailOTP'] = emailOTP;
-  //
-  //     // Send OTP to phone number
-  //     await auth.verifyPhoneNumber(
-  //       phoneNumber: '+91$phoneNumber',
-  //       verificationCompleted: (PhoneAuthCredential credential) {
-  //         auth.signInWithCredential(credential);
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         print(e.message);
-  //         Fluttertoast.showToast(
-  //           msg: 'Unknown Error occurred while sending OTP',
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           backgroundColor: Colors.grey[800],
-  //           textColor: Colors.white,
-  //         );
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {
-  //         otpData['phoneVerificationId'] = verificationId;
-  //         // Store the verification ID
-  //         Fluttertoast.showToast(
-  //           msg: 'OTP sent successfully to phone number',
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.BOTTOM,
-  //           backgroundColor: Colors.grey[800],
-  //           textColor: Colors.white,
-  //         );
-  //       },
-  //       codeAutoRetrievalTimeout: (String verificationId) {
-  //         otpData['phoneVerificationId'] = verificationId;
-  //       },
-  //     );
-  //
-  //     // Send OTP to email
-  //     String username = 'niroghcare@gmail.com'; // Replace with your email address
-  //     String password = 'telkysvrewcbwkfk'; // Replace with your email password
-  //
-  //     final smtpServer = gmail(username, password);
-  //     final message = Message()
-  //       ..from = Address(username)
-  //       ..recipients.add(email)
-  //       ..subject = 'OTP for Verification'
-  //       ..text = 'Your OTP for verification: $emailOTP';
-  //
-  //     try {
-  //       send(message, smtpServer);
-  //
-  //       // Show the toast message
-  //       Fluttertoast.showToast(
-  //         msg: 'OTP sent successfully to email',
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         backgroundColor: Colors.grey[800],
-  //         textColor: Colors.white,
-  //       );
-  //     } catch (e) {
-  //       // Handle OTP send failure
-  //       print(e.toString());
-  //       Fluttertoast.showToast(
-  //         msg: 'Unknown Error occure while sending OTP',
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         backgroundColor: Colors.grey[800],
-  //         textColor: Colors.white,
-  //       );
-  //     }
-  //     isOTPSent = true; // Update the OTP sent status
-  //   }
-  //   return otpData;
-  // }
-
-  // int verifyOTP(String OTP, int otp){
-  //   int totp = int.parse(OTP);
-  //   if(otp==totp){
-  //     return 1;
-  //   }
-  //   return 0;
-  // }
-  //
-  // Future<int> verifyPOTP(String OTP, String verificationId) async {
-  //   print(OTP);
-  //   print(verificationId);
-  //   int totp = int.parse(OTP);
-  //   if (OTP.length == 6) {
-  //     try {
-  //       PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //         verificationId: verificationId,
-  //         smsCode: OTP,
-  //       );
-  //       await auth.signInWithCredential(credential);
-  //       return 1;
-  //     } catch (e) {
-  //       print(e.toString()); // Handle phone OTP verification failure
-  //     }
-  //   }
-  //   return 0;
-  // }
-
-// void _performFirebaseAuthentication(String email, String phoneNumber) async {
-//   try {
-//     // Perform any additional logic required before Firebase email authentication
-//
-//     UserCredential userCredential =
-//     await FirebaseAuth.instance.createUserWithEmailAndPassword(
-//       email: email,
-//       password: password,
-//     );
-//
-//     // Perform additional logic after successful signup
-//
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text('Registration Successful'),
-//           actions: <Widget>[
-//             TextButton(
-//               child: const Text('OK'),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//                 Navigator.pushReplacement(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => HomeScreen()),
-//                 );
-//               },
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   } catch (e) {
-//     showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return AlertDialog(
-//           title: const Text('Error'),
-//           content: Text(e.toString()),
-//           actions: <Widget>[
-//             TextButton(
-//               child: const Text('OK'),
-//               onPressed: () {
-//                 Navigator.of(context).pop();
-//               },
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Registration Successful'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileSetup()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text(e.toString()),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 }

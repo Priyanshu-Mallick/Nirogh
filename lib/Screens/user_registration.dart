@@ -47,9 +47,8 @@ class _UserRegistrationState extends State<UserRegistration>
   final otpController6 = TextEditingController();
   int otp=0;
 
-  bool isEmailVerified = false;
-  bool isPhoneVerified = false;
-
+  bool emailVerificationSuccess = false;
+  bool phoneVerificationSuccess = false;
   // For firebase state management
   @override
   void initState() {
@@ -95,7 +94,7 @@ class _UserRegistrationState extends State<UserRegistration>
                     Navigator.of(context).pop();
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => ProfileSetup()),
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
                     );
                   },
                 ),
@@ -166,6 +165,7 @@ class _UserRegistrationState extends State<UserRegistration>
 
               // Generate and send OTP via phone
               String verificationId = await AuthService().sendOTPToPhone(phone);
+              print(verificationId);
 
               //call the showVerifyDialog
               _showVerifyDialog(email, phone, emailOTP, verificationId);
@@ -271,6 +271,8 @@ class _UserRegistrationState extends State<UserRegistration>
   void _showVerifyDialog(String email, String phoneNumber, String emailOTP, String verificationId) {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;
+    String name = nameController.text;
+    String password = passwordController.text;
 
     showModalBottomSheet(
       context: context,
@@ -311,7 +313,7 @@ class _UserRegistrationState extends State<UserRegistration>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
+                        const Text(
                           'Email ID',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -321,92 +323,111 @@ class _UserRegistrationState extends State<UserRegistration>
                         SizedBox(height: 8),
                         Text(email),
                         SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Text(
-                              'OTP',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            for (var i = 0; i < 6; i++)
-                              Container(
-                                width: 40,
-                                height: 40,
-                                margin: EdgeInsets.only(right: 1.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(10.0),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'OTP',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
-                                child: TextField(
-                                  controller: i == 0
-                                      ? eotpController1
-                                      : i == 1
-                                      ? eotpController2
-                                      : i == 2
-                                      ? eotpController3
-                                      : i == 3
-                                      ? eotpController4
-                                      : i == 4
-                                      ? eotpController5
-                                      : eotpController6,
-                                  maxLength: 1,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                                    counterText: '',
+                              ),
+                              SizedBox(width: 8),
+                              for (var i = 0; i < 6; i++)
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  margin: EdgeInsets.only(right: 1.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  onChanged: (value) {
-                                    if (value.length == 1 && i < 5) {
-                                      FocusScope.of(context).nextFocus();
+                                  child: TextField(
+                                    controller: i == 0
+                                        ? eotpController1
+                                        : i == 1
+                                        ? eotpController2
+                                        : i == 2
+                                        ? eotpController3
+                                        : i == 3
+                                        ? eotpController4
+                                        : i == 4
+                                        ? eotpController5
+                                        : eotpController6,
+                                    maxLength: 1,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                      counterText: '',
+                                    ),
+                                    onChanged: (value) {
+                                      if (value.length == 1 && i < 5) {
+                                        FocusScope.of(context).nextFocus();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              SizedBox(width: 8),
+                              Container(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    // Handle OTP verification
+                                    print(eotpController1.text);
+                                    String otp = eotpController1.text +
+                                        eotpController2.text +
+                                        eotpController3.text +
+                                        eotpController4.text +
+                                        eotpController5.text +
+                                        eotpController6.text;
+                                    if (otp.length == 6) {
+                                      // Verify the entered OTP
+                                      int d = await AuthService().verifyEmailOTP(emailOTP, otp);
+                                      print(d);
+                                      if(d==1){
+                                        setState(() {
+                                          emailVerificationSuccess = true;
+                                        });
+                                        Fluttertoast.showToast(
+                                          msg: 'OTP verified successfully',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.grey[800],
+                                          textColor: Colors.white,
+                                        );
+                                      }
+                                      else{
+                                        print("Error");
+                                        setState(() {
+                                          emailVerificationSuccess = false;
+                                        });
+                                      }
                                     }
                                   },
+                                  child: emailVerificationSuccess
+                                      ? Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green,
+                                    ),
+                                    child: Icon(Icons.done, color: Colors.white),
+                                  )
+                                      : Text(
+                                    'Verify',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            SizedBox(width: 16),
-                            Container(
-                              child: TextButton(
-                                onPressed: () async {
-                                  // Handle OTP verification
-                                  print(eotpController1.text);
-                                  String otp = eotpController1.text +
-                                      eotpController2.text +
-                                      eotpController3.text +
-                                      eotpController4.text +
-                                      eotpController5.text +
-                                      eotpController6.text;
-                                  if (otp.length == 6) {
-                                    // Verify the entered OTP
-                                    int d = await AuthService().verifyEmailOTP(emailOTP, otp);
-                                    print(d);
-                                    if(d==1){
-                                      Fluttertoast.showToast(
-                                        msg: 'OTP verified successfully',
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.grey[800],
-                                        textColor: Colors.white,
-                                      );
-                                    }
-                                    else{
-                                      print("Error");
-                                    }
-                                  }
-                                },
-                                    child: const Text(
-                                      'Verify',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(height: 16),
                         Text(
@@ -419,120 +440,140 @@ class _UserRegistrationState extends State<UserRegistration>
                         SizedBox(height: 8),
                         Text(phoneNumber),
                         SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Text(
-                              'OTP',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            SizedBox(width: 8),
-                            for (var i = 0; i < 6; i++)
-                              Container(
-                                width: 40,
-                                height: 40,
-                                margin: EdgeInsets.only(right: 1.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(10.0),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'OTP',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
                                 ),
-                                child: TextField(
-                                  controller: i == 0
-                                      ? otpController1
-                                      : i == 1
-                                      ? otpController2
-                                      : i == 2
-                                      ? otpController3
-                                      : i == 3
-                                      ? otpController4
-                                      : i == 4
-                                      ? otpController5
-                                      : otpController6,
-                                  maxLength: 1,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                                    counterText: '',
+                              ),
+                              SizedBox(width: 8),
+                              for (var i = 0; i < 6; i++)
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  margin: EdgeInsets.only(right: 1.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                  onChanged: (value) {
-                                    if (value.length == 1 && i < 5) {
-                                      FocusScope.of(context).nextFocus();
+                                  child: TextField(
+                                    controller: i == 0
+                                        ? otpController1
+                                        : i == 1
+                                        ? otpController2
+                                        : i == 2
+                                        ? otpController3
+                                        : i == 3
+                                        ? otpController4
+                                        : i == 4
+                                        ? otpController5
+                                        : otpController6,
+                                    maxLength: 1,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                      counterText: '',
+                                    ),
+                                    onChanged: (value) {
+                                      if (value.length == 1 && i < 5) {
+                                        FocusScope.of(context).nextFocus();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              SizedBox(width: 8),
+                              Container(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    // Handle OTP verification
+                                    String otp = otpController1.text +
+                                        otpController2.text +
+                                        otpController3.text +
+                                        otpController4.text +
+                                        otpController5.text +
+                                        otpController6.text;
+                                    if (otp.length == 6) {
+                                      // Verify the entered OTP
+                                      int d = await AuthService().verifyPhoneOTP(verificationId, otp);
+                                      print(d);
+                                      if(d==1){
+                                        setState(() {
+                                          phoneVerificationSuccess = true;
+                                        });
+                                        Fluttertoast.showToast(
+                                          msg: 'OTP verified successfully',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.grey[800],
+                                          textColor: Colors.white,
+                                        );
+                                      }
+                                      else{
+                                        print("Error");
+                                        setState(() {
+                                          phoneVerificationSuccess = false;
+                                        });
+                                      }
                                     }
                                   },
-                                ),
-                              ),
-                            SizedBox(width: 16),
-                            Container(
-                              child: TextButton(
-                                onPressed: () async {
-                                  // Handle OTP verification
-                                  String otp = otpController1.text +
-                                      otpController2.text +
-                                      otpController3.text +
-                                      otpController4.text +
-                                      otpController5.text +
-                                      otpController6.text;
-                                  if (otp.length == 6) {
-                                    // Verify the entered OTP
-                                    int d = await AuthService().verifyPhoneOTP(verificationId, otp);
-                                    print(d);
-                                    if(d==1){
-                                      Fluttertoast.showToast(
-                                        msg: 'OTP verified successfully',
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: Colors.grey[800],
-                                        textColor: Colors.white,
-                                      );
-                                    }
-                                    else{
-                                      print("Error");
-                                    }
-                                  }
-                                },
-                                child: const Text(
-                                  'Verify',
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                  child: phoneVerificationSuccess
+                                      ? Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green,
+                                    ),
+                                    child: Icon(Icons.done, color: Colors.white),
+                                  )
+                                      : Text(
+                                    'Verify',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(height: 32),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets
-                              .symmetric(horizontal: 16.0),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.circular(
-                                  30.0),
-                              color: Colors.black,
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                              },
-                              style: ButtonStyle(
-                                foregroundColor:
-                                MaterialStateProperty
-                                    .all<Color>(
-                                  Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: IgnorePointer(
+                            ignoring: !(emailVerificationSuccess && phoneVerificationSuccess),
+                            child: Opacity(
+                              opacity: emailVerificationSuccess && phoneVerificationSuccess ? 1.0 : 0.5,
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  color: Colors.black,
                                 ),
-                              ),
-                              child: const Text(
-                                'Continue',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
+                                child: TextButton(
+                                  onPressed: () {
+                                    // Handle continue button press
+                                    AuthService().performEmailVerification(context, name, email, phoneNumber, password);
+                                  },
+                                  style: ButtonStyle(
+                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  ),
+                                  child: const Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

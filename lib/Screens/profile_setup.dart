@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 
 class ProfileSetup extends StatelessWidget {
   @override
@@ -122,6 +123,11 @@ class ProfileSetup extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 // Perform save action
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeScreen(),
+                                  ),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.cyanAccent,
