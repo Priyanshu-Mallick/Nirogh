@@ -267,7 +267,6 @@ class _UserRegistrationState extends State<UserRegistration>
       );
     }
   }
-
   void _showVerifyDialog(String email, String phoneNumber, String verificationId) {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
     double initialPosition = sheetHeight;

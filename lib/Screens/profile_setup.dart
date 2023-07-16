@@ -6,27 +6,6 @@ class ProfileSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 40,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: const Text(
-            "Profile Page",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: Colors.lightBlueAccent,
-        ),
         backgroundColor: Colors.cyanAccent,
         body: Column(
           children: <Widget>[
