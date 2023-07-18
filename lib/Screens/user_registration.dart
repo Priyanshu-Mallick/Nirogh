@@ -422,8 +422,9 @@ class _UserRegistrationState extends State<UserRegistration>
                                               child: Align(
                                                 alignment: Alignment.centerRight,
                                                 child: InkWell(
-                                                  onTap: () {
+                                                  onTap: () async {
                                                     // Handle Forget Password click
+                                                    await AuthService().showResetPasswordBottomSheet(context);
                                                   },
                                                   child: Text(
                                                     'Forget Password?',

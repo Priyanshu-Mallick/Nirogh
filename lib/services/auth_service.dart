@@ -16,12 +16,12 @@ class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
   String? verificationId;
   int otp=0;
-  final eotpController1 = TextEditingController();
-  final eotpController2 = TextEditingController();
-  final eotpController3 = TextEditingController();
-  final eotpController4 = TextEditingController();
-  final eotpController5 = TextEditingController();
-  final eotpController6 = TextEditingController();
+  // final eotpController1 = TextEditingController();
+  // final eotpController2 = TextEditingController();
+  // final eotpController3 = TextEditingController();
+  // final eotpController4 = TextEditingController();
+  // final eotpController5 = TextEditingController();
+  // final eotpController6 = TextEditingController();
   final otpController1 = TextEditingController();
   final otpController2 = TextEditingController();
   final otpController3 = TextEditingController();
@@ -29,7 +29,7 @@ class AuthService {
   final otpController5 = TextEditingController();
   final otpController6 = TextEditingController();
 
-  bool emailVerificationSuccess = false;
+  // bool emailVerificationSuccess = false;
   bool phoneVerificationSuccess = false;
   signInWithGoogle() async {
     // begin interactive sign-in process
@@ -292,6 +292,131 @@ class AuthService {
       );
     }
   }
+  Future<void> showResetPasswordBottomSheet(BuildContext context) async {
+    TextEditingController emailController = TextEditingController();
+    double sheetHeight = MediaQuery.of(context).size.height * 0.72;
+    double buttonWidth = MediaQuery.of(context).size.width * 0.4;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          child: Container(
+            height: sheetHeight,
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Reset Password',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 5),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Enter the registered email',
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 18),
+                        minimumSize: Size(buttonWidth, 0),
+                      ),
+                      onPressed: () {
+                        String email = emailController.text.trim();
+
+                        if (email.isNotEmpty) {
+                          FirebaseAuth.instance.sendPasswordResetEmail(email: email)
+                              .then((value) {
+                            // Password reset email sent successfully
+                            // Provide feedback to the user if needed
+                            Fluttertoast.showToast(
+                              msg: 'Check email for password reset link',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.grey[800],
+                              textColor: Colors.white,
+                            );
+                            Navigator.of(context).pop();
+                          }).catchError((error) {
+                            // Handle any errors that occurred during the password reset process
+                            // Provide feedback to the user if needed
+                            print('Password reset error: $error');
+                          });
+                        } else {
+                          // Provide feedback to the user that email field is empty
+                          Fluttertoast.showToast(
+                            msg: 'Please enter your email',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.grey[800],
+                            textColor: Colors.white,
+                          );
+                        }
+                      },
+                      child: Text(
+                        'Reset',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        primary: Colors.white,
+                        side: BorderSide(
+                          color: Colors.black,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 18),
+                        minimumSize: Size(buttonWidth, 0),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+
+
+
 
   Future<void> showVerifyDialog(String name, String email, String phoneNumber, String password, String verificationId, BuildContext context) async {
     double sheetHeight = MediaQuery.of(context).size.height * 0.72;
