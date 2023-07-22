@@ -513,7 +513,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     await AuthService().storeUserDisplayName(displayName!, userName);
                                                     Navigator.pushReplacement(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => ProfileSetup()),
+                                                      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                     );
                                                   }
                                                 },
@@ -722,7 +722,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     await AuthService().storeUserDisplayName(displayName!, userName);
                                                     Navigator.pushReplacement(
                                                       context,
-                                                      MaterialPageRoute(builder: (context) => ProfileSetup()),
+                                                      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                     );
                                                   }
                                                 },

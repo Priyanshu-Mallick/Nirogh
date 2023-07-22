@@ -9,28 +9,35 @@ class BottomNavigationBarWidget extends StatelessWidget {
       shape: CircularNotchedRectangle(),
       notchMargin: 6,
       elevation: 30,
+      height: 70, // Increased the height to accommodate the text
       child: Row(
-        mainAxisSize: MainAxisSize.max,
+        // mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          IconButton(
-            icon: Icon(CupertinoIcons.home, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(CupertinoIcons.calendar, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(CupertinoIcons.cart, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(CupertinoIcons.chat_bubble_text, color: Colors.black),
-            onPressed: () {},
-          ),
+          buildNavigationItem(CupertinoIcons.home, 'Home'),
+          buildNavigationItem(CupertinoIcons.calendar, 'Book'),
+          buildNavigationItem(CupertinoIcons.cart, 'Cart'),
+          buildNavigationItem(CupertinoIcons.chat_bubble_text, 'Chat'),
         ],
       ),
+    );
+  }
+
+  Widget buildNavigationItem(IconData iconData, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 30, // Set the size of the touchable area
+          height: 30, // Set the size of the touchable area
+          child: IconButton(
+            padding: EdgeInsets.zero, // Set the padding to zero
+            icon: Icon(iconData, color: Colors.black),
+            onPressed: () {},
+          ),
+        ),
+        Text(label, style: TextStyle(color: Colors.black)),
+      ],
     );
   }
 }

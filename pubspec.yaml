@@ -70,12 +70,7 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - lib/Assets/login page-image.jpg
-    - lib/Assets/google.png
-    - lib/Assets/splash_anim.mp4
-    - lib/Assets/Flash 1.png
-    - lib/Assets/Flash 2.png
-    - lib/Assets/Flash 3.png
+    - lib/Assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

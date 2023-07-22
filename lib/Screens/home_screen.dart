@@ -5,6 +5,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nirogh/Screens/drawer_content.dart';
 import 'package:nirogh/Widgets/bottom_navigation.dart';
+import 'package:nirogh/Widgets/horizontal_card1.dart';
+import 'package:nirogh/Widgets/popular_lab.dart';
+import 'package:nirogh/Widgets/popular_test.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -149,12 +152,89 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  'Welcome to the Home Screen!',
-                  style: TextStyle(fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hi Priyanshu!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      'Good Morning',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.grey[300],
                 ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Icon(CupertinoIcons.search),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 5, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    // The first item in the list
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                      child: HorizontalCard(),
+                    );
+                  } else if (index == 1) {
+                    // The second item in the list (Popular Labs section)
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                      child: PopularLabsWidget(),
+                    );
+                  } else if (index == 2) {
+                    // The thired item in the list (Popular Tests section)
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                      child: PopularTestsWidget(),
+                    );
+                  }
+                  else {
+                    // The rest of the list items
+                    return ListTile(
+                      title: Text('Item ${index}'),
+                    );
+                  }
+                },
               ),
             ),
           ],
@@ -169,6 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Icon(Icons.call),
         elevation: 10,
+        backgroundColor: Colors.cyan,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBarWidget(),

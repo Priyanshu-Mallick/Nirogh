@@ -137,7 +137,7 @@ class _DrawerContent extends State<DrawerContent> {
                             onPressed: () {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => ProfileSetup(),
+                                  builder: (context) => UpdateProfileScreen(),
                                 ),
                               );
                             },

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Widgets/profile_text_field.dart';
 
 
@@ -422,7 +423,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               width: double.infinity,
                               height: 42,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                   isDarkMode ? Colors.yellowAccent : Colors.greenAccent,

@@ -264,7 +264,7 @@ class AuthService {
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfileSetup()),
+                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                   );
                 },
               ),
