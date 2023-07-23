@@ -15,8 +15,11 @@ class BottomNavigationBarWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           buildNavigationItem(CupertinoIcons.home, 'Home'),
+          // SizedBox(width: 15),
           buildNavigationItem(CupertinoIcons.calendar, 'Book'),
+          const SizedBox(width: 15),
           buildNavigationItem(CupertinoIcons.cart, 'Cart'),
+          // SizedBox(width: 15),
           buildNavigationItem(CupertinoIcons.chat_bubble_text, 'Chat'),
         ],
       ),

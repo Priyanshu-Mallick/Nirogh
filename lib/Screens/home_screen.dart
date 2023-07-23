@@ -82,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     int notificationCount = 5; // Replace this with the actual number of notifications
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
