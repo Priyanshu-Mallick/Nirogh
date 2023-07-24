@@ -11,8 +11,8 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Text(
             'Popular Labs',
             style: TextStyle(
@@ -45,7 +45,7 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                   },
                   child: Container(
                     width: 130,
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -58,11 +58,11 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                           width: 60,
                           height: 60,
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           getLabName(index),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),

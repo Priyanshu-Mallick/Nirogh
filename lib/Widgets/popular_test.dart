@@ -11,8 +11,8 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Text(
             'Popular Tests',
             style: TextStyle(
@@ -45,7 +45,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                   },
                   child: Container(
                     width: 130,
-                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -56,16 +56,16 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                         Text(
                           getTestName(index),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           getPriceTag(index),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.red,
                             fontSize: 14,
                             fontWeight: FontWeight.bold,

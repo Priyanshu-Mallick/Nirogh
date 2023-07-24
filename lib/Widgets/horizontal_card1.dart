@@ -6,7 +6,7 @@ class HorizontalCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 100,
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -32,7 +32,7 @@ class HorizontalCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                Text(
+                const Text(
                   'Search',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -40,7 +40,7 @@ class HorizontalCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
+                const Text(
                   'by Labs',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -60,7 +60,7 @@ class HorizontalCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                Text(
+                const Text(
                   'Health',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -68,7 +68,7 @@ class HorizontalCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
+                const Text(
                   'Insurance',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -88,7 +88,7 @@ class HorizontalCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                Text(
+                const Text(
                   'Swastya',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -96,7 +96,7 @@ class HorizontalCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Text(
+                const Text(
                   'Sevak',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -116,7 +116,7 @@ class HorizontalCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                 ),
-                Text(
+                const Text(
                   'Package',
                   textAlign: TextAlign.center,
                   style: TextStyle(
