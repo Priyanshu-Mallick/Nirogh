@@ -45,6 +45,8 @@ dependencies:
   video_player: ^2.7.0
   geolocator: ^9.0.2
   geocoding: ^2.1.0
+  image_picker: ^1.0.0
+  image_cropper: ^4.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

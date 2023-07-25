@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:nirogh/Screens/home_screen.dart';
-import 'package:nirogh/Widgets/profile_text_field.dart';
-
+import '../widgets/profile_text_field.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
@@ -11,12 +15,126 @@ class UpdateProfileScreen extends StatefulWidget {
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
 }
 
+
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String selectedAge = '';
   String selectedSex = '';
   String selectedBlood = '';
   late bool isDarkMode;
   late List<String> choices = [];
+
+  File? _image;
+
+
+  Future _getImage(ImageSource source) async {
+    try{
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return;
+      File? img = File(image.path);
+      img = await _cropImage(imageFile: img);
+      setState(() {
+        _image = img;
+      });
+    } on PlatformException catch (e){
+      print(e);
+      Navigator.of(context).pop();
+    }
+  }
+
+
+  Future<File?> _cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage =
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    if(croppedImage == null) return null;
+    return File(croppedImage.path);
+  }
+
+
+  void openImageBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      backgroundColor: Colors.transparent, // Set the background color to transparent
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            // The blurred content of the background page
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Adjust the sigma values for the blur effect
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            // The bottom sheet content
+            Container(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Select Image Source',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Send the image
+                      _getImage(ImageSource.camera);
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      CupertinoIcons.camera,
+                      size: 24,
+                    ),
+                    label: Text('Camera'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(50, 50)),
+                    ),
+                  ),
+                  SizedBox(height: 8.0),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      // Send the image
+                      _getImage(ImageSource.gallery);
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(CupertinoIcons.photo),
+                    label: const Text('Gallery'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      minimumSize: MaterialStateProperty.all<Size>(Size(50, 50)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _showChoiceBottomSheet(BuildContext context, int c, String ctext) async {
     dynamic result;
@@ -260,6 +378,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -276,7 +395,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   appBar: AppBar(
                     backgroundColor: isDarkMode ? Colors.black : Colors.white,
                     leading: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      },
                       icon: Icon(
                         Icons.arrow_back,
                         color: isDarkMode ? Colors.white : Colors.black,
@@ -326,8 +451,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 120,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: const Image(
-                                  image: AssetImage("assets/images/profile_image.jpg"),
+                                child: _image != null
+                                    ? Image.file(_image!)
+                                    : Transform.scale(
+                                  scale: 7.0, // Adjust this value to increase or decrease the icon size
+                                  child: const Icon(CupertinoIcons.person_crop_circle_fill),
                                 ),
                               ),
                             ),
@@ -338,7 +466,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 backgroundColor: Colors.white,
                                 radius: 19,
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => openImageBottomSheet(),
                                   color: Colors.black,
                                   icon: const Icon(
                                     Icons.camera_alt_outlined,
@@ -424,9 +552,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => HomeScreen(),
+                                    ),
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -441,39 +570,21 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            const SizedBox(height: 20),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text.rich(
-                                  TextSpan(
-                                    text: "Nirogh",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: isDarkMode ? Colors.white : Colors.black,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                          text: " - the Result You can Trust!!",
-                                          style: TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                            color: isDarkMode ? Colors.white : Colors.black,
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: isDarkMode
-                                          ? Colors.redAccent.withOpacity(0.66)
-                                          : Colors.redAccent.withOpacity(0.5),
-                                      elevation: 0,
-                                      foregroundColor: Colors.black,
-                                      shape: const StadiumBorder(),
-                                      side: BorderSide.none),
-                                  child: const Text("Delete"),
-                                ),
+                                Text("Nirogh", style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: isDarkMode? Colors.white : Colors.black,
+                                )),
+                                Text("The result you can Trust!", style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 13,
+                                  color: isDarkMode? Colors.white : Colors.black,
+                                )),
+
                               ],
                             )
                           ],
