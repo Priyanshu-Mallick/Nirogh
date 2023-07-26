@@ -53,7 +53,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   void openImageBottomSheet() {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -72,7 +72,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             ),
             // The bottom sheet content
             Container(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,18 +86,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton.icon(
                     onPressed: () {
                       // Send the image
                       _getImage(ImageSource.camera);
                       Navigator.pop(context);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       CupertinoIcons.camera,
                       size: 24,
                     ),
-                    label: Text('Camera'),
+                    label: const Text('Camera'),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -105,10 +105,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      minimumSize: MaterialStateProperty.all<Size>(Size(50, 50)),
+                      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 50)),
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton.icon(
                     onPressed: () {
                       // Send the image
@@ -124,7 +124,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      minimumSize: MaterialStateProperty.all<Size>(Size(50, 50)),
+                      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 50)),
                     ),
                   ),
                 ],

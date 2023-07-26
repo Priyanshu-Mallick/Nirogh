@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.cyan));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.cyan));
 
     int notificationCount = 5; // Replace this with the actual number of notifications
 
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Text(
                             sAdd.isNotEmpty ? sAdd : 'Home', // Show location if available, otherwise show 'Home'
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
