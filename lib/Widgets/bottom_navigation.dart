@@ -1,7 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nirogh/Screens/bookings_screen.dart';
+import 'package:nirogh/Screens/cart_screen.dart';
+import 'package:nirogh/Screens/chatbot_screen.dart';
 
-class BottomNavigationBarWidget extends StatelessWidget {
+class BottomNavigationBarWidget extends StatefulWidget {
+  @override
+  _BottomNavigationBarWidgetState createState() =>
+      _BottomNavigationBarWidgetState();
+}
+
+class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
+  int _selectedIndex = 0;
+
+  // List of screens to navigate to based on the index
+  final List<Widget> _screens = [
+    BookingScreen(),
+    CartScreen(),
+    ChatbotScreen(),
+  ];
+
+  // Function to change the screen based on the selected index
+  void _changeScreen(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
@@ -14,33 +39,35 @@ class BottomNavigationBarWidget extends StatelessWidget {
         // mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          buildNavigationItem(CupertinoIcons.home, 'Home'),
-          // SizedBox(width: 15),
-          buildNavigationItem(CupertinoIcons.calendar, 'Book'),
-          const SizedBox(width: 15),
-          buildNavigationItem(CupertinoIcons.cart, 'Cart'),
-          // SizedBox(width: 15),
-          buildNavigationItem(CupertinoIcons.chat_bubble_text, 'Chat'),
+          buildNavigationItem(CupertinoIcons.home, 'Home', 0),
+          buildNavigationItem(CupertinoIcons.calendar, 'Book', 1),
+          buildNavigationItem(CupertinoIcons.cart, 'Cart', 2),
+          buildNavigationItem(CupertinoIcons.chat_bubble, 'Chat', 3),
         ],
       ),
     );
   }
 
-  Widget buildNavigationItem(IconData iconData, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 30, // Set the size of the touchable area
-          height: 30, // Set the size of the touchable area
-          child: IconButton(
-            padding: EdgeInsets.zero, // Set the padding to zero
-            icon: Icon(iconData, color: Colors.black),
-            onPressed: () {},
+  Widget buildNavigationItem(IconData iconData, String label, int index) {
+    final isSelected = index == _selectedIndex;
+    return InkWell(
+      onTap: () {
+        _changeScreen(index); // Call the function to change the screen
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 30, // Set the size of the touchable area
+            height: 30, // Set the size of the touchable area
+            child: Icon(
+              iconData,
+              color: isSelected ? Colors.cyan : Colors.black,
+            ),
           ),
-        ),
-        Text(label, style: TextStyle(color: Colors.black)),
-      ],
+          Text(label, style: TextStyle(color: isSelected ? Colors.cyan : Colors.black)),
+        ],
+      ),
     );
   }
 }

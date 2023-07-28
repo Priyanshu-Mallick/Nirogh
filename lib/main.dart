@@ -6,6 +6,8 @@ import 'package:nirogh/Screens/user_registration.dart';
 import 'package:nirogh/firebase_options.dart';
 import 'package:video_player/video_player.dart';
 
+import 'Screens/home_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Initialize Firebase
@@ -86,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _navigateToNextScreen() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => SlidableFlashScreens()),
+      MaterialPageRoute(builder: (context) => HomeScreen()),
     );
   }
 
