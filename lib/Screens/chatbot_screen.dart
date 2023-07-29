@@ -5,9 +5,9 @@ class ChatbotScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chatbot Screen'),
+        title: const Text('Chatbot Screen'),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Service is Coming Soon',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
