@@ -112,8 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           if (sAdd.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 1.0),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 1.0),
                               child: Icon(CupertinoIcons.location_solid),
                             ),
                         ],
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Text(
                     'Hi Priyanshu!',
                     style: TextStyle(
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
+                    padding: EdgeInsets.only(top: 5.0),
                     child: Text(
                       'Good Morning',
                       style: TextStyle(
@@ -186,14 +186,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.grey[300],
                 ),
                 child: Row(
-                  children: [
+                  children: const [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: EdgeInsets.only(left: 20),
                       child: Icon(CupertinoIcons.search),
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
+                        padding: EdgeInsets.only(left: 8),
                         child: TextField(
                           decoration: InputDecoration(
                             border: InputBorder.none,
@@ -241,16 +241,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: DrawerContent(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Code to execute on button press
         },
-        child: Icon(Icons.call),
         elevation: 10,
         backgroundColor: Colors.cyan,
+        child: const Icon(Icons.call),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBarWidget(),
