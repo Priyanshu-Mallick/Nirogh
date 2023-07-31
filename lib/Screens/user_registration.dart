@@ -505,17 +505,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       );
                                                     },
                                                   );
-                                                  final user = await AuthService().signInWithGoogle();
+                                                  await AuthService().signInWithGoogle();
                                                   Navigator.pop(context); // Close the buffering animation dialog
-                                                  if (user != null) {
-                                                    final displayName = await AuthService().getUserDisplayName();
-                                                    final userName = await AuthService().getUniqueUsername(displayName!);
-                                                    await AuthService().storeUserDisplayName(displayName!, userName);
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                    );
-                                                  }
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                  );
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
@@ -714,17 +709,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       );
                                                     },
                                                   );
-                                                  final user = await AuthService().signInWithGoogle();
+                                                  await AuthService().signInWithGoogle();
                                                   Navigator.pop(context); // Close the buffering animation dialog
-                                                  if (user != null) {
-                                                    final displayName = await AuthService().getUserDisplayName();
-                                                    final userName = await AuthService().getUniqueUsername(displayName!);
-                                                    await AuthService().storeUserDisplayName(displayName!, userName);
-                                                    Navigator.pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                    );
-                                                  }
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                  );
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,

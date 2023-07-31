@@ -7,6 +7,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import '../widgets/profile_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
@@ -17,6 +20,9 @@ class UpdateProfileScreen extends StatefulWidget {
 
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+  String userProfilePic = '';
+  String userName = '';
+  String phoneNumber = '';
   String selectedAge = '';
   String selectedSex = '';
   String selectedBlood = '';
@@ -25,6 +31,29 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   File? _image;
 
+  Future<void> _fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+      final userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data();
+        setState(() {
+          // Assign the retrieved data to the corresponding variables
+          // Update the variables you use here based on the actual field names in Firestore
+          userProfilePic = userData?['profilePictureUrl'] ?? '';
+          userName = userData?['fullName'] ?? '';
+          // Add other fields if needed
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
 
   Future _getImage(ImageSource source) async {
     try{
@@ -378,7 +407,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -453,12 +481,18 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 borderRadius: BorderRadius.circular(100),
                                 child: _image != null
                                     ? Image.file(_image!)
+                                    : userProfilePic.isNotEmpty
+                                    ? Image.network(
+                                  userProfilePic,
+                                  fit: BoxFit.cover,
+                                )
                                     : Transform.scale(
                                   scale: 7.0, // Adjust this value to increase or decrease the icon size
                                   child: const Icon(CupertinoIcons.person_crop_circle_fill),
                                 ),
                               ),
                             ),
+
                             Positioned(
                               bottom: 0,
                               right: 0,
@@ -482,7 +516,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           children: [
                             const SizedBox(height: 10),
                             ProfileTextField(
-                              ttext: "Full Name",
+                              ttext: userName != ''
+                              ? userName : "Full Name",
                               icon: const Icon(Icons.person_2_outlined),
                               isDarkMode: isDarkMode,
                             ),

@@ -31,74 +31,147 @@ class AuthService {
 
   // bool emailVerificationSuccess = false;
   bool phoneVerificationSuccess = false;
-  signInWithGoogle() async {
-    // begin interactive sign-in process
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    // obtain auth details from request
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+  // Function for Google Sign-In
+  // Function for Google Sign-In
+  Future<void> signInWithGoogle() async {
+    try {
+      // Configure GoogleSignIn with the required scopes
+      final GoogleSignIn _googleSignIn = GoogleSignIn(
+        scopes: [
+          'email',
+          'https://www.googleapis.com/auth/contacts.readonly', // Request read-only access to user's contacts
+        ],
+      );
 
-    // create a new credential for the user
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
+      // Begin interactive sign-in process
+      final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
 
-    // finally, let's sign in
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
+      if (gUser != null) {
+        // Obtain auth details from request
+        final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
-  Future<String?> getUserDisplayName() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      return user.displayName;
-    }
-    return null;
-  }
+        // Create a new credential for the user
+        final credential = GoogleAuthProvider.credential(
+          accessToken: gAuth.accessToken,
+          idToken: gAuth.idToken,
+        );
 
-  Future<String> getUniqueUsername(String displayName) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('user')
-          .doc(user.uid)
-          .get();
-      if (snapshot.exists) {
-        return snapshot.data()!['username'];
-      } else {
-        final username = await generateUniqueUsername(displayName);
-        await storeUserDisplayName(displayName, username);
-        return username;
+        // Finally, let's sign in
+        final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // If the sign-in is successful, retrieve and store user data
+        if (authResult.user != null) {
+          final user = authResult.user!;
+          await storeUserData(
+            user.photoURL ?? "",
+            user.displayName ?? "", // If displayName is null, use empty string
+            user.phoneNumber ?? "", // If displayName is null, use empty string
+            user.email ?? "", // Use email as a default username
+            0, // You can prompt the user to enter their age later
+            "", // You can prompt the user to enter their sex later
+          );
+        }
       }
-    }
-    throw Exception('User is not signed in.');
-  }
-
-  Future<String> generateUniqueUsername(String displayName) async {
-    final random = Random();
-    final prefix = displayName.replaceAll(' ', '').toLowerCase();
-    final suffix = random.nextInt(9999).toString().padLeft(4, '0');
-    final username = '$prefix$suffix';
-    final snapshot = await FirebaseFirestore.instance
-        .collection('user')
-        .where('username', isEqualTo: username)
-        .get();
-    if (snapshot.docs.isEmpty) {
-      return username;
-    } else {
-      return generateUniqueUsername(displayName); // Recursively generate a new username if it already exists
+    } catch (e) {
+      // Handle any errors that occur during sign-in or data storage
+      print("Error during sign-in or data storage: $e");
     }
   }
+  // signInWithGoogle() async {
+  //   // begin interactive sign-in process
+  //   final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+  //
+  //   // obtain auth details from request
+  //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+  //
+  //   // create a new credential for the user
+  //   final credential = GoogleAuthProvider.credential(
+  //     accessToken: gAuth.accessToken,
+  //     idToken: gAuth.idToken,
+  //   );
+  //
+  //   // finally, let's sign in
+  //   return await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
+  //
+  // Future<String?> getUserDisplayName() async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     return user.displayName;
+  //   }
+  //   return null;
+  // }
 
-  Future<void> storeUserDisplayName(String displayName, String username) async {
+  // Future<String> getUniqueUsername(String displayName) async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     final snapshot = await FirebaseFirestore.instance
+  //         .collection('user')
+  //         .doc(user.uid)
+  //         .get();
+  //     if (snapshot.exists) {
+  //       return snapshot.data()!['username'];
+  //     } else {
+  //       final username = await generateUniqueUsername(displayName);
+  //       await storeUserDisplayName(displayName, username);
+  //       return username;
+  //     }
+  //   }
+  //   throw Exception('User is not signed in.');
+  // }
+
+  // Future<String> generateUniqueUsername(String displayName) async {
+  //   final random = Random();
+  //   final prefix = displayName.replaceAll(' ', '').toLowerCase();
+  //   final suffix = random.nextInt(9999).toString().padLeft(4, '0');
+  //   final username = '$prefix$suffix';
+  //   final snapshot = await FirebaseFirestore.instance
+  //       .collection('user')
+  //       .where('username', isEqualTo: username)
+  //       .get();
+  //   if (snapshot.docs.isEmpty) {
+  //     return username;
+  //   } else {
+  //     return generateUniqueUsername(displayName); // Recursively generate a new username if it already exists
+  //   }
+  // }
+
+  // Function to store user data
+  Future<void> storeUserData(
+      String profilePictureUrl,
+      String fullName,
+      String phoneNumber,
+      String email,
+      int age,
+      String sex,
+      ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
       await userRef.set({
-        'displayName': displayName,
-        'username': username,
+        'profilePictureUrl': profilePictureUrl,
+        'fullName': fullName,
+        'phoneNumber': phoneNumber,
+        'email': email,
+        'age': age,
+        'sex': sex,
       });
+      Fluttertoast.showToast(
+        msg: 'User data saved successfully',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[800],
+        textColor: Colors.white,
+      );
     }
+    Fluttertoast.showToast(
+      msg: 'User data can not stored successfully',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.grey[800],
+      textColor: Colors.white,
+    );
   }
 
   String _generateOTP(int length) {
