@@ -407,6 +407,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+  void SaveUserData(String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -539,7 +543,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               icon: const Icon(Icons.calendar_today_outlined),
                               isDarkMode: isDarkMode,
                               onTap: () {
-
                                 choices.clear();
                                 for (int i = 1; i <= 120; i++) {
                                   choices.add(i.toString());
