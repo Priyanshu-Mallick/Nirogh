@@ -11,6 +11,7 @@ class ProfileTextField extends StatelessWidget {
     this.onTap,
   }) : super(key: key);
 
+
   final bool isDarkMode;
   final Icon icon;
   final String ttext;
@@ -21,7 +22,6 @@ class ProfileTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-
       readOnly: read,
       cursorColor: isDarkMode ? Colors.white : Colors.black,
       decoration: InputDecoration(
