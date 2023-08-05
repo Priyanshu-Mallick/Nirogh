@@ -472,12 +472,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                               ),
                                             ),
                                             SizedBox(height: 25.0),
-                                            Padding(
-                                              padding: const EdgeInsets
+                                            const Padding(
+                                              padding: EdgeInsets
                                                   .symmetric(
                                                   horizontal: 16.0),
                                               child: Align(
-                                                  child: const Text(
+                                                  child: Text(
                                                     '------------OR Sign Up With------------',
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -675,13 +675,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                               ),
                                             ),
                                             SizedBox(height: 15.0),
-                                            Padding(
-                                              padding: const EdgeInsets
+                                            const Padding(
+                                              padding: EdgeInsets
                                                   .symmetric(
                                                   horizontal: 16.0),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                  child: const Text(
+                                                  child: Text(
                                                     '------------OR Sign Up With------------',
                                                     style: TextStyle(
                                                       fontSize: 15,
@@ -723,13 +723,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                               ),
                                             ),
                                             const SizedBox(height: 5.0),
-                                            Padding(
-                                              padding: const EdgeInsets
+                                            const Padding(
+                                              padding: EdgeInsets
                                                   .symmetric(
                                                   horizontal: 16.0),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                  child: const Text(
+                                                  child: Text(
                                                     'Google',
                                                     style: TextStyle(
                                                       fontSize: 12,
