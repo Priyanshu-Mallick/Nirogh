@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HorizontalCard extends StatelessWidget {
+  const HorizontalCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +18,7 @@ class HorizontalCard extends StatelessWidget {
             color: Colors.black.withOpacity(0.2), // Set the shadow color and opacity
             spreadRadius: 5,
             blurRadius: 15,
-            offset: Offset(0, 8), // Set the offset for the shadow
+            offset: const Offset(0, 8), // Set the offset for the shadow
           ),
         ],
       ),
