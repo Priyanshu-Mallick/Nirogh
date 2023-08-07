@@ -28,7 +28,7 @@ class _UserRegistrationState extends State<UserRegistration>
   bool passwordVisibility = true;
   bool cpasswordVisibility = true;
   Color customColor1 = const Color.fromRGBO(176,248,224,255);
-  Color customColor2 = Color.fromRGBO(247,251,249,255);
+  Color customColor2 = const Color.fromRGBO(247,251,249,255);
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
   FirebaseAuth auth = FirebaseAuth.instance; // Declare the auth variable outside the sendOTP method
 
@@ -107,8 +107,8 @@ class _UserRegistrationState extends State<UserRegistration>
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Error'),
-              content: Text('Please enter email and password'),
+              title: const Text('Error'),
+              content: const Text('Please enter email and password'),
               actions: <Widget>[
                 TextButton(
                   child: Text('OK'),
