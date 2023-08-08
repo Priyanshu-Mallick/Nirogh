@@ -3,18 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:nirogh/Screens/bookings_screen.dart';
 import 'package:nirogh/Screens/cart_screen.dart';
 import 'package:nirogh/Screens/chatbot_screen.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
+  final int initialIndex; // Add this variable
+
+  BottomNavigationBarWidget({required this.initialIndex}); // Provide a default value
+
   @override
   _BottomNavigationBarWidgetState createState() =>
-      _BottomNavigationBarWidgetState();
+      _BottomNavigationBarWidgetState(initialIndex: initialIndex);
 }
 
 class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
-  int _selectedIndex = 0;
-
+  int _selectedIndex=0; // Add this variable
+  // Constructor
+  _BottomNavigationBarWidgetState({required int initialIndex}) {
+    _selectedIndex = initialIndex;
+  }
   // List of screens to navigate to based on the index
   final List<Widget> _screens = [
+    HomeScreen(),
     BookingScreen(),
     CartScreen(),
     ChatbotScreen(),
@@ -25,6 +34,21 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     setState(() {
       _selectedIndex = index;
     });
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => _screens[index],
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0); // Slide from right
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
   }
 
   @override
@@ -49,10 +73,12 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   }
 
   Widget buildNavigationItem(IconData iconData, String label, int index) {
-    final isSelected = index == _selectedIndex;
+    final isSelected = _selectedIndex == index;
     return InkWell(
       onTap: () {
         _changeScreen(index); // Call the function to change the screen
+        print(index);
+        print(_selectedIndex);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,

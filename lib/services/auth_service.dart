@@ -10,6 +10,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
@@ -334,6 +335,7 @@ class AuthService {
               TextButton(
                 child: const Text('OK'),
                 onPressed: () {
+                  setLoggedIn(true);
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(
                     context,
@@ -853,5 +855,19 @@ class AuthService {
         );
       },
     );
+  }
+  static Future<bool> isLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
+  static Future<void> setLoggedIn(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', value);
+  }
+
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    await setLoggedIn(false);
   }
 }

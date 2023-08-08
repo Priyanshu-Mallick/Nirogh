@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:nirogh/Screens/user_registration.dart';
 import 'package:nirogh/firebase_options.dart';
+import 'package:nirogh/services/auth_service.dart';
 import 'package:video_player/video_player.dart';
 
 import 'Screens/home_screen.dart';
+import 'Widgets/bottom_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,11 +74,19 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.addListener(() {
       if (_controller.value.position == _controller.value.duration) {
-        _animationController.forward().then((_) {
-          _navigateToNextScreen();
+        _animationController.forward().then((_) async {
+          bool isLoggedIn = await AuthService.isLoggedIn();
+          if (isLoggedIn) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          } else {
+            _navigateToNextScreen();
+          }
         });
       }
     });
+
   }
 
   @override
@@ -88,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _navigateToNextScreen() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => UserRegistration()),
+      MaterialPageRoute(builder: (context) => SlidableFlashScreens()),
     );
   }
 

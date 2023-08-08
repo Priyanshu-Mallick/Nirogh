@@ -81,7 +81,7 @@ class _UserRegistrationState extends State<UserRegistration>
         );
 
         // Perform additional logic after successful login
-
+        AuthService.setLoggedIn(true);
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -506,6 +506,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     },
                                                   );
                                                   await AuthService().signInWithGoogle();
+                                                  AuthService.setLoggedIn(true);
                                                   Navigator.pop(context); // Close the buffering animation dialog
                                                   Navigator.pushReplacement(
                                                     context,
@@ -710,9 +711,8 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     },
                                                   );
                                                   await AuthService().signInWithGoogle();
-                                                  Navigator.pop(context); // Close the buffering animation dialog
-                                                  Navigator.pushReplacement(
-                                                    context,
+                                                  AuthService.setLoggedIn(true);
+                                                  Navigator.of(context).pushReplacement(
                                                     MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                   );
                                                 },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:nirogh/Widgets/profile_menu.dart';
+import 'package:nirogh/main.dart';
+import 'package:nirogh/services/auth_service.dart';
 
 class DrawerContent extends StatefulWidget {
   const DrawerContent({super.key});
@@ -160,7 +162,12 @@ class _DrawerContent extends State<DrawerContent> {
                               icon: Icons.logout_outlined,
                               textColor: Colors.red,
                               endIcon: false,
-                              onPress: (){},
+                              onPress: (){
+                                AuthService.signOut();
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) => SlidableFlashScreens()),
+                                );
+                              },
                               isDark: isDarkMode
                           ),
                           const SizedBox()

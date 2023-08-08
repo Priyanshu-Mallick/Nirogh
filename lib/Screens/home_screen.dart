@@ -15,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
   double? lat;
   double? long;
   String address = '';
@@ -253,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.call),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBarWidget(),
+      bottomNavigationBar: BottomNavigationBarWidget(initialIndex: _selectedIndex),
     );
   }
 }
