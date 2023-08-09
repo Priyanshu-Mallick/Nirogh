@@ -28,6 +28,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String selectedBlood = '';
   late bool isDarkMode;
   late List<String> choices = [];
+  late TextEditingController _phoneNumberController;
 
   File? _image;
 
@@ -53,6 +54,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   void initState() {
     super.initState();
     _fetchUserData();
+    _phoneNumberController = TextEditingController();
   }
 
   Future _getImage(ImageSource source) async {
@@ -408,7 +410,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void SaveUserData(String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood){
-
+    print(userProfilePic);
+    print(userName);
+    print(phoneNumber);
+    print(selectedAge);
+    print(selectedSex);
+    print(selectedBlood);
   }
 
   @override
@@ -522,6 +529,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             ProfileTextField(
                               ttext: userName != ''
                               ? userName : "Full Name",
+                              ctext: userName,
                               icon: const Icon(Icons.person_2_outlined),
                               isDarkMode: isDarkMode,
                             ),
@@ -532,6 +540,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               ttext: "Phone number",
                               icon: const Icon(Icons.phone),
                               isDarkMode: isDarkMode,
+                              ctext: _phoneNumberController.text,
                             ),
                             const SizedBox(
                               height: 20,
@@ -590,6 +599,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  SaveUserData(userProfilePic, userName, _phoneNumberController as String, selectedAge, selectedSex, selectedBlood);
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => HomeScreen(),
