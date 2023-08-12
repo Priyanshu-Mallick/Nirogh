@@ -88,7 +88,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             ),
                             booking.complete == 1
                                 ? Row(
-                              children: [
+                              children: const [
                                 Icon(Icons.check_circle_rounded, color: Colors.green),
                                 Text(
                                   "Completed!",
@@ -100,7 +100,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             )
                                 : booking.complete == 2
                                 ? Row(
-                              children: [
+                              children: const [
                                 Icon(Icons.flag_circle_rounded, color: Colors.orange),
                                 Text(
                                   "Pending!",
@@ -111,7 +111,7 @@ class _BookingScreenState extends State<BookingScreen> {
                               ],
                             )
                                 : Row(
-                              children: [
+                              children: const [
                                 Icon(Icons.cancel, color: Colors.red),
                                 Text(
                                   "Cancelled!",
