@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nirogh/Screens/home_screen.dart';
-import '../widgets/profile_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -28,10 +28,34 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String selectedBlood = '';
   late bool isDarkMode;
   late List<String> choices = [];
-  late TextEditingController _phoneNumberController;
-
+  TextEditingController _phoneNumberController = TextEditingController();
   File? _image;
 
+  Future<void> SaveUserData(String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Map<String, dynamic> userData = {
+          'profilePictureUrl': userProfilePic,
+          'fullName': userName,
+          'phoneNumber': phoneNumber,
+          'age': selectedAge,
+          'sex': selectedSex,
+          'bloodGroup': selectedBlood,
+        };
+        final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+        if (await userRef.get().then((snapshot) => snapshot.exists)) {
+        await userRef.update(userData);
+        } else {
+        await userRef.set(userData);
+        }
+        print('User data saved successfully');
+      }
+    } catch (e) {
+      print('Error saving user data: $e');
+    }
+  }
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -44,6 +68,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           // Update the variables you use here based on the actual field names in Firestore
           userProfilePic = userData?['profilePictureUrl'] ?? '';
           userName = userData?['fullName'] ?? '';
+          _phoneNumberController.text = userData?['phoneNumber'] ?? '';
+          selectedAge = userData?['age'] ?? '';
+          selectedSex = userData?['sex'] ?? '';
+          selectedBlood = userData?['bloodGroup'] ?? '';
           // Add other fields if needed
         });
       }
@@ -409,14 +437,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  void SaveUserData(String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood){
-    print(userProfilePic);
-    print(userName);
-    print(phoneNumber);
-    print(selectedAge);
-    print(selectedSex);
-    print(selectedBlood);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -526,80 +547,157 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         Column(
                           children: [
                             const SizedBox(height: 10),
-                            ProfileTextField(
-                              ttext: userName != ''
-                              ? userName : "Full Name",
-                              ctext: userName,
-                              icon: const Icon(Icons.person_2_outlined),
-                              isDarkMode: isDarkMode,
+                            TextField(
+                              readOnly: false,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                labelText: "Full Name",
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.person_2_outlined),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: TextEditingController(text: userName),
                             ),
-                            const SizedBox(
-                              height: 20,
+                            const SizedBox(height: 20),
+                            TextField(
+                              readOnly: false,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                labelText: 'Phone number',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.phone),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: _phoneNumberController, // Use the _phoneNumberController here
                             ),
-                            ProfileTextField(
-                              ttext: "Phone number",
-                              icon: const Icon(Icons.phone),
-                              isDarkMode: isDarkMode,
-                              ctext: _phoneNumberController.text,
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ProfileTextField(
-                              read: true,
-                              ctext: selectedAge,
-                              ttext: 'Age',
-                              icon: const Icon(Icons.calendar_today_outlined),
-                              isDarkMode: isDarkMode,
+                            const SizedBox(height: 20),
+                            TextField(
+                              readOnly: true,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                labelText: 'Age',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.calendar_today_outlined),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: TextEditingController(text: selectedAge),
                               onTap: () {
                                 choices.clear();
                                 for (int i = 1; i <= 120; i++) {
                                   choices.add(i.toString());
                                 }
-                                _showChoiceBottomSheet(context,1, "Select Age");
+                                _showChoiceBottomSheet(context, 1, "Select Age");
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ProfileTextField(
-                              read: true,
-                              ctext: selectedSex,
-                              ttext: 'Sex',
-                              icon: const Icon(Icons.transgender_outlined),
-                              isDarkMode: isDarkMode,
+                            const SizedBox(height: 20),
+                            TextField(
+                              readOnly: true,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                labelText: 'Sex',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.transgender_outlined),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: TextEditingController(text: selectedSex),
                               onTap: () {
                                 selectedSex = '';
                                 choices.clear();
                                 choices = ["Male", "Female", "Transgender", "Others"];
-                                _showChoiceBottomSheet(context,2,"Select Sex");
+                                _showChoiceBottomSheet(context, 2, "Select Sex");
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            ProfileTextField(
-                              read: true,
-                              ctext: selectedBlood,
-                              ttext: 'Blood Group',
-                              icon: const Icon(Icons.water_drop),
-                              isDarkMode: isDarkMode,
+
+                            const SizedBox(height: 20),
+                            TextField(
+                              readOnly: true,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                                labelText: 'Blood Group',
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.water_drop),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: TextEditingController(text: selectedBlood),
                               onTap: () {
                                 selectedBlood = '';
                                 choices.clear();
-                                choices = ["A+", "B+", "AB+","O+", "A-","B-","AB-","O-"];
-                                _showChoiceBottomSheet(context,3,"Select Blood Group");
+                                choices = ["A+", "B+", "AB+", "O+", "A-", "B-", "AB-", "O-"];
+                                _showChoiceBottomSheet(context, 3, "Select Blood Group");
                               },
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            const SizedBox(height: 20),
                             SizedBox(
                               width: double.infinity,
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  SaveUserData(userProfilePic, userName, _phoneNumberController as String, selectedAge, selectedSex, selectedBlood);
+                                  SaveUserData(userProfilePic, userName, _phoneNumberController.text, selectedAge, selectedSex, selectedBlood);
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => HomeScreen(),
@@ -607,8 +705,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                  isDarkMode ? Colors.yellowAccent : Colors.greenAccent,
+                                  backgroundColor: isDarkMode ? Colors.yellowAccent : Colors.greenAccent,
                                   side: BorderSide.none,
                                   shape: const StadiumBorder(),
                                 ),

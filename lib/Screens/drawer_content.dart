@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:nirogh/Widgets/profile_menu.dart';
@@ -14,15 +16,38 @@ class DrawerContent extends StatefulWidget {
 class _DrawerContent extends State<DrawerContent> {
   // Define your variables here
 
+  String userProfilePic = '';
+  String userName = '';
+  String email = '';
+
   @override
   void initState() {
     super.initState();
     // Initialize your variables or perform any other setup operations
+    _fetchUserData();
   }
   @override
   void dispose() {
     super.dispose();
     // Clean up any resources or subscriptions
+  }
+
+  Future<void> _fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+      final userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data();
+        setState(() {
+          // Assign the retrieved data to the corresponding variables
+          // Update the variables you use here based on the actual field names in Firestore
+          userProfilePic = userData?['profilePictureUrl'] ?? '';
+          userName = userData?['fullName'] ?? '';
+          email = userData?['email'] ?? '';
+        });
+      }
+    }
   }
 
   @override
@@ -91,48 +116,58 @@ class _DrawerContent extends State<DrawerContent> {
                         children: [
                           const SizedBox(height: 50),
                           Stack(
-                              children: [
-                                const SizedBox(
-                                  child: CircleAvatar(
-                                    radius: 60.0,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 70,
-                                      color: Colors.blue,
+                            children: [
+                              SizedBox(
+                                child: CircleAvatar(
+                                  radius: 60.0,
+                                  backgroundColor: Colors.white,
+                                  child: userProfilePic.isNotEmpty
+                                      ? ClipOval(
+                                    child: Image.network(
+                                      userProfilePic,
+                                      width: 120,
+                                      height: 120,
+                                      fit: BoxFit.cover,
                                     ),
+                                  )
+                                      : Icon(
+                                    Icons.person,
+                                    size: 70,
+                                    color: Colors.blue,
                                   ),
                                 ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 19,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      color: Colors.black,
-                                      icon: const Icon(Icons.edit, size: 18),
-                                    ),
-                                  ),
-
-                                ),
-                              ]
+                              ),
+                              // Positioned(
+                              //   bottom: 0,
+                              //   right: 0,
+                              //   child: CircleAvatar(
+                              //     backgroundColor: Colors.white,
+                              //     radius: 19,
+                              //     child: IconButton(
+                              //       onPressed: () {
+                              //         // Implement the edit functionality here
+                              //       },
+                              //       color: Colors.black,
+                              //       icon: const Icon(Icons.edit, size: 18),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
                           ),
                           const SizedBox(height: 10),
                           Text(
-                              "Priyanshu Mallick",
-                              style: TextStyle(
-                                color: isDarkMode ? Colors.white : Colors.black,
-                                fontSize: 30,
-                              )
+                            userName,
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              fontSize: 30,
+                            ),
                           ),
                           Text(
-                              "clgpriyanshumallick@gmail.com",
-                              style: TextStyle(
-                                color: isDarkMode ? Colors.white54 : Colors.black54,
-                                fontSize: 18,
-                              )
+                            email,
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white54 : Colors.black54,
+                              fontSize: 15,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
