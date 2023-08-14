@@ -20,6 +20,7 @@ class UpdateProfileScreen extends StatefulWidget {
 
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+  String email = '';
   String userProfilePic = '';
   String userName = '';
   String phoneNumber = '';
@@ -31,13 +32,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
   File? _image;
 
-  Future<void> SaveUserData(String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
+  Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         Map<String, dynamic> userData = {
           'profilePictureUrl': userProfilePic,
+          'email' : email,
           'fullName': userName,
           'phoneNumber': phoneNumber,
           'age': selectedAge,
@@ -67,6 +69,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           // Assign the retrieved data to the corresponding variables
           // Update the variables you use here based on the actual field names in Firestore
           userProfilePic = userData?['profilePictureUrl'] ?? '';
+          email = userData?['email'] ?? '';
           userName = userData?['fullName'] ?? '';
           _phoneNumberController.text = userData?['phoneNumber'] ?? '';
           selectedAge = userData?['age'] ?? '';
@@ -561,6 +564,31 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                     color: isDarkMode ? Colors.white : Colors.black,
                                   ),
                                 ),
+                                labelText: "Email-Id",
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black,
+                                ),
+                                prefixIcon: const Icon(Icons.person_2_outlined),
+                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                              ),
+                              controller: TextEditingController(text: email),
+                            ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              readOnly: false,
+                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    width: 2,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
                                 labelText: "Full Name",
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -697,7 +725,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  SaveUserData(userProfilePic, userName, _phoneNumberController.text, selectedAge, selectedSex, selectedBlood);
+                                  SaveUserData(email, userProfilePic, userName, _phoneNumberController.text, selectedAge, selectedSex, selectedBlood);
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => HomeScreen(),
