@@ -8,8 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:libphonenumber/libphonenumber.dart';
 
+import '../services/auth_service.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({Key? key}) : super(key: key);
@@ -81,6 +83,36 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+  void CheckPhoneNumber(String phoneNumber) async {
+    // Check if the phone number is already registered
+    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered(
+        "+91" + phoneNumber);
+
+    if (!isRegistered) {
+      // Phone number is not registered, send OTP and proceed to OTP verification
+      String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
+      await AuthService().CheckPhoneOTP(context, verificationId, phoneNumber);
+    } else {
+      // Phone number is registered, save user data and navigate to HomeScreen
+      SaveUserData(
+        email,
+        userProfilePic,
+        userName,
+        phoneNumber,
+        selectedAge,
+        selectedSex,
+        selectedBlood,
+      );
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ),
+      );
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -89,15 +121,31 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   Future _getImage(ImageSource source) async {
-    try{
+    try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
+
       File? img = File(image.path);
       img = await _cropImage(imageFile: img);
-      setState(() {
-        _image = img;
-      });
-    } on PlatformException catch (e){
+
+      if (img != null) {
+        // Upload image to Firebase Cloud Storage
+        String imageName = DateTime.now().millisecondsSinceEpoch.toString(); // Generating a unique name for the image
+        firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref().child(imageName);
+
+        firebase_storage.UploadTask uploadTask = ref.putFile(img);
+        firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+
+        // Get the download URL from the uploaded image
+        String imageUrl = await taskSnapshot.ref.getDownloadURL();
+
+        setState(() {
+          // _image = img; // Assuming _image is a File variable to display the selected image
+          userProfilePic = imageUrl; // Update the userProfilePic variable
+        });
+      }
+    } on PlatformException catch (e) {
       print(e);
       Navigator.of(context).pop();
     }
@@ -514,9 +562,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 120,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: _image != null
-                                    ? Image.file(_image!)
-                                    : userProfilePic.isNotEmpty
+                                child: userProfilePic.isNotEmpty
                                     ? Image.network(
                                   userProfilePic,
                                   fit: BoxFit.cover,
@@ -527,7 +573,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                               ),
                             ),
-
                             Positioned(
                               bottom: 0,
                               right: 0,
@@ -725,12 +770,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  SaveUserData(email, userProfilePic, userName, _phoneNumberController.text, selectedAge, selectedSex, selectedBlood);
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => HomeScreen(),
-                                    ),
-                                  );
+                                  CheckPhoneNumber(phoneNumber);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: isDarkMode ? Colors.yellowAccent : Colors.greenAccent,

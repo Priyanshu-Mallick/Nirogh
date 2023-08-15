@@ -165,8 +165,6 @@ class _UserRegistrationState extends State<UserRegistration>
 
               // Generate and send OTP via phone
               String verificationId = await AuthService().sendOTPToPhone(phone);
-              print(verificationId);
-
               //call the showVerifyDialog
               await AuthService().showVerifyDialog(name, email, phone, password, verificationId, context);
 
@@ -508,9 +506,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   await AuthService().signInWithGoogle();
                                                   AuthService.setLoggedIn(true);
                                                   Navigator.pop(context); // Close the buffering animation dialog
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                  Navigator.of(context).pushReplacement(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => HomeScreen(),
+                                                    ),
                                                   );
                                                 },
                                                 elevation: 0,

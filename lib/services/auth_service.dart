@@ -69,7 +69,7 @@ class AuthService {
             user.displayName ?? "", // If displayName is null, use empty string
             user.phoneNumber ?? "", // If displayName is null, use empty string
             user.email ?? "", // Use email as a default username
-            0, // You can prompt the user to enter their age later
+            "", // You can prompt the user to enter their age later
             "", // You can prompt the user to enter their sex later
           );
         }
@@ -144,7 +144,7 @@ class AuthService {
       String fullName,
       String phoneNumber,
       String email,
-      int age,
+      String age,
       String sex,
       ) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -318,13 +318,21 @@ class AuthService {
         password: password,
       );
 
+      await storeUserData(
+        userCredential.user!.photoURL ?? "",
+        name, // If displayName is null, use empty string
+        phone, // If displayName is null, use empty string
+        userCredential.user!.email ?? "", // Use email as a default username
+        "", // You can prompt the user to enter their age later
+        "", // You can prompt the user to enter their sex later
+      );
       // Perform additional logic after successful signup
       // Store user data in Firestore
-      await FirebaseFirestore.instance.collection('User Data').doc(userCredential.user!.uid).set({
-        'name': name,
-        'email': email,
-        'phone': phone,
-      });
+      // await FirebaseFirestore.instance.collection('user').doc(userCredential.user!.uid).set({
+      //   'name': name,
+      //   'email': email,
+      //   'phone': phone,
+      // });
 
       showDialog(
         context: context,
@@ -869,5 +877,274 @@ class AuthService {
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     await setLoggedIn(false);
+  }
+  Future<bool> checkIfPhoneNumberRegistered(String phoneNumber) async {
+    try {
+      // Use Firebase authentication API to check if the phone number is registered
+      final result = await FirebaseAuth.instance.signInWithPhoneNumber(phoneNumber);
+
+      // If signInWithPhoneNumber is successful, it means the phone number is registered
+      return true;
+    } catch (e) {
+      // If an error occurs, it means the phone number is not registered
+      return false;
+    }
+  }
+
+  Future<void> CheckPhoneOTP(BuildContext context, String verificationId, String phoneNumber) async {
+    TextEditingController otpController1 = TextEditingController();
+    TextEditingController otpController2 = TextEditingController();
+    TextEditingController otpController3 = TextEditingController();
+    TextEditingController otpController4 = TextEditingController();
+    TextEditingController otpController5 = TextEditingController();
+    TextEditingController otpController6 = TextEditingController();
+
+    bool phoneVerificationSuccess = false;
+
+    double sheetHeight = MediaQuery.of(context).size.height * 0.72;
+    double initialPosition = sheetHeight;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return GestureDetector(
+              onVerticalDragUpdate: (details) {
+                setState(() {
+                  sheetHeight -= details.delta.dy;
+                });
+              },
+              onVerticalDragEnd: (details) {
+                if (details.primaryVelocity! > 0) {
+                  Navigator.pop(context);
+                } else if (sheetHeight < initialPosition) {
+                  setState(() {
+                    sheetHeight = initialPosition;
+                  });
+                }
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                height: sheetHeight,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Phone Number',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(phoneNumber),
+                        SizedBox(height: 16),
+                        Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'OTP',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              for (var i = 0; i < 6; i++)
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  margin: EdgeInsets.only(right: 1.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: TextField(
+                                    controller: i == 0
+                                        ? otpController1
+                                        : i == 1
+                                        ? otpController2
+                                        : i == 2
+                                        ? otpController3
+                                        : i == 3
+                                        ? otpController4
+                                        : i == 4
+                                        ? otpController5
+                                        : otpController6,
+                                    maxLength: 1,
+                                    textAlign: TextAlign.center,
+                                    keyboardType: TextInputType.number,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(vertical: 14),
+                                      counterText: '',
+                                    ),
+                                    onChanged: (value) {
+                                      if (value.length == 1 && i < 5) {
+                                        FocusScope.of(context).nextFocus();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              SizedBox(width: 8),
+                              Container(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    // Handle OTP verification
+                                    String otp = otpController1.text +
+                                        otpController2.text +
+                                        otpController3.text +
+                                        otpController4.text +
+                                        otpController5.text +
+                                        otpController6.text;
+                                    if (otp.length == 6) {
+                                      setState(() {
+                                        phoneVerificationSuccess = false;
+                                      });
+
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(20.0),
+                                              child: Row(
+                                                children: [
+                                                  CircularProgressIndicator(),
+                                                  SizedBox(width: 20),
+                                                  Text('Verifying...'),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                      // Verify the entered OTP
+                                      int d = await verifyPhoneOTP(verificationId, otp);
+                                      print(d);
+                                      Navigator.pop(context); // Close the verification progress dialog
+                                      if(d==1){
+                                        setState(() {
+                                          phoneVerificationSuccess = true;
+                                        });
+                                        Fluttertoast.showToast(
+                                          msg: 'OTP verified successfully',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.grey[800],
+                                          textColor: Colors.white,
+                                        );
+                                      }
+                                      else{
+                                        Fluttertoast.showToast(
+                                          msg: 'Incorrect OTP',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: Colors.grey[800],
+                                          textColor: Colors.white,
+                                        );
+                                        print("Error");
+                                        setState(() {
+                                          phoneVerificationSuccess = false;
+                                        });
+                                        otpController1.clear();
+                                        otpController2.clear();
+                                        otpController3.clear();
+                                        otpController4.clear();
+                                        otpController5.clear();
+                                        otpController6.clear();
+                                      }
+                                    }
+                                  },
+                                  child: phoneVerificationSuccess
+                                      ? Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.green,
+                                    ),
+                                    child: const Icon(Icons.done, color: Colors.white),
+                                  )
+                                      : Stack(
+                                    alignment: Alignment.center,
+                                    children: const [
+                                      IgnorePointer(
+                                        ignoring: true,
+                                        child: Text(
+                                          'Verify',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 32),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: IgnorePointer(
+                            ignoring: !(phoneVerificationSuccess),
+                            child: Opacity(
+                              opacity: phoneVerificationSuccess ? 1.0 : 0.5,
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  color: Colors.black,
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    // Handle continue button press
+                                    // Navigate to the main screen
+                                  },
+                                  style: ButtonStyle(
+                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                                  ),
+                                  child: const Text(
+                                    'Continue',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

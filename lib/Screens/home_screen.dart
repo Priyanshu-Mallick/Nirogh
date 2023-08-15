@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,13 +22,44 @@ class _HomeScreenState extends State<HomeScreen> {
   double? long;
   String address = '';
   String sAdd = '';
+  String? userName = "";
 
   @override
   void initState() {
     super.initState();
     getLatLong();
+    _fetchUserData();
   }
 
+  String _getGreetingMessage() {
+    final currentTime = DateTime.now();
+    String greeting = 'Good ';
+
+    if (currentTime.hour >= 0 && currentTime.hour < 12) {
+      greeting += 'Morning';
+    } else if (currentTime.hour >= 12 && currentTime.hour < 17) {
+      greeting += 'Afternoon';
+    } else {
+      greeting += 'Evening';
+    }
+
+    return greeting;
+  }
+
+
+  Future<void> _fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+      final userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data();
+        setState(() {
+          userName = userData?['fullName'] ?? '';
+        });
+      }
+    }
+  }
   void getLatLong() async {
     Position position;
     try {
@@ -158,9 +191,11 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
-                    'Hi Priyanshu!',
+                    userName != null
+                        ? 'Hi ${userName?.split(' ').first}!'
+                        : 'Welcome!',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -169,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 5.0),
                     child: Text(
-                      'Good Morning',
+                      _getGreetingMessage(),
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
