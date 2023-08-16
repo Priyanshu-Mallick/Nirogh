@@ -9,7 +9,6 @@ import 'package:nirogh/Screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:libphonenumber/libphonenumber.dart';
 
 import '../services/auth_service.dart';
 
@@ -85,8 +84,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   void CheckPhoneNumber(String phoneNumber) async {
     // Check if the phone number is already registered
-    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered(
-        "+91" + phoneNumber);
+    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered(phoneNumber);
 
     if (!isRegistered) {
       // Phone number is not registered, send OTP and proceed to OTP verification
@@ -770,7 +768,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               height: 42,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  CheckPhoneNumber(phoneNumber);
+                                  CheckPhoneNumber(_phoneNumberController.text);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: isDarkMode ? Colors.yellowAccent : Colors.greenAccent,

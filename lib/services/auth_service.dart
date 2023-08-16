@@ -881,7 +881,8 @@ class AuthService {
   Future<bool> checkIfPhoneNumberRegistered(String phoneNumber) async {
     try {
       // Use Firebase authentication API to check if the phone number is registered
-      final result = await FirebaseAuth.instance.signInWithPhoneNumber(phoneNumber);
+      String phno='+91$phoneNumber';
+      final result = await FirebaseAuth.instance.signInWithPhoneNumber(phno);
 
       // If signInWithPhoneNumber is successful, it means the phone number is registered
       return true;
