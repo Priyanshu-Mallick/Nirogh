@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,13 +65,14 @@ class AuthService {
         // If the sign-in is successful, retrieve and store user data
         if (authResult.user != null) {
           final user = authResult.user!;
-          await storeUserData(
+          await SaveUserData(
+            user.email ?? "",
             user.photoURL ?? "",
             user.displayName ?? "", // If displayName is null, use empty string
             user.phoneNumber ?? "", // If displayName is null, use empty string
-            user.email ?? "", // Use email as a default username
-            "", // You can prompt the user to enter their age later
-            "", // You can prompt the user to enter their sex later
+            "",
+            "",
+            ""
           );
         }
       }
@@ -173,6 +175,33 @@ class AuthService {
       backgroundColor: Colors.grey[800],
       textColor: Colors.white,
     );
+  }
+
+  Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
+
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Map<String, dynamic> userData = {
+          'profilePictureUrl': userProfilePic,
+          'email' : email,
+          'fullName': userName,
+          'phoneNumber': phoneNumber,
+          'age': selectedAge,
+          'sex': selectedSex,
+          'bloodGroup': selectedBlood,
+        };
+        final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+        if (await userRef.get().then((snapshot) => snapshot.exists)) {
+          await userRef.update(userData);
+        } else {
+          await userRef.set(userData);
+        }
+        print('User data saved successfully');
+      }
+    } catch (e) {
+      print('Error saving user data: $e');
+    }
   }
 
   String _generateOTP(int length) {
@@ -892,7 +921,7 @@ class AuthService {
     }
   }
 
-  Future<void> CheckPhoneOTP(BuildContext context, String verificationId, String phoneNumber) async {
+  Future<void> CheckPhoneOTP(BuildContext context, String verificationId, String phoneNumber, String email, String name, String age, String sex, String bloodg, String dp) async {
     TextEditingController otpController1 = TextEditingController();
     TextEditingController otpController2 = TextEditingController();
     TextEditingController otpController3 = TextEditingController();
@@ -1118,9 +1147,14 @@ class AuthService {
                                   color: Colors.black,
                                 ),
                                 child: TextButton(
-                                  onPressed: () {
-                                    // Handle continue button press
-                                    // Navigate to the main screen
+                                  onPressed: () async {
+                                    await SaveUserData(
+                                        email, dp, name, phoneNumber, age, sex, bloodg
+                                    );
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                    );
                                   },
                                   style: ButtonStyle(
                                     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),

@@ -32,33 +32,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   late List<String> choices = [];
   TextEditingController _phoneNumberController = TextEditingController();
   File? _image;
+  late AuthService authService;
 
-  Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
-
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        Map<String, dynamic> userData = {
-          'profilePictureUrl': userProfilePic,
-          'email' : email,
-          'fullName': userName,
-          'phoneNumber': phoneNumber,
-          'age': selectedAge,
-          'sex': selectedSex,
-          'bloodGroup': selectedBlood,
-        };
-        final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-        if (await userRef.get().then((snapshot) => snapshot.exists)) {
-        await userRef.update(userData);
-        } else {
-        await userRef.set(userData);
-        }
-        print('User data saved successfully');
-      }
-    } catch (e) {
-      print('Error saving user data: $e');
-    }
-  }
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -89,10 +64,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (!isRegistered) {
       // Phone number is not registered, send OTP and proceed to OTP verification
       String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
-      await AuthService().CheckPhoneOTP(context, verificationId, phoneNumber);
+      await AuthService().CheckPhoneOTP(context, verificationId, phoneNumber, email, userName, selectedAge, selectedSex, selectedBlood, userProfilePic);
     } else {
       // Phone number is registered, save user data and navigate to HomeScreen
-      SaveUserData(
+      AuthService().SaveUserData(
         email,
         userProfilePic,
         userName,
@@ -116,6 +91,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     super.initState();
     _fetchUserData();
     _phoneNumberController = TextEditingController();
+    authService = AuthService();
   }
 
   Future _getImage(ImageSource source) async {
