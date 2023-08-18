@@ -987,7 +987,7 @@ class AuthService {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'OTP',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
