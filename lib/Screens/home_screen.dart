@@ -11,6 +11,8 @@ import 'package:nirogh/Widgets/horizontal_card1.dart';
 import 'package:nirogh/Widgets/popular_lab.dart';
 import 'package:nirogh/Widgets/popular_test.dart';
 
+import 'notification_screen.dart';
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -159,7 +161,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       IconButton(
                         icon: Icon(CupertinoIcons.bell_fill),
                         onPressed: () {
-                          // Code to handle notification icon tap
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (context, animation, secondaryAnimation) => Notifications(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0);
+                                const end = Offset.zero;
+                                const curve = Curves.easeInOut;
+
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var offsetAnimation = animation.drive(tween);
+
+                                return SlideTransition(
+                                  position: offsetAnimation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
                         },
                       ),
                       if (notificationCount > 0)
