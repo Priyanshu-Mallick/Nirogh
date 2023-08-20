@@ -64,7 +64,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (!isRegistered) {
       // Phone number is not registered, send OTP and proceed to OTP verification
       String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
-      await AuthService().CheckPhoneOTP(context, verificationId, phoneNumber, email, userName, selectedAge, selectedSex, selectedBlood, userProfilePic);
+      await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
     } else {
       // Phone number is registered, save user data and navigate to HomeScreen
       AuthService().SaveUserData(

@@ -166,7 +166,7 @@ class _UserRegistrationState extends State<UserRegistration>
               // Generate and send OTP via phone
               String verificationId = await AuthService().sendOTPToPhone(phone);
               //call the showVerifyDialog
-              await AuthService().showVerifyDialog(name, email, phone, password, verificationId, context);
+              await AuthService().showVerifyDialog(name, email, phone, password, verificationId, context, "", "", "", "", 0);
 
             } else {
               showDialog(
@@ -494,9 +494,9 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     builder: (BuildContext context) {
                                                       return WillPopScope(
                                                         onWillPop: () async => false, // Disable popping with back button
-                                                        child: Center(
+                                                        child: const Center(
                                                           child: SpinKitFadingCircle(
-                                                            color: Theme.of(context).primaryColor,
+                                                            color: Colors.cyan,
                                                             size: 50.0,
                                                           ),
                                                         ),

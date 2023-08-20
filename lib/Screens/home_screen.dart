@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       IconButton(
-                        icon: Icon(CupertinoIcons.bell_fill),
+                        icon: const Icon(CupertinoIcons.bell_fill),
                         onPressed: () {
                           Navigator.push(
                             context,
