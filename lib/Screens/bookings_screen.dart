@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Widgets/bottom_navigation.dart';
 import 'package:nirogh/services/track_order.dart';
+
+import 'home_screen.dart';
 
 class Booking {
   final String bookingId;
@@ -58,11 +61,17 @@ class _BookingScreenState extends State<BookingScreen> {
             ? Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.view_agenda_outlined, color: Colors.black),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+              },
+              icon: Icon(CupertinoIcons.square_grid_2x2, color: Colors.black),
             ),
             title: const Text('My Bookings', style: TextStyle(color: Colors.black)),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.cyan[300],
           ),
           body: Container(
             color: Colors.black12,
@@ -272,10 +281,10 @@ class _BookingScreenState extends State<BookingScreen> {
         onSelected: (String result) {
           if (result == 'track') {
             // _showSnackbar(context, 'This functionality will be updated soon');
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TrackingScreen(id: bookingId)),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => TrackingScreen(id: bookingId)),
+            // );
           } else if (result == 'cancel') {
             _showCancelBottomSheet(context, index);
           } else if (result == 'download') {

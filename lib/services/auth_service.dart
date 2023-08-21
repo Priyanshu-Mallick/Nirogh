@@ -36,7 +36,7 @@ class AuthService {
 
   // Function for Google Sign-In
   // Function for Google Sign-In
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     try {
       // Configure GoogleSignIn with the required scopes
       final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -62,25 +62,28 @@ class AuthService {
         // Finally, let's sign in
         final authResult = await FirebaseAuth.instance.signInWithCredential(credential);
 
-        // If the sign-in is successful, retrieve and store user data
+        // If the sign-in is successful, retrieve and pass user data to UpdateProfileScreen
         if (authResult.user != null) {
           final user = authResult.user!;
-          await SaveUserData(
-            user.email ?? "",
-            user.photoURL ?? "",
-            user.displayName ?? "", // If displayName is null, use empty string
-            user.phoneNumber ?? "", // If displayName is null, use empty string
-            "",
-            "",
-            ""
+          AuthService.setLoggedIn(true);
+          Navigator.pop(context);
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => UpdateProfileScreen(
+                email: user.email ?? "",
+                userProfilePic: user.photoURL ?? "",
+                userName: user.displayName ?? "",
+              ),
+            ),
           );
         }
       }
     } catch (e) {
-      // Handle any errors that occur during sign-in or data storage
-      print("Error during sign-in or data storage: $e");
+      // Handle any errors that occur during sign-in
+      print("Error during sign-in: $e");
     }
   }
+
   // signInWithGoogle() async {
   //   // begin interactive sign-in process
   //   final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -141,41 +144,41 @@ class AuthService {
   // }
 
   // Function to store user data
-  Future<void> storeUserData(
-      String profilePictureUrl,
-      String fullName,
-      String phoneNumber,
-      String email,
-      String age,
-      String sex,
-      ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-      await userRef.set({
-        'profilePictureUrl': profilePictureUrl,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
-        'email': email,
-        'age': age,
-        'sex': sex,
-      });
-      Fluttertoast.showToast(
-        msg: 'User data saved successfully',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
-    }
-    Fluttertoast.showToast(
-      msg: 'User data can not stored successfully',
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      backgroundColor: Colors.grey[800],
-      textColor: Colors.white,
-    );
-  }
+  // Future<void> storeUserData(
+  //     String profilePictureUrl,
+  //     String fullName,
+  //     String phoneNumber,
+  //     String email,
+  //     String age,
+  //     String sex,
+  //     ) async {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+  //     await userRef.set({
+  //       'profilePictureUrl': profilePictureUrl,
+  //       'fullName': fullName,
+  //       'phoneNumber': phoneNumber,
+  //       'email': email,
+  //       'age': age,
+  //       'sex': sex,
+  //     });
+  //     Fluttertoast.showToast(
+  //       msg: 'User data saved successfully',
+  //       toastLength: Toast.LENGTH_SHORT,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.grey[800],
+  //       textColor: Colors.white,
+  //     );
+  //   }
+  //   Fluttertoast.showToast(
+  //     msg: 'User data can not stored successfully',
+  //     toastLength: Toast.LENGTH_SHORT,
+  //     gravity: ToastGravity.BOTTOM,
+  //     backgroundColor: Colors.grey[800],
+  //     textColor: Colors.white,
+  //   );
+  // }
 
   Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
 
@@ -370,7 +373,7 @@ class AuthService {
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                    MaterialPageRoute(builder: (context) => UpdateProfileScreen(email: "", userName: "", userProfilePic: "")),
                   );
                 },
               ),
@@ -520,7 +523,7 @@ class AuthService {
   }
 
   Future<void> showVerifyDialog(String name, String email, String phoneNumber, String password, String verificationId, BuildContext context, String dp, String age, String sex, String bg, int c) async {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.72;
+    double sheetHeight = MediaQuery.of(context).size.height * 0.5;
     double initialPosition = sheetHeight;
 
     showModalBottomSheet(
@@ -859,6 +862,10 @@ class AuthService {
                                     }
                                     else{
                                       SaveUserData(email, dp, name, phoneNumber, age, sex, bg);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => HomeScreen()),
+                                      );
                                     }
                                   },
                                   style: ButtonStyle(

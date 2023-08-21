@@ -13,7 +13,16 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../services/auth_service.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({Key? key}) : super(key: key);
+  final String email;
+  final String userProfilePic;
+  final String userName;
+
+  const UpdateProfileScreen({
+    required this.email,
+    required this.userProfilePic,
+    required this.userName,
+    Key? key,
+  }) : super(key: key);
 
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
@@ -31,8 +40,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   late bool isDarkMode;
   late List<String> choices = [];
   TextEditingController _phoneNumberController = TextEditingController();
-  File? _image;
+  // File? _image;
   late AuthService authService;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+    _phoneNumberController = TextEditingController();
+    authService = AuthService();
+
+    email = widget.email;
+    userProfilePic = widget.userProfilePic;
+    userName = widget.userName;
+  }
 
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -59,9 +80,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   void CheckPhoneNumber(String phoneNumber) async {
     // Check if the phone number is already registered
-    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered(phoneNumber);
 
-    if (!isRegistered) {
+    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered("+91"+phoneNumber);
+    print("The Registration status is");
+    print(isRegistered);
+    if (isRegistered==false) {
       // Phone number is not registered, send OTP and proceed to OTP verification
       String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
       await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
@@ -83,15 +106,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         ),
       );
     }
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-    _phoneNumberController = TextEditingController();
-    authService = AuthService();
   }
 
   Future _getImage(ImageSource source) async {

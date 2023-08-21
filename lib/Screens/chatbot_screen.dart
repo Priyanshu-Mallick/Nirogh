@@ -14,6 +14,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.cyan[300],
         title: const Text('Chatbot Screen'),
       ),
       body: const Center(

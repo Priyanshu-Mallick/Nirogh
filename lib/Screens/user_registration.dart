@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nirogh/services/auth_service.dart';
-import 'package:nirogh/firebase_options.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
@@ -503,14 +500,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       );
                                                     },
                                                   );
-                                                  await AuthService().signInWithGoogle();
-                                                  AuthService.setLoggedIn(true);
-                                                  Navigator.pop(context); // Close the buffering animation dialog
-                                                  Navigator.of(context).pushReplacement(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => HomeScreen(),
-                                                    ),
-                                                  );
+                                                  await AuthService().signInWithGoogle(context);
+                                                  // AuthService.setLoggedIn(true);
+                                                  // Navigator.pop(context); // Close the buffering animation dialog
+                                                  // Navigator.of(context).pushReplacement(
+                                                  //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                  // );
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
@@ -709,11 +704,12 @@ class _UserRegistrationState extends State<UserRegistration>
                                                       );
                                                     },
                                                   );
-                                                  await AuthService().signInWithGoogle();
-                                                  AuthService.setLoggedIn(true);
-                                                  Navigator.of(context).pushReplacement(
-                                                    MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                  );
+                                                  await AuthService().signInWithGoogle(context);
+                                                  // AuthService.setLoggedIn(true);
+                                                  // Navigator.pop(context);
+                                                  // Navigator.of(context).pushReplacement(
+                                                  //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                  // );
                                                 },
                                                 elevation: 0,
                                                 backgroundColor: Colors.white,
