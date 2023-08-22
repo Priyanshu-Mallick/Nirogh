@@ -79,35 +79,47 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   void CheckPhoneNumber(String phoneNumber) async {
-    // Check if the phone number is already registered
+    final user = FirebaseAuth.instance.currentUser;
 
-    bool isRegistered = await AuthService().checkIfPhoneNumberRegistered("+91"+phoneNumber);
+    if (user != null) {
+      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
+      final userSnapshot = await userRef.get();
 
-    print("The Registration status is");
-    print(isRegistered);
-    if (isRegistered==false) {
-      // Phone number is not registered, send OTP and proceed to OTP verification
-      String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
-      await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
-    } else {
-      // Phone number is registered, save user data and navigate to HomeScreen
-      AuthService().SaveUserData(
-        email,
-        userProfilePic,
-        userName,
-        phoneNumber,
-        selectedAge,
-        selectedSex,
-        selectedBlood,
-      );
+      if (userSnapshot.exists) {
+        final userData = userSnapshot.data();
+        final savedPhoneNumber = userData?['phoneNumber'] ?? '';
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+        bool isRegistered = savedPhoneNumber == phoneNumber;
+
+        print("The Registration status is");
+        print(isRegistered);
+
+        if (!isRegistered) {
+          // Phone number is not registered, send OTP and proceed to OTP verification
+          String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
+          await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
+        } else {
+          // Phone number is registered, save user data and navigate to HomeScreen
+          AuthService().SaveUserData(
+            email,
+            userProfilePic,
+            userName,
+            phoneNumber,
+            selectedAge,
+            selectedSex,
+            selectedBlood,
+          );
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+          );
+        }
+      }
     }
   }
+
 
   Future _getImage(ImageSource source) async {
     try {

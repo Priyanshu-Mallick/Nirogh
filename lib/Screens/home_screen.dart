@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ? 'Hi ${userName?.split(' ').first}!'
                         : 'Welcome!',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 30,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       _getGreetingMessage(),
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 20,
                         color: Colors.grey,
                       ),
                     ),
@@ -235,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
