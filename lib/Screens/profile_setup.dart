@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nirogh/Screens/home_screen.dart';
@@ -130,6 +131,21 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       img = await _cropImage(imageFile: img);
 
       if (img != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return WillPopScope(
+              onWillPop: () async => false, // Disable popping with back button
+              child: Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.cyan,
+                  size: 50.0,
+                ),
+              ),
+            );
+          },
+        );
         // Upload image to Firebase Cloud Storage
         String imageName = DateTime.now().millisecondsSinceEpoch.toString(); // Generating a unique name for the image
         firebase_storage.Reference ref =
@@ -142,10 +158,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         String imageUrl = await taskSnapshot.ref.getDownloadURL();
 
         setState(() {
-          // _image = img; // Assuming _image is a File variable to display the selected image
           userProfilePic = imageUrl; // Update the userProfilePic variable
         });
       }
+      Navigator.of(context).pop();
     } on PlatformException catch (e) {
       print(e);
       Navigator.of(context).pop();

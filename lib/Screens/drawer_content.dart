@@ -137,21 +137,6 @@ class _DrawerContent extends State<DrawerContent> {
                                   ),
                                 ),
                               ),
-                              // Positioned(
-                              //   bottom: 0,
-                              //   right: 0,
-                              //   child: CircleAvatar(
-                              //     backgroundColor: Colors.white,
-                              //     radius: 19,
-                              //     child: IconButton(
-                              //       onPressed: () {
-                              //         // Implement the edit functionality here
-                              //       },
-                              //       color: Colors.black,
-                              //       icon: const Icon(Icons.edit, size: 18),
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                           const SizedBox(height: 10),

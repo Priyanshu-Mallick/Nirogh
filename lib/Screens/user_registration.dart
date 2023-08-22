@@ -697,7 +697,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                         onWillPop: () async => false, // Disable popping with back button
                                                         child: Center(
                                                           child: SpinKitFadingCircle(
-                                                            color: Theme.of(context).primaryColor,
+                                                            color: Colors.cyan,
                                                             size: 50.0,
                                                           ),
                                                         ),
