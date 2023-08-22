@@ -82,6 +82,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     // Check if the phone number is already registered
 
     bool isRegistered = await AuthService().checkIfPhoneNumberRegistered("+91"+phoneNumber);
+
     print("The Registration status is");
     print(isRegistered);
     if (isRegistered==false) {
