@@ -266,13 +266,13 @@ class _BookingScreenState extends State<BookingScreen> {
       bottomNavigationBar: BottomNavigationBarWidget(initialIndex: _selectedIndex),
     );
   }
-  void _showSnackbar(BuildContext context, String message) {
-    final snackbar = SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
-  }
+  // void _showSnackbar(BuildContext context, String message) {
+  //   final snackbar = SnackBar(
+  //     content: Text(message),
+  //     backgroundColor: Colors.red,
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  // }
 
   PopupMenuButton<String> buildPopupMenuButton(BuildContext context, int index, int complete, String bookingId) {
     if (complete == 2) {
