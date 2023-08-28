@@ -35,7 +35,7 @@ class _NotificationsState extends State<Notifications> {
               height: 150, // Adjust the height as needed
             ),
             SizedBox(height: 20),
-            Text(
+            const Text(
               'It\'s a bit lonely around here!',
               style: TextStyle(
                 fontSize: 20,
