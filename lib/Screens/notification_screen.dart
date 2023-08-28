@@ -19,7 +19,7 @@ class _NotificationsState extends State<Notifications> {
         title: const Text('Notificaations'),
         backgroundColor: Colors.cyan[300],
         leading: IconButton(
-          icon: Icon(CupertinoIcons.arrow_left),
+          icon: const Icon(CupertinoIcons.arrow_left),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -34,7 +34,7 @@ class _NotificationsState extends State<Notifications> {
               width: 150, // Adjust the width as needed
               height: 150, // Adjust the height as needed
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Text(
               'It\'s a bit lonely around here!',
               style: TextStyle(
@@ -43,8 +43,8 @@ class _NotificationsState extends State<Notifications> {
                 color: Colors.black
               ),
             ),
-            SizedBox(height: 15),
-            Text(
+            const SizedBox(height: 15),
+            const Text(
               'The notifications you receive will appear in this section',
               style: TextStyle(fontSize: 14, color: CupertinoColors.inactiveGray),
             ),
