@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:nirogh/Screens/home_screen.dart';
-
-import '../Widgets/bottom_navigation.dart';
 
 class Notifications extends StatefulWidget {
   @override
@@ -10,8 +7,6 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-  int _selectedIndex = 2; // Set the default selected index
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
