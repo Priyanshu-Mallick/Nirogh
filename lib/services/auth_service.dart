@@ -68,12 +68,25 @@ class AuthService {
           AuthService.setLoggedIn(true);
           Navigator.pop(context);
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => UpdateProfileScreen(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => UpdateProfileScreen(
                 email: user.email ?? "",
                 userProfilePic: user.photoURL ?? "",
                 userName: user.displayName ?? "",
               ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
             ),
           );
         }

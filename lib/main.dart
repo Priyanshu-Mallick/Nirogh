@@ -100,7 +100,22 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _navigateToNextScreen() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => SlidableFlashScreens()),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SlidableFlashScreens(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
     );
   }
 
@@ -216,8 +231,21 @@ class _SlidableFlashScreensState extends State<SlidableFlashScreens> {
                   );
                 } else {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => UserRegistration(),
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) => UserRegistration(),
+                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                        const begin = Offset(1.0, 0.0);
+                        const end = Offset.zero;
+                        const curve = Curves.easeInOut;
+
+                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                        var offsetAnimation = animation.drive(tween);
+
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: child,
+                        );
+                      },
                     ),
                   );
                 }
