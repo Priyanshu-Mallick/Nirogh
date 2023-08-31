@@ -137,7 +137,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           builder: (BuildContext context) {
             return WillPopScope(
               onWillPop: () async => false, // Disable popping with back button
-              child: Center(
+              child: const Center(
                 child: SpinKitFadingCircle(
                   color: Colors.cyan,
                   size: 50.0,
