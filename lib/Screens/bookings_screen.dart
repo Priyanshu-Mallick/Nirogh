@@ -48,7 +48,7 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  int _selectedIndex = 1; // Set the default selected index
+  final int _selectedIndex = 1; // Set the default selected index
   Color darkCyan = const Color.fromRGBO(0, 110, 160, 1.0);
   Color darkRed = const Color.fromRGBO(100, 0, 0, 1.0);
 
@@ -68,7 +68,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   ),
                 );
               },
-              icon: Icon(CupertinoIcons.square_grid_2x2, color: Colors.black),
+              icon: const Icon(CupertinoIcons.square_grid_2x2, color: Colors.black),
             ),
             title: const Text('My Bookings', style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.cyan[300],
