@@ -92,9 +92,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
         bool isRegistered = savedPhoneNumber == phoneNumber;
 
-        print("The Registration status is");
-        print(isRegistered);
-
         if (!isRegistered) {
           // Phone number is not registered, send OTP and proceed to OTP verification
           String verificationId = await AuthService().sendOTPToPhone(phoneNumber);

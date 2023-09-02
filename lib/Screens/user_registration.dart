@@ -481,37 +481,35 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   ),
                                               ),
                                             ),
-                                            SizedBox(height: 20.0),
-                                            Container(
-                                              child: FloatingActionButton(
-                                                onPressed: () async {
-                                                  showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder: (BuildContext context) {
-                                                      return WillPopScope(
-                                                        onWillPop: () async => false, // Disable popping with back button
-                                                        child: const Center(
-                                                          child: SpinKitFadingCircle(
-                                                            color: Colors.cyan,
-                                                            size: 50.0,
-                                                          ),
+                                            const SizedBox(height: 20.0),
+                                            FloatingActionButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (BuildContext context) {
+                                                    return WillPopScope(
+                                                      onWillPop: () async => false, // Disable popping with back button
+                                                      child: const Center(
+                                                        child: SpinKitFadingCircle(
+                                                          color: Colors.cyan,
+                                                          size: 50.0,
                                                         ),
-                                                      );
-                                                    },
-                                                  );
-                                                  await AuthService().signInWithGoogle(context);
-                                                  // AuthService.setLoggedIn(true);
-                                                  // Navigator.pop(context); // Close the buffering animation dialog
-                                                  // Navigator.of(context).pushReplacement(
-                                                  //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                  // );
-                                                },
-                                                elevation: 0,
-                                                backgroundColor: Colors.white,
-                                                foregroundColor: Colors.black,
-                                                child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
-                                              ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                                await AuthService().signInWithGoogle(context);
+                                                // AuthService.setLoggedIn(true);
+                                                // Navigator.pop(context); // Close the buffering animation dialog
+                                                // Navigator.of(context).pushReplacement(
+                                                //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                // );
+                                              },
+                                              elevation: 0,
+                                              backgroundColor: Colors.white,
+                                              foregroundColor: Colors.black,
+                                              child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
                                             SizedBox(height: 10.0),
                                             const Padding(
