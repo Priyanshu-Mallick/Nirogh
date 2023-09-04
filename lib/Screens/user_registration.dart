@@ -511,7 +511,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                               foregroundColor: Colors.black,
                                               child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
-                                            SizedBox(height: 10.0),
+                                            const SizedBox(height: 10.0),
                                             const Padding(
                                               padding: EdgeInsets
                                                   .symmetric(
