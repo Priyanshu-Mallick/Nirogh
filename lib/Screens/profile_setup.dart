@@ -86,7 +86,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
       final userSnapshot = await userRef.get();
 
-      if (userSnapshot.exists) {
+      // if (userSnapshot.exists) {
         final userData = userSnapshot.data();
         final savedPhoneNumber = userData?['phoneNumber'] ?? '';
 
@@ -114,7 +114,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             ),
           );
         }
-      }
+      // }
     }
   }
 
