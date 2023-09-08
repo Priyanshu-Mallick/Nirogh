@@ -130,7 +130,7 @@ class _DrawerContent extends State<DrawerContent> {
                                       fit: BoxFit.cover,
                                     ),
                                   )
-                                      : Icon(
+                                      : const Icon(
                                     Icons.person,
                                     size: 70,
                                     color: Colors.blue,
