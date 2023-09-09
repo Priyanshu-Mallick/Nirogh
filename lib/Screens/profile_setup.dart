@@ -742,7 +742,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               onTap: () {
                                 selectedSex = '';
                                 choices.clear();
-                                choices = ["Male", "Female", "Transgender", "Others"];
+                                choices = ["Male", "Female", "Others"];
                                 _showChoiceBottomSheet(context, 2, "Select Sex");
                               },
                             ),

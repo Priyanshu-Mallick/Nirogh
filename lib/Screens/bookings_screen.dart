@@ -26,7 +26,7 @@ class Booking {
     required this.scheduledTime,
     this.complete = 2,
     this.name = "Priyanshu Mallick",
-    this.sex = "Transgender",
+    this.sex = "Male",
     this.age = 21,
     this.address = "Nrushingha, Atharnala, Puri, Odisha, India, P.I.N. - 752002",
   });
