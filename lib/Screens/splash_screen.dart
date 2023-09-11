@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   late VideoPlayerController _controller;
 
   @override
-  void inintState() {
+  void initState() {
     super.initState();
 
     _controller = VideoPlayerController.asset(
