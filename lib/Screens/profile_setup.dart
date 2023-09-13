@@ -38,7 +38,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String selectedAge = '';
   String selectedSex = '';
   String selectedBlood = '';
-  late bool isDarkMode;
+  // late bool isDarkMode;
   late List<String> choices = [];
   TextEditingController _phoneNumberController = TextEditingController();
   // File? _image;
@@ -272,10 +272,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: isDarkMode? Colors.grey.withOpacity(0.5) : Colors.cyanAccent.withOpacity(0.5),
+                    color: Colors.cyanAccent.withOpacity(0.5),
                     border: Border.all(
                         style: BorderStyle.solid,
-                        color: isDarkMode ? Colors.grey : Colors.cyanAccent,
+                        color: Colors.cyanAccent,
                         width: 4)
                 ),
                 height: 400,
@@ -346,10 +346,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: isDarkMode ? Colors.grey.withOpacity(0.5) : Colors.cyanAccent.withOpacity(0.5),
+                    color: Colors.cyanAccent.withOpacity(0.5),
                     border: Border.all(
                         style: BorderStyle.solid,
-                        color: isDarkMode ? Colors.grey : Colors.cyanAccent,
+                        color: Colors.cyanAccent,
                         width: 4)
                 ),
                 height: 400,
@@ -420,10 +420,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               Container(
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: isDarkMode ? Colors.grey.withOpacity(0.5) : Colors.cyanAccent.withOpacity(0.5),
+                    color: Colors.cyanAccent.withOpacity(0.5),
                     border: Border.all(
                         style: BorderStyle.solid,
-                        color: isDarkMode ? Colors.grey : Colors.cyanAccent,
+                        color: Colors.cyanAccent,
                         width: 4)
                 ),
                 height: 400,
@@ -508,9 +508,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+        // isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
         return MaterialApp(
-          theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+          theme: ThemeData.light(),
           home: Directionality(
             textDirection: TextDirection.ltr,
             child: Builder(
@@ -518,7 +518,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: AppBar(
-                    backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                    backgroundColor: Colors.white,
                     leading: IconButton(
                       onPressed: () {
                         Navigator.of(context).pushReplacement(
@@ -529,20 +529,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       },
                       icon: Icon(
                         Icons.arrow_back,
-                        color: isDarkMode ? Colors.white : Colors.black,
+                        color: Colors.black,
                       ),
                     ),
                     title: Text(
                       "Profile",
                       style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black,
+                        color: Colors.black,
                       ),
                     ),
                   ),
                   body: Container(
                     decoration: BoxDecoration(
-                      gradient: !isDarkMode
-                          ? LinearGradient(
+                      gradient: LinearGradient(
                         colors: [
                           Colors.cyanAccent.withOpacity(0.5),
                           Colors.white70,
@@ -553,17 +552,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
-                          : const LinearGradient(
-                        colors: [
-                          Colors.white70,
-                          Colors.black26,
-                          Colors.black38,
-                          Colors.black26,
-                          Colors.white70,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
                     ),
                     padding: const EdgeInsets.all(15),
                     child: Column(
@@ -611,7 +599,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             const SizedBox(height: 10),
                             TextField(
                               readOnly: false,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -620,23 +608,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: "Email-Id",
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.person_2_outlined),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: TextEditingController(text: email),
                             ),
                             const SizedBox(height: 20),
                             TextField(
                               readOnly: false,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -645,23 +633,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: "Full Name",
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.person_2_outlined),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: TextEditingController(text: userName),
                             ),
                             const SizedBox(height: 20),
                             TextField(
                               readOnly: false,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -670,23 +658,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Phone number',
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.phone),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: _phoneNumberController, // Use the _phoneNumberController here
                             ),
                             const SizedBox(height: 20),
                             TextField(
                               readOnly: true,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -695,16 +683,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Age',
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.calendar_today_outlined),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: TextEditingController(text: selectedAge),
                               onTap: () {
@@ -718,7 +706,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             const SizedBox(height: 20),
                             TextField(
                               readOnly: true,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -727,16 +715,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Sex',
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.transgender_outlined),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: TextEditingController(text: selectedSex),
                               onTap: () {
@@ -750,7 +738,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             const SizedBox(height: 20),
                             TextField(
                               readOnly: true,
-                              cursorColor: isDarkMode ? Colors.white : Colors.black,
+                              cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
@@ -759,16 +747,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   borderRadius: BorderRadius.circular(100),
                                   borderSide: BorderSide(
                                     width: 2,
-                                    color: isDarkMode ? Colors.white : Colors.black,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Blood Group',
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 ),
                                 prefixIcon: const Icon(Icons.water_drop),
-                                prefixIconColor: isDarkMode ? Colors.white : Colors.black,
+                                prefixIconColor: Colors.black,
                               ),
                               controller: TextEditingController(text: selectedBlood),
                               onTap: () {
@@ -787,7 +775,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   CheckPhoneNumber(_phoneNumberController.text);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: isDarkMode ? Colors.yellowAccent : Colors.greenAccent,
+                                  backgroundColor: Colors.greenAccent,
                                   side: BorderSide.none,
                                   shape: const StadiumBorder(),
                                 ),
@@ -804,12 +792,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 Text("Nirogh", style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: isDarkMode? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 )),
                                 Text("The result you can Trust!", style: TextStyle(
                                   fontStyle: FontStyle.italic,
                                   fontSize: 13,
-                                  color: isDarkMode? Colors.white : Colors.black,
+                                  color: Colors.black,
                                 )),
 
                               ],
