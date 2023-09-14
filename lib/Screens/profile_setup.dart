@@ -745,13 +745,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Blood Group',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -788,7 +788,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             const SizedBox(height: 20),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
+                              children: const [
                                 Text("Nirogh", style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
