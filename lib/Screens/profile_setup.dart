@@ -527,12 +527,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           ),
                         );
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: Colors.black,
                       ),
                     ),
-                    title: Text(
+                    title: const Text(
                       "Profile",
                       style: TextStyle(
                         color: Colors.black,
@@ -681,13 +681,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Age',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -713,13 +713,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'Sex',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
