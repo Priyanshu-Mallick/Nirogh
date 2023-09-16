@@ -606,13 +606,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
                                 ),
                                 labelText: "Email-Id",
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -631,13 +631,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
                                 ),
                                 labelText: "Full Name",
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -656,7 +656,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(100),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
                                   ),
