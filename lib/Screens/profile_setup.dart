@@ -662,7 +662,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   ),
                                 ),
                                 labelText: 'Phone number',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -786,9 +786,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Column(
+                            const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
+                              children: [
                                 Text("Nirogh", style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
