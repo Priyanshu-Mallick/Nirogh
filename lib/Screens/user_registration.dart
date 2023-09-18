@@ -683,37 +683,35 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   ),
                                               ),
                                             ),
-                                            SizedBox(height: 15.0),
-                                            Container(
-                                              child: FloatingActionButton(
-                                                onPressed: () async {
-                                                  showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder: (BuildContext context) {
-                                                      return WillPopScope(
-                                                        onWillPop: () async => false, // Disable popping with back button
-                                                        child: Center(
-                                                          child: SpinKitFadingCircle(
-                                                            color: Colors.cyan,
-                                                            size: 50.0,
-                                                          ),
+                                            const SizedBox(height: 15.0),
+                                            FloatingActionButton(
+                                              onPressed: () async {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder: (BuildContext context) {
+                                                    return WillPopScope(
+                                                      onWillPop: () async => false, // Disable popping with back button
+                                                      child: const Center(
+                                                        child: SpinKitFadingCircle(
+                                                          color: Colors.cyan,
+                                                          size: 50.0,
                                                         ),
-                                                      );
-                                                    },
-                                                  );
-                                                  await AuthService().signInWithGoogle(context);
-                                                  // AuthService.setLoggedIn(true);
-                                                  // Navigator.pop(context);
-                                                  // Navigator.of(context).pushReplacement(
-                                                  //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                  // );
-                                                },
-                                                elevation: 0,
-                                                backgroundColor: Colors.white,
-                                                foregroundColor: Colors.black,
-                                                child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
-                                              ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                                await AuthService().signInWithGoogle(context);
+                                                // AuthService.setLoggedIn(true);
+                                                // Navigator.pop(context);
+                                                // Navigator.of(context).pushReplacement(
+                                                //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
+                                                // );
+                                              },
+                                              elevation: 0,
+                                              backgroundColor: Colors.white,
+                                              foregroundColor: Colors.black,
+                                              child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
                                             const SizedBox(height: 5.0),
                                             const Padding(
