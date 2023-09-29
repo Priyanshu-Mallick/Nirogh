@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(top: 5.0),
                     child: Text(
                       _getGreetingMessage(),
                       style: const TextStyle(
@@ -241,8 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(30),
                   color: Colors.grey[300],
                 ),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Padding(
                       padding: EdgeInsets.only(left: 20),
                       child: Icon(CupertinoIcons.search),
@@ -268,8 +268,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     // The first item in the list
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
                       child: HorizontalCard(),
                     );
                   } else if (index == 1) {
