@@ -363,7 +363,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                         // Login tab content
                                         Column(
                                           children: [
-                                            SizedBox(height: 30),
+                                            const SizedBox(height: 30),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -379,7 +379,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 15),
+                                            const SizedBox(height: 15),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -409,7 +409,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 20.0),
+                                            const SizedBox(height: 20.0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -466,7 +466,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 25.0),
+                                            const SizedBox(height: 25.0),
                                             const Padding(
                                               padding: EdgeInsets
                                                   .symmetric(
@@ -534,7 +534,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                         // Sign Up tab content
                                         Column(
                                           children: [
-                                            SizedBox(height: 0),
+                                            const SizedBox(height: 0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -549,26 +549,26 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 0),
+                                            const SizedBox(height: 0),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                               child: TextField(
                                                 controller: emailController,
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                   labelText: 'Email',
                                                 ),
-                                                style: TextStyle(fontSize: 15),
+                                                style: const TextStyle(fontSize: 15),
                                               ),
                                             ),
-                                            SizedBox(height: 0),
+                                            const SizedBox(height: 0),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                               child: TextField(
                                                 controller: phoneController,
-                                                decoration: InputDecoration(
+                                                decoration: const InputDecoration(
                                                   labelText: 'Phone Number',
                                                 ),
-                                                style: TextStyle(fontSize: 15),
+                                                style: const TextStyle(fontSize: 15),
                                                 keyboardType: TextInputType.number,
                                               ),
                                             ),
