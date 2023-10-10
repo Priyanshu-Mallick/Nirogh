@@ -123,11 +123,11 @@ class _UserRegistrationState extends State<UserRegistration>
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
+            title: const Text('Error'),
             content: Text(e.toString()),
             actions: <Widget>[
               TextButton(
-                child: Text('OK'),
+                child: const Text('OK'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -572,7 +572,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 keyboardType: TextInputType.number,
                                               ),
                                             ),
-                                            SizedBox(height: 0),
+                                            const SizedBox(height: 0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -602,7 +602,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 0),
+                                            const SizedBox(height: 0),
                                             Padding(
                                               padding: const EdgeInsets
                                                   .symmetric(
@@ -633,7 +633,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 40),
+                                            const SizedBox(height: 40),
                                             Container(
                                               width: double.infinity,
                                               padding: const EdgeInsets
@@ -667,7 +667,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 15.0),
+                                            const SizedBox(height: 15.0),
                                             const Padding(
                                               padding: EdgeInsets
                                                   .symmetric(
