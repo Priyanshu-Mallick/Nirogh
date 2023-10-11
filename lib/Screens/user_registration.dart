@@ -177,7 +177,7 @@ class _UserRegistrationState extends State<UserRegistration>
                         onPressed: () {
                           Navigator.pop(context); // Close the dialog
                         },
-                        child: Text('OK'),
+                        child: const Text('OK'),
                       ),
                     ],
                   );
@@ -197,7 +197,7 @@ class _UserRegistrationState extends State<UserRegistration>
                       onPressed: () {
                         Navigator.pop(context); // Close the dialog
                       },
-                      child: Text('OK'),
+                      child: const Text('OK'),
                     ),
                   ],
                 );
@@ -284,7 +284,7 @@ class _UserRegistrationState extends State<UserRegistration>
                 bottomLeft: Radius.circular(50.0),
                 bottomRight: Radius.circular(50.0),
               ),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: 200.0,
                 child: Image.asset(

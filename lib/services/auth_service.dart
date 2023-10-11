@@ -562,7 +562,7 @@ class AuthService {
                 }
               },
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOut,
                 height: sheetHeight,
                 decoration: const BoxDecoration(
@@ -695,21 +695,21 @@ class AuthService {
                         //   ),
                         // ),
                         // SizedBox(height: 16),
-                        Text(
+                        const Text(
                           'Phone Number',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(phoneNumber),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                         Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
+                              const Text(
                                 'OTP',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
