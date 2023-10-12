@@ -8,6 +8,7 @@ import 'package:nirogh/firebase_options.dart';
 import 'package:nirogh/services/auth_service.dart';
 import 'package:video_player/video_player.dart';
 
+import 'Screens/chatbot_screen.dart';
 import 'Screens/home_screen.dart';
 import 'Widgets/bottom_navigation.dart';
 
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: SplashScreen(),
+      home: ChatbotScreen(),
     );
   }
 }
