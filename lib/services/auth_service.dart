@@ -97,102 +97,6 @@ class AuthService {
     }
   }
 
-  // signInWithGoogle() async {
-  //   // begin interactive sign-in process
-  //   final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-  //
-  //   // obtain auth details from request
-  //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
-  //
-  //   // create a new credential for the user
-  //   final credential = GoogleAuthProvider.credential(
-  //     accessToken: gAuth.accessToken,
-  //     idToken: gAuth.idToken,
-  //   );
-  //
-  //   // finally, let's sign in
-  //   return await FirebaseAuth.instance.signInWithCredential(credential);
-  // }
-  //
-  // Future<String?> getUserDisplayName() async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     return user.displayName;
-  //   }
-  //   return null;
-  // }
-
-  // Future<String> getUniqueUsername(String displayName) async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     final snapshot = await FirebaseFirestore.instance
-  //         .collection('user')
-  //         .doc(user.uid)
-  //         .get();
-  //     if (snapshot.exists) {
-  //       return snapshot.data()!['username'];
-  //     } else {
-  //       final username = await generateUniqueUsername(displayName);
-  //       await storeUserDisplayName(displayName, username);
-  //       return username;
-  //     }
-  //   }
-  //   throw Exception('User is not signed in.');
-  // }
-
-  // Future<String> generateUniqueUsername(String displayName) async {
-  //   final random = Random();
-  //   final prefix = displayName.replaceAll(' ', '').toLowerCase();
-  //   final suffix = random.nextInt(9999).toString().padLeft(4, '0');
-  //   final username = '$prefix$suffix';
-  //   final snapshot = await FirebaseFirestore.instance
-  //       .collection('user')
-  //       .where('username', isEqualTo: username)
-  //       .get();
-  //   if (snapshot.docs.isEmpty) {
-  //     return username;
-  //   } else {
-  //     return generateUniqueUsername(displayName); // Recursively generate a new username if it already exists
-  //   }
-  // }
-
-  // Function to store user data
-  // Future<void> storeUserData(
-  //     String profilePictureUrl,
-  //     String fullName,
-  //     String phoneNumber,
-  //     String email,
-  //     String age,
-  //     String sex,
-  //     ) async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-  //     await userRef.set({
-  //       'profilePictureUrl': profilePictureUrl,
-  //       'fullName': fullName,
-  //       'phoneNumber': phoneNumber,
-  //       'email': email,
-  //       'age': age,
-  //       'sex': sex,
-  //     });
-  //     Fluttertoast.showToast(
-  //       msg: 'User data saved successfully',
-  //       toastLength: Toast.LENGTH_SHORT,
-  //       gravity: ToastGravity.BOTTOM,
-  //       backgroundColor: Colors.grey[800],
-  //       textColor: Colors.white,
-  //     );
-  //   }
-  //   Fluttertoast.showToast(
-  //     msg: 'User data can not stored successfully',
-  //     toastLength: Toast.LENGTH_SHORT,
-  //     gravity: ToastGravity.BOTTOM,
-  //     backgroundColor: Colors.grey[800],
-  //     textColor: Colors.white,
-  //   );
-  // }
-
   Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
 
     try {
@@ -416,8 +320,11 @@ class AuthService {
   }
   Future<void> showResetPasswordBottomSheet(BuildContext context) async {
     TextEditingController emailController = TextEditingController();
-    double sheetHeight = MediaQuery.of(context).size.height * 0.72;
-    double buttonWidth = MediaQuery.of(context).size.width * 0.4;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double sheetHeight = screenHeight * 0.72;
+    double buttonWidth = screenWidth * 0.4;
 
     showModalBottomSheet(
       context: context,
@@ -431,18 +338,18 @@ class AuthService {
         return SingleChildScrollView(
           child: Container(
             height: sheetHeight,
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(screenWidth * 0.04),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Reset Password',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: screenWidth * 0.06,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: screenHeight * 0.01),
                 TextField(
                   controller: emailController,
                   decoration: const InputDecoration(
@@ -450,7 +357,7 @@ class AuthService {
                     hintText: 'Enter the registered email',
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: screenHeight * 0.02),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -460,7 +367,10 @@ class AuthService {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * 0.03,
+                          horizontal: buttonWidth * 0.3,
+                        ),
                         minimumSize: Size(buttonWidth, 0),
                       ),
                       onPressed: () {
@@ -502,7 +412,7 @@ class AuthService {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: screenWidth * 0.04),
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         primary: Colors.white,
@@ -512,7 +422,10 @@ class AuthService {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * 0.03,
+                          horizontal: buttonWidth * 0.3,
+                        ),
                         minimumSize: Size(buttonWidth, 0),
                       ),
                       onPressed: () {
@@ -536,7 +449,8 @@ class AuthService {
   }
 
   Future<void> showVerifyDialog(String name, String email, String phoneNumber, String password, String verificationId, BuildContext context, String dp, String age, String sex, String bg, int c) async {
-    double sheetHeight = MediaQuery.of(context).size.height * 0.5;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double sheetHeight = screenHeight * 0.5;
     double initialPosition = sheetHeight;
 
     showModalBottomSheet(
@@ -574,7 +488,7 @@ class AuthService {
                 ),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(screenHeight * 0.03),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -695,36 +609,36 @@ class AuthService {
                         //   ),
                         // ),
                         // SizedBox(height: 16),
-                        const Text(
+                        Text(
                           'Phone Number',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: screenHeight * 0.025, // Adjusted font size using MediaQuery
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: screenHeight * 0.015), // Adjusted SizedBox using MediaQuery
                         Text(phoneNumber),
-                        const SizedBox(height: 16),
+                        SizedBox(height: screenHeight * 0.032),
                         Center(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Text(
+                              Text(
                                 'OTP',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: screenHeight * 0.025, // Adjusted font size using MediaQuery
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              SizedBox(width: screenHeight * 0.008),
                               for (var i = 0; i < 6; i++)
                                 Container(
-                                  width: 40,
-                                  height: 40,
-                                  margin: EdgeInsets.only(right: 1.0),
+                                  width: screenHeight * 0.04, // Adjusted width using MediaQuery
+                                  height: screenHeight * 0.04, // Adjusted height using MediaQuery
+                                  margin: EdgeInsets.only(right: screenHeight * 0.001), // Adjusted margin using MediaQuery
                                   decoration: BoxDecoration(
                                     border: Border.all(),
-                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(screenHeight * 0.01), // Adjusted borderRadius using MediaQuery
                                   ),
                                   child: TextField(
                                     controller: i == 0
@@ -752,7 +666,7 @@ class AuthService {
                                     },
                                   ),
                                 ),
-                              SizedBox(width: 8),
+                              SizedBox(width: screenHeight * 0.008), // Adjusted SizedBox using MediaQuery
                               Container(
                                 child: TextButton(
                                   onPressed: () async {
@@ -825,8 +739,8 @@ class AuthService {
                                   },
                                   child: phoneVerificationSuccess
                                       ? Container(
-                                    width: 40,
-                                    height: 40,
+                                    width: screenHeight * 0.04, // Adjusted width using MediaQuery
+                                    height: screenHeight * 0.04, // Adjusted height using MediaQuery
                                     decoration: const BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Colors.green,
@@ -854,17 +768,17 @@ class AuthService {
                             ],
                           ),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: screenHeight * 0.064), // Adjusted SizedBox using MediaQuery
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          padding: EdgeInsets.symmetric(horizontal: screenHeight * 0.036), // Adjusted padding using MediaQuery
                           child: IgnorePointer(
                             ignoring: !(phoneVerificationSuccess),
                             child: Opacity(
                               opacity: phoneVerificationSuccess ? 1.0 : 0.5,
                               child: Container(
                                 width: double.infinity,
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(30.0),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(screenHeight * 0.03), // Adjusted borderRadius using MediaQuery,
                                   color: Colors.black,
                                 ),
                                 child: TextButton(
@@ -884,10 +798,10 @@ class AuthService {
                                   style: ButtonStyle(
                                     foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Continue',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: screenHeight * 0.02, // Adjusted font size using MediaQuery
                                       color: Colors.white,
                                     ),
                                   ),

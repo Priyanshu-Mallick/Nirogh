@@ -134,10 +134,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           builder: (BuildContext context) {
             return WillPopScope(
               onWillPop: () async => false, // Disable popping with back button
-              child: const Center(
+              child: Center(
                 child: SpinKitFadingCircle(
                   color: Colors.cyan,
-                  size: 50.0,
+                  size: MediaQuery.of(context).size.width * 0.2,
                 ),
               ),
             );
@@ -174,93 +174,100 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
 
-  void openImageBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
+    void openImageBottomSheet() {
+      double screenWidth = MediaQuery.of(context).size.width;
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
         ),
-      ),
-      backgroundColor: Colors.transparent, // Set the background color to transparent
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            // The blurred content of the background page
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Adjust the sigma values for the blur effect
-              child: Container(
-                color: Colors.transparent,
+        backgroundColor: Colors.transparent, // Set the background color to transparent
+        builder: (BuildContext context) {
+          return Stack(
+            children: [
+              // The blurred content of the background page
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Adjust the sigma values for the blur effect
+                child: Container(
+                  color: Colors.transparent,
+                ),
               ),
-            ),
-            // The bottom sheet content
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Text(
-                    'Select Image Source',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Send the image
-                      _getImage(ImageSource.camera);
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      CupertinoIcons.camera,
-                      size: 24,
-                    ),
-                    label: const Text('Camera'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
+              // The bottom sheet content
+              Container(
+                padding: EdgeInsets.all(screenWidth * 0.08),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Select Image Source',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.06,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 50)),
                     ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      // Send the image
-                      _getImage(ImageSource.gallery);
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(CupertinoIcons.photo),
-                    label: const Text('Gallery'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
+                    SizedBox(height: screenWidth * 0.08),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Send the image
+                        _getImage(ImageSource.camera);
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        CupertinoIcons.camera,
+                        size: screenWidth * 0.12,
                       ),
-                      minimumSize: MaterialStateProperty.all<Size>(const Size(50, 50)),
+                      label: const Text('Camera'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(screenWidth * 0.15),
+                          ),
+                        ),
+                        minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, screenWidth * 0.15),),
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: screenWidth * 0.04),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Send the image
+                        _getImage(ImageSource.gallery);
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(CupertinoIcons.photo),
+                      label: const Text('Gallery'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(screenWidth * 0.15),
+                          ),
+                        ),
+                        minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, screenWidth * 0.15)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+            ],
+          );
+        },
+      );
+    }
 
   void _showChoiceBottomSheet(BuildContext context, int c, String ctext) async {
+
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double itemExtent = screenHeight * 0.1; // Adjusted item extent using MediaQuery
+    double fontSize = screenWidth * 0.06; // Adjusted font size using MediaQuery
+
     dynamic result;
     if(c == 1) {
       result = await showModalBottomSheet(

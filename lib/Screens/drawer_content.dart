@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nirogh/Screens/post_splash_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:nirogh/Widgets/profile_menu.dart';
-import 'package:nirogh/main.dart';
 import 'package:nirogh/services/auth_service.dart';
 
 class DrawerContent extends StatefulWidget {

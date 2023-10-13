@@ -271,10 +271,13 @@ class _UserRegistrationState extends State<UserRegistration>
         statusBarIconBrightness: Brightness.dark,
       ),
     );
+
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: null,
-      // resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.topCenter,
@@ -285,8 +288,8 @@ class _UserRegistrationState extends State<UserRegistration>
                 bottomRight: Radius.circular(50.0),
               ),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: 200.0,
+                width: screenWidth,
+                height: screenHeight * 0.25,
                 child: Image.asset(
                   'lib/Assets/login page-image.jpg',
                   fit: BoxFit.cover,
@@ -295,22 +298,27 @@ class _UserRegistrationState extends State<UserRegistration>
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 130.0, 20.0, 30.0),
+                padding: EdgeInsets.fromLTRB(
+                  screenWidth * 0.05,
+                  screenHeight * 0.65,
+                  screenWidth * 0.05,
+                  screenHeight * 0.05,
+                ),
                 child: Column(
                   children: [
                     Expanded(
                       child: Card(
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(screenWidth * 0.05),
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.0),
+                            borderRadius: BorderRadius.circular(screenWidth * 0.05),
                             boxShadow: [
                               BoxShadow(
                                 color: customColor1.withOpacity(1),
-                                blurRadius: 10,
+                                blurRadius: screenWidth * 0.02,
                                 spreadRadius: 1,
                               ),
                             ],
@@ -320,13 +328,12 @@ class _UserRegistrationState extends State<UserRegistration>
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 30.0),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.05, vertical: screenHeight * 0.03),
                                 child: Container(
-                                  height: 40.0,
-                                  // Set the desired height for the TabBar
+                                  height: screenHeight * 0.04,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderRadius: BorderRadius.circular(screenHeight * 0.02),
                                     border: Border.all(
                                       color: Colors.black,
                                       width: 1.0,
@@ -344,7 +351,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                     ],
                                     indicator: BoxDecoration(
                                       color: Colors.cyanAccent,
-                                      borderRadius: BorderRadius.circular(30.0),
+                                      borderRadius: BorderRadius.circular(screenHeight * 0.02),
                                     ),
                                     labelColor: Colors.black,
                                     unselectedLabelColor: Colors.grey,
@@ -354,40 +361,34 @@ class _UserRegistrationState extends State<UserRegistration>
                               Expanded(
                                 child: SingleChildScrollView(
                                   child: SizedBox(
-                                    height:
-                                    MediaQuery.of(context).size.height *
-                                        0.6,
+                                    height: screenHeight * 0.6,
                                     child: TabBarView(
                                       controller: _tabController,
                                       children: [
                                         // Login tab content
                                         Column(
                                           children: [
-                                            const SizedBox(height: 30),
+                                            SizedBox(height: screenHeight * 0.03),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: emailController,
-                                                decoration: const InputDecoration(
-                                                  labelText:
-                                                  'Enter email or username',
+                                                decoration: InputDecoration(
+                                                  labelText: 'Enter email or username',
                                                 ),
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 15),
+                                            SizedBox(height: screenHeight * 0.015),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: passwordController,
-                                                obscureText:
-                                                passwordVisibility,
+                                                obscureText: passwordVisibility,
                                                 decoration: InputDecoration(
                                                   labelText: 'Password',
                                                   suffixIcon: IconButton(
@@ -398,8 +399,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
-                                                        passwordVisibility =
-                                                        !passwordVisibility;
+                                                        passwordVisibility = !passwordVisibility;
                                                       });
                                                     },
                                                   ),
@@ -409,11 +409,11 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 20.0),
+                                            SizedBox(height: screenHeight * 0.02),
+                                            SizedBox(height: screenHeight * 0.03),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: Align(
                                                 alignment: Alignment.centerRight,
                                                 child: InkWell(
@@ -430,29 +430,21 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 50.0),
-                                            // ...
-                                            Container(
-                                              width: double.infinity,
-                                              padding: const EdgeInsets
-                                                  .symmetric(horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.05),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                                               child: Container(
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      30.0),
+                                                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                                                   color: Colors.black,
                                                 ),
                                                 child: TextButton(
                                                   onPressed: () {
-                                                    loginWithEmailAndPassword(
-                                                        context);
+                                                    loginWithEmailAndPassword(context);
                                                   },
                                                   style: ButtonStyle(
-                                                    foregroundColor:
-                                                    MaterialStateProperty
-                                                        .all<Color>(
+                                                    foregroundColor: MaterialStateProperty.all<Color>(
                                                       Colors.white,
                                                     ),
                                                   ),
@@ -466,22 +458,22 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 25.0),
-                                            const Padding(
-                                              padding: EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.025),
+                                            SizedBox(height: screenHeight * 0.04),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                                               child: Align(
-                                                  child: Text(
-                                                    '------------OR Sign Up With------------',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors.black,
-                                                    ),
+                                                child: Text(
+                                                  '------------OR Sign Up With------------',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black,
                                                   ),
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(height: 20.0),
+                                            SizedBox(height: screenHeight * 0.02),
+                                            SizedBox(height: screenHeight * 0.015),
                                             FloatingActionButton(
                                               onPressed: () async {
                                                 showDialog(
@@ -500,33 +492,25 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   },
                                                 );
                                                 await AuthService().signInWithGoogle(context);
-                                                // AuthService.setLoggedIn(true);
-                                                // Navigator.pop(context); // Close the buffering animation dialog
-                                                // Navigator.of(context).pushReplacement(
-                                                //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                // );
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,
                                               foregroundColor: Colors.black,
                                               child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
-                                            const SizedBox(height: 10.0),
-                                            const Padding(
-                                              padding: EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.01),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                  child: Text(
-                                                    'Google',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
+                                                child: Text(
+                                                  'Google',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
                                                   ),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -534,11 +518,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                         // Sign Up tab content
                                         Column(
                                           children: [
-                                            const SizedBox(height: 0),
+                                            SizedBox(height: screenHeight * 0.0),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: nameController,
                                                 decoration: const InputDecoration(
@@ -549,9 +532,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 0),
+                                            SizedBox(height: screenHeight * 0.015),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: emailController,
                                                 decoration: const InputDecoration(
@@ -560,9 +544,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 style: const TextStyle(fontSize: 15),
                                               ),
                                             ),
-                                            const SizedBox(height: 0),
+                                            SizedBox(height: screenHeight * 0.015),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: phoneController,
                                                 decoration: const InputDecoration(
@@ -572,15 +557,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 keyboardType: TextInputType.number,
                                               ),
                                             ),
-                                            const SizedBox(height: 0),
+                                            SizedBox(height: screenHeight * 0.015),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
                                                 controller: passwordController,
-                                                obscureText:
-                                                passwordVisibility,
+                                                obscureText: passwordVisibility,
                                                 decoration: InputDecoration(
                                                   labelText: 'Password',
                                                   suffixIcon: IconButton(
@@ -591,8 +574,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
-                                                        passwordVisibility =
-                                                        !passwordVisibility;
+                                                        passwordVisibility = !passwordVisibility;
                                                       });
                                                     },
                                                   ),
@@ -602,16 +584,13 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 0),
+                                            SizedBox(height: screenHeight * 0.015),
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: TextField(
-                                                controller:
-                                                cpasswordController,
-                                                obscureText:
-                                                cpasswordVisibility,
+                                                controller: cpasswordController,
+                                                obscureText: cpasswordVisibility,
                                                 decoration: InputDecoration(
                                                   labelText: 'Confirm Password',
                                                   suffixIcon: IconButton(
@@ -622,8 +601,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     ),
                                                     onPressed: () {
                                                       setState(() {
-                                                        cpasswordVisibility =
-                                                        !cpasswordVisibility;
+                                                        cpasswordVisibility = !cpasswordVisibility;
                                                       });
                                                     },
                                                   ),
@@ -633,17 +611,15 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 40),
-                                            Container(
-                                              width: double.infinity,
-                                              padding: const EdgeInsets
-                                                  .symmetric(horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.02),
+                                            SizedBox(height: screenHeight * 0.01),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: Container(
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      30.0),
+                                                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
                                                   color: Colors.black,
                                                 ),
                                                 child: TextButton(
@@ -651,9 +627,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     signUpWithEmail(context);
                                                   },
                                                   style: ButtonStyle(
-                                                    foregroundColor:
-                                                    MaterialStateProperty
-                                                        .all<Color>(
+                                                    foregroundColor: MaterialStateProperty.all<Color>(
                                                       Colors.white,
                                                     ),
                                                   ),
@@ -667,23 +641,22 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            const SizedBox(height: 15.0),
-                                            const Padding(
-                                              padding: EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.015),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                  child: Text(
-                                                    '------------OR Sign Up With------------',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors.black,
-                                                    ),
+                                                child: Text(
+                                                  '------------OR Sign Up With------------',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black,
                                                   ),
+                                                ),
                                               ),
                                             ),
-                                            const SizedBox(height: 15.0),
+                                            SizedBox(height: screenHeight * 0.015),
                                             FloatingActionButton(
                                               onPressed: () async {
                                                 showDialog(
@@ -702,33 +675,26 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   },
                                                 );
                                                 await AuthService().signInWithGoogle(context);
-                                                // AuthService.setLoggedIn(true);
-                                                // Navigator.pop(context);
-                                                // Navigator.of(context).pushReplacement(
-                                                //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
-                                                // );
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,
                                               foregroundColor: Colors.black,
                                               child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
-                                            const SizedBox(height: 5.0),
-                                            const Padding(
-                                              padding: EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0),
+                                            SizedBox(height: screenHeight * 0.005),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: screenWidth * 0.04),
                                               child: Align(
                                                 alignment: Alignment.center,
-                                                  child: Text(
-                                                    'Google',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                      FontWeight.bold,
-                                                      color: Colors.black,
-                                                    ),
+                                                child: Text(
+                                                  'Google',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
                                                   ),
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -743,7 +709,7 @@ class _UserRegistrationState extends State<UserRegistration>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10.0),
+                    SizedBox(height: screenHeight * 0.01),
                     Text(
                       'Terms & Conditions | Privacy Policy',
                       style: TextStyle(
