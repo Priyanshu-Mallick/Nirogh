@@ -289,7 +289,7 @@ class _UserRegistrationState extends State<UserRegistration>
               ),
               child: SizedBox(
                 width: screenWidth,
-                height: screenHeight * 0.25,
+                height: screenHeight * 0.2,
                 child: Image.asset(
                   'lib/Assets/login page-image.jpg',
                   fit: BoxFit.cover,
@@ -299,10 +299,10 @@ class _UserRegistrationState extends State<UserRegistration>
             Center(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
-                  screenWidth * 0.05,
-                  screenHeight * 0.65,
-                  screenWidth * 0.05,
-                  screenHeight * 0.05,
+                  screenWidth * 0.03,
+                  screenHeight * 0.14,
+                  screenWidth * 0.03,
+                  screenHeight * 0.1,
                 ),
                 child: Column(
                   children: [
@@ -310,16 +310,16 @@ class _UserRegistrationState extends State<UserRegistration>
                       child: Card(
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                          borderRadius: BorderRadius.circular(screenWidth * 0.1),
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                            borderRadius: BorderRadius.circular(screenWidth * 0.1),
                             boxShadow: [
                               BoxShadow(
                                 color: customColor1.withOpacity(1),
                                 blurRadius: screenWidth * 0.02,
-                                spreadRadius: 1,
+                                spreadRadius: 2,
                               ),
                             ],
                             color: Colors.white,
@@ -329,11 +329,11 @@ class _UserRegistrationState extends State<UserRegistration>
                             children: [
                               Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth * 0.05, vertical: screenHeight * 0.03),
+                                    horizontal: screenWidth * 0.05, vertical: screenHeight * 0.06),
                                 child: Container(
-                                  height: screenHeight * 0.04,
+                                  height: screenHeight * 0.05,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(screenHeight * 0.02),
+                                    borderRadius: BorderRadius.circular(screenHeight * 0.05),
                                     border: Border.all(
                                       color: Colors.black,
                                       width: 1.0,
@@ -351,7 +351,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                     ],
                                     indicator: BoxDecoration(
                                       color: Colors.cyanAccent,
-                                      borderRadius: BorderRadius.circular(screenHeight * 0.02),
+                                      borderRadius: BorderRadius.circular(screenHeight * 0.05),
                                     ),
                                     labelColor: Colors.black,
                                     unselectedLabelColor: Colors.grey,
@@ -361,31 +361,30 @@ class _UserRegistrationState extends State<UserRegistration>
                               Expanded(
                                 child: SingleChildScrollView(
                                   child: SizedBox(
-                                    height: screenHeight * 0.6,
                                     child: TabBarView(
                                       controller: _tabController,
                                       children: [
                                         // Login tab content
                                         Column(
                                           children: [
-                                            SizedBox(height: screenHeight * 0.03),
+                                            SizedBox(height: screenHeight * 0.001),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: screenWidth * 0.04),
+                                                  horizontal: screenWidth * 0.05),
                                               child: TextField(
                                                 controller: emailController,
                                                 decoration: InputDecoration(
-                                                  labelText: 'Enter email or username',
+                                                  labelText: 'Enter email',
                                                 ),
                                                 style: const TextStyle(
                                                   fontSize: 15,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: screenHeight * 0.015),
+                                            SizedBox(height: screenHeight * 0.001),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: screenWidth * 0.04),
+                                                  horizontal: screenWidth * 0.05),
                                               child: TextField(
                                                 controller: passwordController,
                                                 obscureText: passwordVisibility,
@@ -409,11 +408,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: screenHeight * 0.02),
-                                            SizedBox(height: screenHeight * 0.03),
+                                            SizedBox(height: screenHeight * 0.009),
                                             Padding(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: screenWidth * 0.04),
+                                                  horizontal: screenWidth * 0.05),
                                               child: Align(
                                                 alignment: Alignment.centerRight,
                                                 child: InkWell(
@@ -422,9 +420,9 @@ class _UserRegistrationState extends State<UserRegistration>
                                                     await AuthService().showResetPasswordBottomSheet(context);
                                                   },
                                                   child: Text(
-                                                    'Forget Password?',
+                                                    'Forgot Password?',
                                                     style: TextStyle(
-                                                      color: Colors.grey[700],
+                                                      color: Colors.blue,
                                                     ),
                                                   ),
                                                 ),
@@ -432,11 +430,11 @@ class _UserRegistrationState extends State<UserRegistration>
                                             ),
                                             SizedBox(height: screenHeight * 0.05),
                                             Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                                               child: Container(
                                                 width: double.infinity,
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(screenHeight * 0.03),
+                                                  borderRadius: BorderRadius.circular(screenHeight * 0.05),
                                                   color: Colors.black,
                                                 ),
                                                 child: TextButton(
@@ -451,7 +449,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   child: const Text(
                                                     'Log In',
                                                     style: TextStyle(
-                                                      fontSize: 20,
+                                                      fontSize: 18,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -459,9 +457,8 @@ class _UserRegistrationState extends State<UserRegistration>
                                               ),
                                             ),
                                             SizedBox(height: screenHeight * 0.025),
-                                            SizedBox(height: screenHeight * 0.04),
                                             Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                                               child: Align(
                                                 child: Text(
                                                   '------------OR Sign Up With------------',
@@ -472,8 +469,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: screenHeight * 0.02),
-                                            SizedBox(height: screenHeight * 0.015),
+                                            SizedBox(height: screenHeight * 0.025),
                                             FloatingActionButton(
                                               onPressed: () async {
                                                 showDialog(
@@ -482,10 +478,10 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   builder: (BuildContext context) {
                                                     return WillPopScope(
                                                       onWillPop: () async => false, // Disable popping with back button
-                                                      child: const Center(
+                                                      child: Center(
                                                         child: SpinKitFadingCircle(
                                                           color: Colors.cyan,
-                                                          size: 50.0,
+                                                          size: screenWidth*0.5,
                                                         ),
                                                       ),
                                                     );
@@ -498,15 +494,15 @@ class _UserRegistrationState extends State<UserRegistration>
                                               foregroundColor: Colors.black,
                                               child: Image.asset('lib/Assets/google.png', fit: BoxFit.cover,),
                                             ),
-                                            SizedBox(height: screenHeight * 0.01),
+                                            SizedBox(height: screenHeight * 0.005),
                                             Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                                              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   'Google',
                                                   style: TextStyle(
-                                                    fontSize: 12,
+                                                    fontSize: screenHeight*0.015,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
                                                   ),

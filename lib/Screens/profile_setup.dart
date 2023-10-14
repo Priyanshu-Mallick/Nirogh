@@ -262,13 +262,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
 
   void _showChoiceBottomSheet(BuildContext context, int c, String ctext) async {
-
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-    double itemExtent = screenHeight * 0.1; // Adjusted item extent using MediaQuery
-    double fontSize = screenWidth * 0.06; // Adjusted font size using MediaQuery
-
     dynamic result;
+
+    // Get the screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Adjust container height and text size based on screen width
+    double containerHeight = screenWidth > 400 ? 400 : screenWidth * 0.9;
+    double fontSize = screenWidth > 400 ? 18 : 16;
+
     if(c == 1) {
       result = await showModalBottomSheet(
         backgroundColor: Colors.transparent,
@@ -283,11 +285,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     border: Border.all(
                         style: BorderStyle.solid,
                         color: Colors.cyanAccent,
-                        width: 4)
+                      width: MediaQuery.of(context).size.width * 0.01,
+                    ),
                 ),
-                height: 400,
+                height: containerHeight,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
                   child: CupertinoPicker(
 
                     scrollController: FixedExtentScrollController(
@@ -301,20 +304,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     },
                     children: choices.map((choice) {
                       return Container(
-                        width: 400,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: screenWidth > 400 ? 400 : screenWidth * 0.9,
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width:2),
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
                           child: Center(
                             child: Text(
                               choice,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: fontSize,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -328,8 +331,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
               Positioned(
                   child: SizedBox(
-                    height: 100,
-                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: Text(ctext, style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
@@ -357,11 +360,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     border: Border.all(
                         style: BorderStyle.solid,
                         color: Colors.cyanAccent,
-                        width: 4)
+                      width: MediaQuery.of(context).size.width * 0.01,)
                 ),
-                height: 400,
+                height: containerHeight,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
                   child: CupertinoPicker(
 
                     scrollController: FixedExtentScrollController(
@@ -375,15 +378,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     },
                     children: choices.map((choice) {
                       return Container(
-                        width: 400,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: MediaQuery.of(context).size.width * 0.9,  // Adjust width based on screen width
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),  // Adjust horizontal padding based on screen width
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width:2),
+                          border: Border.all(color: Colors.black, width: MediaQuery.of(context).size.width * 0.005),  // Adjust border width based on screen width
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),  // Adjust horizontal padding based on screen width
                           child: Center(
                             child: Text(
                               choice,
@@ -402,8 +405,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
               Positioned(
                   child: SizedBox(
-                    height: 100,
-                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: Text(ctext, style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
@@ -431,11 +434,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     border: Border.all(
                         style: BorderStyle.solid,
                         color: Colors.cyanAccent,
-                        width: 4)
+                      width: MediaQuery.of(context).size.width * 0.01,)
                 ),
-                height: 400,
+                height: containerHeight,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),  // Adjust top padding based on screen height
                   child: CupertinoPicker(
 
                     scrollController: FixedExtentScrollController(
@@ -449,20 +452,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     },
                     children: choices.map((choice) {
                       return Container(
-                        width: 400,
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: MediaQuery.of(context).size.width * 0.9,  // Adjust width based on screen width
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),  // Adjust horizontal padding based on screen width
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width:2),
+                          border: Border.all(color: Colors.black, width: MediaQuery.of(context).size.width * 0.005),  // Adjust border width based on screen width
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric( horizontal: 20),
+                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),  // Adjust horizontal padding based on screen width
                           child: Center(
                             child: Text(
                               choice,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: fontSize,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -476,8 +479,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
               Positioned(
                   child: SizedBox(
-                    height: 100,
-                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width,
                     child: Center(
                       child: Text(ctext, style: const TextStyle(
                           fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
@@ -515,7 +518,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Widget build(BuildContext context) {
     return Builder(
       builder: (BuildContext context) {
-        // isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
         return MaterialApp(
           theme: ThemeData.light(),
           home: Directionality(
@@ -560,17 +562,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         end: Alignment.bottomRight,
                       )
                     ),
-                    padding: const EdgeInsets.all(15),
+                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04), // Adjust padding based on screen width
                     child: Column(
                       children: [
                         const SizedBox(height: 10),
                         Stack(
                           children: [
                             SizedBox(
-                              width: 120,
-                              height: 120,
+                              width: MediaQuery.of(context).size.width * 0.32, // Adjust width based on screen width
+                              height: MediaQuery.of(context).size.width * 0.32,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
+                                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.5), // Adjust borderRadius based on screen width
                                 child: userProfilePic.isNotEmpty
                                     ? Image.network(
                                   userProfilePic,
@@ -587,7 +589,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               right: 0,
                               child: CircleAvatar(
                                 backgroundColor: Colors.white,
-                                radius: 19,
+                                radius: MediaQuery.of(context).size.width * 0.09, // Adjust radius based on screen width
                                 child: IconButton(
                                   onPressed: () => openImageBottomSheet(),
                                   color: Colors.black,
@@ -609,10 +611,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
@@ -634,10 +636,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
@@ -659,10 +661,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
@@ -684,10 +686,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
@@ -716,10 +718,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,
@@ -748,10 +750,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(100),
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
                                   borderSide: const BorderSide(
                                     width: 2,
                                     color: Colors.black,

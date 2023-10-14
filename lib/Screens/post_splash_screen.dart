@@ -140,7 +140,7 @@ class FlashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double quoteFontSize = screenWidth * 0.05;
-    double padding = screenWidth * 0.1;
+    double padding = screenWidth * 0.5;
 
     return Container(
       color: Colors.white,
@@ -153,7 +153,7 @@ class FlashScreen extends StatelessWidget {
               fit: BoxFit.contain,
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding),
+              padding: EdgeInsets.symmetric(),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Text(
@@ -161,7 +161,6 @@ class FlashScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: quoteFontSize,
                     color: Colors.black,
-                    fontFamily: 'Oswald',
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
