@@ -10,6 +10,7 @@ import 'package:nirogh/Screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:nirogh/Screens/phone_verify.dart';
 
 import '../services/auth_service.dart';
 
@@ -86,7 +87,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
       final userSnapshot = await userRef.get();
 
-      // if (userSnapshot.exists) {
         final userData = userSnapshot.data();
         final savedPhoneNumber = userData?['phoneNumber'] ?? '';
 
@@ -95,7 +95,22 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         if (!isRegistered) {
           // Phone number is not registered, send OTP and proceed to OTP verification
           String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
-          await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MyVerify(
+                userName: userName,
+                email: email,
+                phoneNumber: phoneNumber,
+                verificationId: verificationId,
+                userProfilePic: userProfilePic,
+                selectedAge: selectedAge,
+                selectedSex: selectedSex,
+                selectedBlood: selectedBlood,
+              ),
+            ),
+          );
+          // await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
         } else {
           // Phone number is registered, save user data and navigate to HomeScreen
           AuthService().SaveUserData(
@@ -114,7 +129,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             ),
           );
         }
-      // }
     }
   }
 

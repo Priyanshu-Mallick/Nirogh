@@ -6,6 +6,7 @@ import 'package:nirogh/firebase_options.dart';
 
 import 'Screens/chatbot_screen.dart';
 import 'Screens/post_splash_screen.dart';
+import 'Screens/phone_verify.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: SplashScreen(),
+      home: MyVerify(userName: '', email: '', phoneNumber: '', verificationId: '', userProfilePic: '', selectedAge: '', selectedSex: '', selectedBlood: '',),
     );
   }
 }
