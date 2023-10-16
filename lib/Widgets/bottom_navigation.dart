@@ -9,8 +9,8 @@ class BottomNavigationBarWidget extends StatefulWidget {
   final int initialIndex; // Add this variable
 
   BottomNavigationBarWidget({required this.initialIndex}); // Provide a default value
-
   @override
+
   _BottomNavigationBarWidgetState createState() =>
       _BottomNavigationBarWidgetState(initialIndex: initialIndex);
 }

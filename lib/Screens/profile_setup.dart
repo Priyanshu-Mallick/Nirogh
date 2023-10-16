@@ -176,6 +176,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     void openImageBottomSheet() {
       double screenWidth = MediaQuery.of(context).size.width;
+      double screenHeight = MediaQuery.of(context).size.height;
+
       showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -197,7 +199,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
               // The bottom sheet content
               Container(
-                padding: EdgeInsets.all(screenWidth * 0.08),
+                padding: EdgeInsets.all(screenWidth * 0.05),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -211,7 +213,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: screenWidth * 0.08),
+                    SizedBox(height: screenWidth * 0.05),
                     ElevatedButton.icon(
                       onPressed: () {
                         // Send the image
@@ -220,9 +222,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       },
                       icon: Icon(
                         CupertinoIcons.camera,
-                        size: screenWidth * 0.12,
+                        color: Colors.white,
+                        size: screenWidth * 0.05,
                       ),
-                      label: const Text('Camera'),
+                      label: const Text('Camera', style: TextStyle(color: Colors.white, fontSize: 15)),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -230,18 +233,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             borderRadius: BorderRadius.circular(screenWidth * 0.15),
                           ),
                         ),
-                        minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, screenWidth * 0.15),),
+                        minimumSize: MaterialStateProperty.all<Size>(Size(screenHeight * 0.13, screenWidth * 0.13)),
                       ),
                     ),
-                    SizedBox(height: screenWidth * 0.04),
+                    SizedBox(height: screenHeight * 0.01),
                     ElevatedButton.icon(
                       onPressed: () {
                         // Send the image
                         _getImage(ImageSource.gallery);
                         Navigator.pop(context);
                       },
-                      icon: const Icon(CupertinoIcons.photo),
-                      label: const Text('Gallery'),
+                      icon: Icon(CupertinoIcons.photo, color: Colors.white,
+                          size: screenWidth * 0.05),
+                      label: const Text('Gallery', style: TextStyle(color: Colors.white, fontSize: 15),),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -249,7 +253,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             borderRadius: BorderRadius.circular(screenWidth * 0.15),
                           ),
                         ),
-                        minimumSize: MaterialStateProperty.all<Size>(Size(screenWidth * 0.5, screenWidth * 0.15)),
+                        minimumSize: MaterialStateProperty.all<Size>(Size(screenHeight * 0.13, screenWidth * 0.13)),
                       ),
                     ),
                   ],
@@ -262,251 +266,120 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
 
   void _showChoiceBottomSheet(BuildContext context, int c, String ctext) async {
-    dynamic result;
+    String? tempSelectedValue;
 
-    // Get the screen width
     double screenWidth = MediaQuery.of(context).size.width;
-
+    double screenHeight = MediaQuery.of(context).size.height;
     // Adjust container height and text size based on screen width
     double containerHeight = screenWidth > 400 ? 400 : screenWidth * 0.9;
     double fontSize = screenWidth > 400 ? 18 : 16;
 
-    if(c == 1) {
-      result = await showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: Colors.cyanAccent.withOpacity(0.5),
-                    border: Border.all(
-                        style: BorderStyle.solid,
-                        color: Colors.cyanAccent,
-                      width: MediaQuery.of(context).size.width * 0.01,
-                    ),
+    tempSelectedValue = await showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
+                color: Colors.cyanAccent.withOpacity(0.5),
+                border: Border.all(
+                  style: BorderStyle.solid,
+                  color: Colors.cyanAccent,
+                  width: MediaQuery.of(context).size.width * 0.01,
                 ),
-                height: containerHeight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
-                  child: CupertinoPicker(
-
-                    scrollController: FixedExtentScrollController(
-                      initialItem: 3,
-                    ),
-                    itemExtent: 50,
-                    onSelectedItemChanged: (index) {
-                      setState(() {
-                        selectedAge = choices[index];
-                      });
-                    },
-                    children: choices.map((choice) {
-                      return Container(
-                        width: screenWidth > 400 ? 400 : screenWidth * 0.9,
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width:2),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
-                          child: Center(
-                            child: Text(
-                              choice,
-                              style: TextStyle(
-                                fontSize: fontSize,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
+              ),
+              height: 400,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: CupertinoPicker(
+                  scrollController: FixedExtentScrollController(initialItem: 3),
+                  itemExtent: 50,
+                  onSelectedItemChanged: (index) {
+                    setState(() {
+                      tempSelectedValue = choices[index];
+                    });
+                  },
+                  children: choices.map((choice) {
+                    return Container(
+                      width: screenWidth > 400 ? 400 : screenWidth * 0.9,
+                      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width:2),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),
+                        child: Center(
+                          child: Text(
+                            choice,
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      );
-                    }).toList(),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: screenHeight*0.005,
+              left: screenWidth*0.1,
+              right: screenWidth*0.1,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, tempSelectedValue);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  side: BorderSide.none,
+                  shape: const StadiumBorder(),
+                ),
+                child: Text(
+                  'OK',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+            Positioned(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Text(
+                    ctext,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-              Positioned(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(ctext, style: const TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
-                      )),
-                    ),
-                  )
-              )
-            ],
-          );
-        },
-      );
-    }
-    else if(c == 2)
-    {
-      result = await showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: Colors.cyanAccent.withOpacity(0.5),
-                    border: Border.all(
-                        style: BorderStyle.solid,
-                        color: Colors.cyanAccent,
-                      width: MediaQuery.of(context).size.width * 0.01,)
-                ),
-                height: containerHeight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),
-                  child: CupertinoPicker(
+            ),
+          ],
+        );
+      },
+    );
 
-                    scrollController: FixedExtentScrollController(
-                      initialItem: 3,
-                    ),
-                    itemExtent: 50,
-                    onSelectedItemChanged: (index) {
-                      setState(() {
-                        selectedSex = choices[index];
-                      });
-                    },
-                    children: choices.map((choice) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width * 0.9,  // Adjust width based on screen width
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),  // Adjust horizontal padding based on screen width
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: MediaQuery.of(context).size.width * 0.005),  // Adjust border width based on screen width
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),  // Adjust horizontal padding based on screen width
-                          child: Center(
-                            child: Text(
-                              choice,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              Positioned(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(ctext, style: const TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
-                      )),
-                    ),
-                  )
-              )
-            ],
-          );
-        },
-      );
-    }
-    else
-    {
-      result = await showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(70)),
-                    color: Colors.cyanAccent.withOpacity(0.5),
-                    border: Border.all(
-                        style: BorderStyle.solid,
-                        color: Colors.cyanAccent,
-                      width: MediaQuery.of(context).size.width * 0.01,)
-                ),
-                height: containerHeight,
-                child: Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.1),  // Adjust top padding based on screen height
-                  child: CupertinoPicker(
-
-                    scrollController: FixedExtentScrollController(
-                      initialItem: 3,
-                    ),
-                    itemExtent: 50,
-                    onSelectedItemChanged: (index) {
-                      setState(() {
-                        selectedBlood = choices[index];
-                      });
-                    },
-                    children: choices.map((choice) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width * 0.9,  // Adjust width based on screen width
-                        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.02),  // Adjust horizontal padding based on screen width
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: MediaQuery.of(context).size.width * 0.005),  // Adjust border width based on screen width
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(100),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.04),  // Adjust horizontal padding based on screen width
-                          child: Center(
-                            child: Text(
-                              choice,
-                              style: TextStyle(
-                                fontSize: fontSize,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-              Positioned(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(ctext, style: const TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white
-                      )),
-                    ),
-                  )
-              )
-            ],
-          );
-        },
-      );
-    }
-    if (result != null) {
-      if(c == 1) {
+    if (tempSelectedValue != null) {
+      if (c == 1) {
         setState(() {
-          selectedAge = result;
+          selectedAge = tempSelectedValue!;
         });
-      }
-      else if(c == 2) {
+      } else if (c == 2) {
         setState(() {
-          selectedSex = result;
+          selectedSex = tempSelectedValue!;
         });
-      }
-      else if(c == 3) {
+      } else if (c == 3) {
         setState(() {
-          selectedBlood = result;
+          selectedBlood = tempSelectedValue!;
         });
       }
     }
@@ -560,260 +433,267 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                      )
+                      ),
                     ),
-                    padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04), // Adjust padding based on screen width
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Stack(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.32, // Adjust width based on screen width
-                              height: MediaQuery.of(context).size.width * 0.32,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.5), // Adjust borderRadius based on screen width
-                                child: userProfilePic.isNotEmpty
-                                    ? Image.network(
-                                  userProfilePic,
-                                  fit: BoxFit.cover,
-                                )
-                                    : Transform.scale(
-                                  scale: 7.0, // Adjust this value to increase or decrease the icon size
-                                  child: const Icon(CupertinoIcons.person_crop_circle_fill),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: MediaQuery.of(context).size.width * 0.09, // Adjust radius based on screen width
-                                child: IconButton(
-                                  onPressed: () => openImageBottomSheet(),
-                                  color: Colors.black,
-                                  icon: const Icon(
-                                    Icons.camera_alt_outlined,
-                                    size: 20,
+                    padding: const EdgeInsets.all(16.0), // Adjust padding based on screen width
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          Stack(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.32, // Adjust width based on screen width
+                                height: MediaQuery.of(context).size.width * 0.32,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.5), // Adjust borderRadius based on screen width
+                                  child: userProfilePic.isNotEmpty
+                                      ? Image.network(
+                                    userProfilePic,
+                                    fit: BoxFit.cover,
+                                  )
+                                      : Transform.scale(
+                                    scale: 7.0, // Adjust this value to increase or decrease the icon size
+                                    child: const Icon(CupertinoIcons.person_crop_circle_fill),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 15),
-                        Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            TextField(
-                              readOnly: false,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: MediaQuery.of(context).size.width * 0.05, // Adjust radius based on screen width
+                                  child: IconButton(
+                                    onPressed: () => openImageBottomSheet(),
+                                    color: Colors.black,
+                                    icon: const Icon(
+                                      Icons.camera_alt_outlined,
+                                      size: 20,
+                                    ),
+                                  ),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
-                                  borderSide: const BorderSide(
-                                    width: 2,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Column(
+                            children: [
+                              const SizedBox(height: 10),
+                              TextField(
+                                readOnly: false,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25), // Adjust borderRadius based on screen width
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: "Email-Id",
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  prefixIcon: const Icon(Icons.person_2_outlined),
+                                  prefixIconColor: Colors.black,
                                 ),
-                                labelText: "Email-Id",
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.person_2_outlined),
-                                prefixIconColor: Colors.black,
+                                controller: TextEditingController(text: email),
                               ),
-                              controller: TextEditingController(text: email),
-                            ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              readOnly: false,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                  borderSide: const BorderSide(
-                                    width: 2,
+                              const SizedBox(height: 20),
+                              TextField(
+                                readOnly: false,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: "Full Name",
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  prefixIcon: const Icon(Icons.person_2_outlined),
+                                  prefixIconColor: Colors.black,
                                 ),
-                                labelText: "Full Name",
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.person_2_outlined),
-                                prefixIconColor: Colors.black,
+                                controller: TextEditingController(text: userName),
                               ),
-                              controller: TextEditingController(text: userName),
-                            ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              readOnly: false,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                  borderSide: const BorderSide(
-                                    width: 2,
+                              const SizedBox(height: 20),
+                              TextField(
+                                readOnly: false,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: 'Phone number',
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  prefixIcon: const Icon(Icons.phone),
+                                  prefixIconColor: Colors.black,
                                 ),
-                                labelText: 'Phone number',
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.phone),
-                                prefixIconColor: Colors.black,
+                                controller: _phoneNumberController, // Use the _phoneNumberController here
                               ),
-                              controller: _phoneNumberController, // Use the _phoneNumberController here
-                            ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              readOnly: true,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                  borderSide: const BorderSide(
-                                    width: 2,
+                              const SizedBox(height: 20),
+                              TextField(
+                                readOnly: true,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: 'Age',
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.black,
                                   ),
+                                  prefixIcon: const Icon(Icons.calendar_today_outlined),
+                                  prefixIconColor: Colors.black,
                                 ),
-                                labelText: 'Age',
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.calendar_today_outlined),
-                                prefixIconColor: Colors.black,
-                              ),
-                              controller: TextEditingController(text: selectedAge),
-                              onTap: () {
-                                choices.clear();
-                                for (int i = 1; i <= 120; i++) {
-                                  choices.add(i.toString());
-                                }
-                                _showChoiceBottomSheet(context, 1, "Select Age");
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              readOnly: true,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                labelText: 'Sex',
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.transgender_outlined),
-                                prefixIconColor: Colors.black,
-                              ),
-                              controller: TextEditingController(text: selectedSex),
-                              onTap: () {
-                                selectedSex = '';
-                                choices.clear();
-                                choices = ["Male", "Female", "Others"];
-                                _showChoiceBottomSheet(context, 2, "Select Sex");
-                              },
-                            ),
-
-                            const SizedBox(height: 20),
-                            TextField(
-                              readOnly: true,
-                              cursorColor: Colors.black,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                                  borderSide: const BorderSide(
-                                    width: 2,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                labelText: 'Blood Group',
-                                labelStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                prefixIcon: const Icon(Icons.water_drop),
-                                prefixIconColor: Colors.black,
-                              ),
-                              controller: TextEditingController(text: selectedBlood),
-                              onTap: () {
-                                selectedBlood = '';
-                                choices.clear();
-                                choices = ["A+", "B+", "AB+", "O+", "A-", "B-", "AB-", "O-"];
-                                _showChoiceBottomSheet(context, 3, "Select Blood Group");
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 42,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  CheckPhoneNumber(_phoneNumberController.text);
+                                controller: TextEditingController(text: selectedAge),
+                                onTap: () {
+                                  choices.clear();
+                                  for (int i = 1; i <= 120; i++) {
+                                    choices.add(i.toString());
+                                  }
+                                  _showChoiceBottomSheet(context, 1, "Select Age");
                                 },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.greenAccent,
-                                  side: BorderSide.none,
-                                  shape: const StadiumBorder(),
+                              ),
+                              const SizedBox(height: 20),
+                              TextField(
+                                readOnly: true,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: 'Sex',
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  prefixIcon: const Icon(Icons.transgender_outlined),
+                                  prefixIconColor: Colors.black,
                                 ),
-                                child: const Text(
-                                  "Save Profile",
-                                  style: TextStyle(color: Colors.black, fontSize: 20),
+                                controller: TextEditingController(text: selectedSex),
+                                onTap: () {
+                                  selectedSex = '';
+                                  choices.clear();
+                                  choices = ["Male", "Female", "Others"];
+                                  _showChoiceBottomSheet(context, 2, "Select Sex");
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              TextField(
+                                readOnly: true,
+                                cursorColor: Colors.black,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                                    borderSide: const BorderSide(
+                                      width: 2,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  labelText: 'Blood Group',
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  prefixIcon: const Icon(Icons.water_drop),
+                                  prefixIconColor: Colors.black,
+                                ),
+                                controller: TextEditingController(text: selectedBlood),
+                                onTap: () {
+                                  selectedBlood = '';
+                                  choices.clear();
+                                  choices = ["A+", "B+", "AB+", "O+", "A-", "B-", "AB-", "O-"];
+                                  _showChoiceBottomSheet(context, 3, "Select Blood Group");
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 42,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    CheckPhoneNumber(_phoneNumberController.text);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.greenAccent,
+                                    side: BorderSide.none,
+                                    shape: const StadiumBorder(),
+                                  ),
+                                  child: const Text(
+                                    "Save Profile",
+                                    style: TextStyle(color: Colors.black, fontSize: 20),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Nirogh", style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                )),
-                                Text("The result you can Trust!", style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                )),
-
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
+                              const SizedBox(height: 20),
+                              const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Nirogh",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    "The result you can Trust!",
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 13,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
