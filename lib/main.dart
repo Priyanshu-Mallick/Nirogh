@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: MyVerify(userName: '', email: '', phoneNumber: '', verificationId: '', userProfilePic: '', selectedAge: '', selectedSex: '', selectedBlood: '',),
+      home: SplashScreen(),
     );
   }
 }

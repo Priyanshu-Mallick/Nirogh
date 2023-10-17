@@ -97,8 +97,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => MyVerify(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => MyVerify(
                 userName: userName,
                 email: email,
                 phoneNumber: phoneNumber,
@@ -108,6 +108,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 selectedSex: selectedSex,
                 selectedBlood: selectedBlood,
               ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                const begin = Offset(1.0, 0.0);
+                const end = Offset.zero;
+                const curve = Curves.easeInOut;
+
+                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                var offsetAnimation = animation.drive(tween);
+
+                return SlideTransition(
+                  position: offsetAnimation,
+                  child: child,
+                );
+              },
             ),
           );
           // await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);

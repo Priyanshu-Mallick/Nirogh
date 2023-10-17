@@ -236,24 +236,24 @@ class AuthService {
     try {
       await auth.signInWithCredential(credential);
       // OTP verification successful
-      Fluttertoast.showToast(
-        msg: 'Phone OTP successfully Verified',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: 'Phone OTP successfully Verified',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   backgroundColor: Colors.grey[800],
+      //   textColor: Colors.white,
+      // );
       return 1;
     } catch (e) {
       // OTP verification failed
       print(e.toString());
-      Fluttertoast.showToast(
-        msg: 'Unknown Error occurred while verifying OTP',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.grey[800],
-        textColor: Colors.white,
-      );
+      // Fluttertoast.showToast(
+      //   msg: 'Unknown Error occurred while verifying OTP',
+      //   toastLength: Toast.LENGTH_SHORT,
+      //   gravity: ToastGravity.BOTTOM,
+      //   backgroundColor: Colors.grey[800],
+      //   textColor: Colors.white,
+      // );
       return 0;
     }
   }
