@@ -197,7 +197,7 @@ class _MyVerifyState extends State<MyVerify> {
                         otpController.clear();
                       }
                     },
-                    child: Text("Verify Phone Number", style: TextStyle(color: Colors.white),)),
+                    child: const Text("Verify Phone Number", style: TextStyle(color: Colors.white),)),
               ),
               Row(
                 children: [
