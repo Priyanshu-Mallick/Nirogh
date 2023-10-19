@@ -180,7 +180,7 @@ class _MyVerifyState extends State<MyVerify> {
                           AuthService().SaveUserData(widget.email, widget.userProfilePic, widget.userName, widget.phoneNumber, widget.selectedAge, widget.selectedSex, widget.selectedBlood);
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                            MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
                           );
                         } else {
                           Fluttertoast.showToast(
