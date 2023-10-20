@@ -29,7 +29,7 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                 color: Colors.black.withOpacity(0.2),
                 spreadRadius: 5,
                 blurRadius: 15,
-                offset: Offset(10, 8),
+                offset: const Offset(10, 8),
               ),
             ],
           ),
