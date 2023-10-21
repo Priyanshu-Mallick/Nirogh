@@ -177,7 +177,7 @@ class _MyVerifyState extends State<MyVerify> {
                             backgroundColor: Colors.grey[800],
                             textColor: Colors.white,
                           );
-                          AuthService().SaveUserData(widget.email, widget.userProfilePic, widget.userName, widget.phoneNumber, widget.selectedAge, widget.selectedSex, widget.selectedBlood);
+                          AuthService().SaveUserData(widget.email, widget.userName, widget.phoneNumber, widget.selectedAge, widget.selectedSex, widget.selectedBlood);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),

@@ -128,7 +128,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           // Phone number is registered, save user data and navigate to HomeScreen
           AuthService().SaveUserData(
             email,
-            userProfilePic,
             userName,
             phoneNumber,
             selectedAge,

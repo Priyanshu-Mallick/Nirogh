@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,8 @@ import 'package:mailer/smtp_server.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   bool isOTPSent = false; // Add this variable to track whether OTP has been sent
@@ -97,32 +100,45 @@ class AuthService {
     }
   }
 
-  Future<void> SaveUserData(String email, String userProfilePic, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
+  Future<void> SaveUserData(String email, String userName, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         Map<String, dynamic> userData = {
-          'profilePictureUrl': userProfilePic,
-          'email' : email,
-          'fullName': userName,
-          'phoneNumber': phoneNumber,
+          'name': userName,
+          'email': email,
+          'phone': phoneNumber,
           'age': selectedAge,
-          'sex': selectedSex,
-          'bloodGroup': selectedBlood,
+          'blood_grp': selectedBlood,
+          'gender': selectedSex,
         };
-        final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-        if (await userRef.get().then((snapshot) => snapshot.exists)) {
-          await userRef.update(userData);
+
+        // Convert userData to a JSON string
+        String jsonData = json.encode(userData);
+        print(jsonData);
+
+        // Send a POST request to your backend API
+        final response = await http.post(
+          Uri.parse("https://43.204.149.138/api/user/"),
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonData,
+        );
+
+        if (response.statusCode == 200) {
+          print('User data saved successfully');
         } else {
-          await userRef.set(userData);
+          print('Failed to save user data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
         }
-        print('User data saved successfully');
       }
     } catch (e) {
       print('Error saving user data: $e');
     }
   }
+
 
   String _generateOTP(int length) {
     // Generate a random OTP
@@ -269,7 +285,6 @@ class AuthService {
 
       await SaveUserData(
         email,
-        userCredential.user!.photoURL ?? "",
         name,
         phone,
         "", //age
@@ -788,7 +803,7 @@ class AuthService {
                                       performEmailVerification(context, name, email, phoneNumber, password);
                                     }
                                     else{
-                                      SaveUserData(email, dp, name, phoneNumber, age, sex, bg);
+                                      SaveUserData(email, name, phoneNumber, age, sex, bg);
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(builder: (context) => HomeScreen()),
