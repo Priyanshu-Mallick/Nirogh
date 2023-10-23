@@ -160,7 +160,7 @@ class _DrawerContent extends State<DrawerContent> {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) => const UpdateProfileScreen(email: "", userName: "", userProfilePic: ""),
+                                  pageBuilder: (context, animation, secondaryAnimation) => const UpdateProfileScreen(email: "", userName: "", userProfilePic: "", uid: "",),
                                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                     const begin = Offset(-1.0, 0.0);
                                     const end = Offset.zero;

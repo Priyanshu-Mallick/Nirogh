@@ -142,48 +142,18 @@ class _UserRegistrationState extends State<UserRegistration>
   Future<void> signUpWithEmail(BuildContext context) async {
     String name = nameController.text;
     String email = emailController.text;
-    String phone = phoneController.text;
     String password = passwordController.text;
     String cpassword = cpasswordController.text;
 
     try {
       if (name.isNotEmpty &&
           email.isNotEmpty &&
-          phone.isNotEmpty &&
           password.isNotEmpty &&
           cpassword.isNotEmpty) {
         if (password == cpassword) {
           // _showVerifyDialog(email, phone);
-          if (email.isNotEmpty && phone.isNotEmpty) {
-            // Phone number validation
-            if (phone.length == 10 && int.tryParse(phone) != null) {
-              // Generate and send OTP via email
-              // String emailOTP = await AuthService().sendOTPToEmail(email);
-
-              // Generate and send OTP via phone
-              String verificationId = await AuthService().sendOTPToPhone(phone);
-              //call the showVerifyDialog
-              await AuthService().showVerifyDialog(name, email, phone, password, verificationId, context, "", "", "", "", 0);
-
-            } else {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Warning'),
-                    content: const Text('Invalid phone number. Please enter a 10-digit phone number.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Close the dialog
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
+          if (email.isNotEmpty) {
+              AuthService().performEmailVerification(context, name, email, password);
           } else {
             showDialog(
               context: context,
@@ -191,7 +161,7 @@ class _UserRegistrationState extends State<UserRegistration>
                 return AlertDialog(
                   title: const Text('Warning'),
                   content: const Text(
-                      'Please fill in both email and phone number fields.'),
+                      'Please fill in both email'),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -516,6 +486,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 // Navigator.of(context).pushReplacement(
                                                 //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                 // );
+                                                Navigator.pop(context);
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,
@@ -569,18 +540,6 @@ class _UserRegistrationState extends State<UserRegistration>
                                                   labelText: 'Email',
                                                 ),
                                                 style: const TextStyle(fontSize: 15),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 0),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                              child: TextField(
-                                                controller: phoneController,
-                                                decoration: const InputDecoration(
-                                                  labelText: 'Phone Number',
-                                                ),
-                                                style: const TextStyle(fontSize: 15),
-                                                keyboardType: TextInputType.number,
                                               ),
                                             ),
                                             const SizedBox(height: 0),
@@ -718,6 +677,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 // Navigator.of(context).pushReplacement(
                                                 //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                 // );
+                                                Navigator.pop(context);
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,

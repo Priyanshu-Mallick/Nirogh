@@ -9,6 +9,7 @@ import 'home_screen.dart';
 class MyVerify extends StatefulWidget {
   final String userName;
   final String email;
+  final String uid;
   final String phoneNumber;
   final String verificationId;
   final String userProfilePic;
@@ -19,6 +20,7 @@ class MyVerify extends StatefulWidget {
   const MyVerify({
     required this.userName,
     required this.email,
+    required this.uid,
     required this.phoneNumber,
     required this.verificationId,
     required this.userProfilePic,
@@ -177,7 +179,7 @@ class _MyVerifyState extends State<MyVerify> {
                             backgroundColor: Colors.grey[800],
                             textColor: Colors.white,
                           );
-                          AuthService().SaveUserData(widget.email, widget.userName, widget.phoneNumber, widget.selectedAge, widget.selectedSex, widget.selectedBlood);
+                          AuthService().SaveUserData(widget.uid, widget.email, widget.userName, widget.phoneNumber, widget.selectedAge, widget.selectedSex, widget.selectedBlood);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (BuildContext context) => HomeScreen()),
@@ -205,7 +207,7 @@ class _MyVerifyState extends State<MyVerify> {
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => UpdateProfileScreen(email: widget.email, userProfilePic: widget.userProfilePic, userName: widget.userName)),
+                          MaterialPageRoute(builder: (context) => UpdateProfileScreen(email: widget.email, userProfilePic: widget.userProfilePic, userName: widget.userName, uid: widget.uid)),
                         );
                       },
                       child: Text(

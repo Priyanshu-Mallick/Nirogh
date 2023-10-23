@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:nirogh/Screens/phone_verify.dart';
+import 'package:http/http.dart' as http;
 
 import '../services/auth_service.dart';
 
@@ -18,11 +20,13 @@ class UpdateProfileScreen extends StatefulWidget {
   final String email;
   final String userProfilePic;
   final String userName;
+  final String uid;
 
   const UpdateProfileScreen({
     required this.email,
     required this.userProfilePic,
     required this.userName,
+    required this.uid,
     Key? key,
   }) : super(key: key);
 
@@ -35,6 +39,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String email = '';
   String userProfilePic = '';
   String userName = '';
+  String uid = '';
   String phoneNumber = '';
   String selectedAge = '';
   String selectedSex = '';
@@ -55,30 +60,45 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     email = widget.email;
     userProfilePic = widget.userProfilePic;
     userName = widget.userName;
+    uid = widget.uid;
   }
 
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-      final userSnapshot = await userRef.get();
-      if (userSnapshot.exists) {
-        final userData = userSnapshot.data();
-        setState(() {
-          // Assign the retrieved data to the corresponding variables
-          // Update the variables you use here based on the actual field names in Firestore
-          userProfilePic = userData?['profilePictureUrl'] ?? '';
-          email = userData?['email'] ?? '';
-          userName = userData?['fullName'] ?? '';
-          _phoneNumberController.text = userData?['phoneNumber'] ?? '';
-          selectedAge = userData?['age'] ?? '';
-          selectedSex = userData?['sex'] ?? '';
-          selectedBlood = userData?['bloodGroup'] ?? '';
-          // Add other fields if needed
-        });
+      try {
+        // Send a GET request to your backend API to fetch user data
+        final response = await http.get(
+          Uri.parse("https://43.204.149.138/api/user/${user.uid}"),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final userData = json.decode(response.body);
+
+          setState(() {
+            // Assign the retrieved data to the corresponding variables
+            userProfilePic = userData['profilePictureUrl'] ?? '';
+            email = userData['email'] ?? '';
+            userName = userData['fullName'] ?? '';
+            _phoneNumberController.text = userData['phoneNumber'] ?? '';
+            selectedAge = userData['age'] ?? '';
+            selectedSex = userData['sex'] ?? '';
+            selectedBlood = userData['bloodGroup'] ?? '';
+            // Add other fields if needed
+          });
+        } else {
+          print('Failed to fetch user data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
       }
     }
   }
+
 
   void CheckPhoneNumber(String phoneNumber) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -101,6 +121,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               pageBuilder: (context, animation, secondaryAnimation) => MyVerify(
                 userName: userName,
                 email: email,
+                uid: uid,
                 phoneNumber: phoneNumber,
                 verificationId: verificationId,
                 userProfilePic: userProfilePic,
@@ -123,10 +144,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               },
             ),
           );
-          // await AuthService().showVerifyDialog(userName, email, phoneNumber, "", verificationId, context, userProfilePic, selectedAge, selectedSex, selectedBlood, 1);
         } else {
           // Phone number is registered, save user data and navigate to HomeScreen
           AuthService().SaveUserData(
+            widget.uid,
             email,
             userName,
             phoneNumber,
