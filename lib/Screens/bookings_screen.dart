@@ -254,15 +254,7 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Code to execute on button press
-        },
-        elevation: 10,
-        backgroundColor: Colors.cyan,
-        child: const Icon(Icons.call),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: BottomNavigationBarWidget(initialIndex: _selectedIndex),
     );
   }

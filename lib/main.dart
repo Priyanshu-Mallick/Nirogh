@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nirogh/Screens/cart_screen.dart';
 import 'package:nirogh/firebase_options.dart';
 
 import 'Screens/chatbot_screen.dart';
@@ -42,7 +43,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: SplashScreen(),
+      // home: SplashScreen(),
+      home: CartScreen(),
     );
   }
 }

@@ -486,7 +486,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 // Navigator.of(context).pushReplacement(
                                                 //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                 // );
-                                                Navigator.pop(context);
+
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,
@@ -677,7 +677,7 @@ class _UserRegistrationState extends State<UserRegistration>
                                                 // Navigator.of(context).pushReplacement(
                                                 //   MaterialPageRoute(builder: (context) => UpdateProfileScreen()),
                                                 // );
-                                                Navigator.pop(context);
+
                                               },
                                               elevation: 0,
                                               backgroundColor: Colors.white,
