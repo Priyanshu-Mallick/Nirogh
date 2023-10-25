@@ -1,6 +1,14 @@
+
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path_provider/path_provider.dart';
 import '../Widgets/bottom_navigation.dart';
+import '../Widgets/file_viewer.dart';
 
 class CartItem {
   final String itemName;
@@ -17,8 +25,24 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   int _selectedIndex = 2; // Set the default selected index
   double totalAmount = 0.0;
+  String selectedFileName = '';
+  String selectedFilePath='';
+  String brwoseFileButtonName = 'Browse File';
+  bool fileChosen = false; // Declare fileChosen as an instance variabl
 
   final List<CartItem> cartItems = [
+    CartItem('Item 1', 25.0),
+    CartItem('Item 2', 30.0),
+    CartItem('Item 3', 15.0),
+    CartItem('Item 2', 30.0),
+    CartItem('Item 3', 15.0),
+    CartItem('Item 2', 30.0),
+    CartItem('Item 1', 25.0),
+    CartItem('Item 2', 30.0),
+    CartItem('Item 3', 15.0),
+    CartItem('Item 2', 30.0),
+    CartItem('Item 3', 15.0),
+    CartItem('Item 2', 30.0),
     CartItem('Item 1', 25.0),
     CartItem('Item 2', 30.0),
     CartItem('Item 3', 15.0),
@@ -85,8 +109,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool fileChosen = false;
-    String selectedFileName = ""; // Initialize with an empty string
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan[300],
@@ -128,25 +150,51 @@ class _CartScreenState extends State<CartScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            // Implement file browsing logic here
-                            selectedFileName = "Example.pdf"; // Replace with the actual file name
-                            setState(() {
-                              fileChosen = true;
-                            });
+                          onPressed: pickFile,
+                          child: Text('$brwoseFileButtonName'),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (fileChosen) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Preview File'),
+                                    content: Container(
+                                      // width: double.infinity,
+                                      child: getFilePreviewWidget(selectedFilePath),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text('Close'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           },
-                          child: Text('Browse file'),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.grey[300], // Background color
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.grey[300], // Background color
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: fileChosen
+                                  ? Text(
+                                '$selectedFileName',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              )
+                                  : Text('No file chosen'),
+                            ),
                           ),
-                          child: Text(
-                            fileChosen ? "Chosen file name is: $selectedFileName" : "You have not chosen any file yet",
-                          ),
-                        ),
+                        )
                       ],
                     ),
                     Text('Upload only jpg, png, or pdf files'),
@@ -223,4 +271,35 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+  // Function to handle file selection
+  Future<void> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'pdf'],
+    );
+
+    if (result != null) {
+      File file = File(result.files.single.path! as String);
+
+      // Get the app's cache directory
+      Directory appCacheDir = await getTemporaryDirectory();
+
+      // Generate a unique file name in the cache directory
+      String uniqueFileName = "${DateTime.now().millisecondsSinceEpoch}_${result.files.single.name}";
+
+      // Create a new file in the cache directory
+      File newFile = File("${appCacheDir.path}/$uniqueFileName");
+
+      // Copy the selected file to the cache directory
+      await newFile.writeAsBytes(await file.readAsBytes());
+
+      setState(() {
+        selectedFilePath = newFile.path;
+        brwoseFileButtonName = "Browse Again";
+        selectedFileName = result.files.single.name;
+        fileChosen = true;
+      });
+    }
+  }
+
 }
