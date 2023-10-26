@@ -198,11 +198,53 @@ class _CartScreenState extends State<CartScreen> {
                       ],
                     ),
                     Text('Upload only jpg, png, or pdf files'),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Patient Name'),
+                    TextField(
+                      readOnly: false,
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                          borderSide: const BorderSide(
+                            width: 2,
+                            color: Colors.black,
+                          ),
+                        ),
+                        labelText: "Full Name",
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        prefixIcon: const Icon(Icons.person_2_outlined),
+                        prefixIconColor: Colors.black,
+                      ),
+                      controller: TextEditingController(),
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Address'),
+                    TextField(
+                      readOnly: false,
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                          borderSide: const BorderSide(
+                            width: 2,
+                            color: Colors.black,
+                          ),
+                        ),
+                        labelText: "Address",
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        prefixIcon: const Icon(Icons.person_2_outlined),
+                        prefixIconColor: Colors.black,
+                      ),
+                      controller: TextEditingController(),
                     ),
                     Row(
                       children: [
