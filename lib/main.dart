@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: SplashScreen(),
-      // home: CartScreen(),
+      // home: SplashScreen(),
+      home: CartScreen(),
     );
   }
 }

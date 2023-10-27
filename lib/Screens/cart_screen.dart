@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,8 @@ class _CartScreenState extends State<CartScreen> {
   String selectedFilePath='';
   String brwoseFileButtonName = 'Browse File';
   bool fileChosen = false; // Declare fileChosen as an instance variabl
+  TextEditingController _fullNameController = TextEditingController();
+  TextEditingController _addressController =  TextEditingController();
 
   final List<CartItem> cartItems = [
     CartItem('Item 1', 25.0),
@@ -37,18 +40,13 @@ class _CartScreenState extends State<CartScreen> {
     CartItem('Item 2', 30.0),
     CartItem('Item 3', 15.0),
     CartItem('Item 2', 30.0),
-    CartItem('Item 1', 25.0),
-    CartItem('Item 2', 30.0),
     CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 1', 25.0),
     CartItem('Item 2', 30.0),
     CartItem('Item 3', 15.0),
     CartItem('Item 2', 30.0),
     CartItem('Item 3', 15.0),
     CartItem('Item 2', 30.0),
+    CartItem('Item 3', 15.0),
     // Add more items as needed
   ];
 
@@ -56,17 +54,29 @@ class _CartScreenState extends State<CartScreen> {
   TimeOfDay selectedTime = TimeOfDay.now();
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showCupertinoModalPopup(
+    final picked = await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
-        return CupertinoDatePicker(
-          mode: CupertinoDatePickerMode.date,
-          initialDateTime: selectedDate,
-          onDateTimeChanged: (DateTime newDate) {
-            setState(() {
-              selectedDate = newDate;
-            });
-          },
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Adjust the sigma values for the blur effect
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            Center(
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                initialDateTime: selectedDate,
+                onDateTimeChanged: (DateTime newDate) {
+                  setState(() {
+                    selectedDate = newDate;
+                  });
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -82,20 +92,32 @@ class _CartScreenState extends State<CartScreen> {
     final TimeOfDay picked = await showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
-        return CupertinoDatePicker(
-          mode: CupertinoDatePickerMode.time,
-          initialDateTime: DateTime(
-            selectedDate.year,
-            selectedDate.month,
-            selectedDate.day,
-            selectedTime.hour,
-            selectedTime.minute,
-          ),
-          onDateTimeChanged: (DateTime newTime) {
-            setState(() {
-              selectedTime = TimeOfDay.fromDateTime(newTime);
-            });
-          },
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Adjust the sigma values for the blur effect
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            Center(
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.time,
+                initialDateTime: DateTime(
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
+                ),
+                onDateTimeChanged: (DateTime newTime) {
+                  setState(() {
+                    selectedTime = TimeOfDay.fromDateTime(newTime);
+                  });
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -112,201 +134,251 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan[300],
-        title: const Text('Cart Screen'),
+        title: const Text('Cart Items'),
+        centerTitle: true,
       ),
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Cart Items',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    for (var item in cartItems)
-                      ListTile(
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Container(
+                height: 250, // Set a height for the container
+                child: Scrollbar(
+                  thumbVisibility: true, // Show the scrollbar always
+                  child: ListView(
+                    physics: BouncingScrollPhysics(), // Use BouncingScrollPhysics
+                    children: cartItems.map((item) {
+                      return ListTile(
                         leading: Text(item.itemName),
                         trailing: Text('\$${item.itemPrice.toStringAsFixed(2)}'),
-                      ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text('\$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Upload Prescription (optional)',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: pickFile,
-                          child: Text('$brwoseFileButtonName'),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (fileChosen) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text('Preview File'),
-                                    content: Container(
-                                      // width: double.infinity,
-                                      child: getFilePreviewWidget(selectedFilePath),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text('Close'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.grey[300], // Background color
-                            ),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: fileChosen
-                                  ? Text(
-                                '$selectedFileName',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              )
-                                  : Text('No file chosen'),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Text('Upload only jpg, png, or pdf files'),
-                    TextField(
-                      readOnly: false,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                          borderSide: const BorderSide(
-                            width: 2,
-                            color: Colors.black,
-                          ),
-                        ),
-                        labelText: "Full Name",
-                        labelStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        prefixIcon: const Icon(Icons.person_2_outlined),
-                        prefixIconColor: Colors.black,
-                      ),
-                      controller: TextEditingController(),
-                    ),
-                    TextField(
-                      readOnly: false,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
-                          borderSide: const BorderSide(
-                            width: 2,
-                            color: Colors.black,
-                          ),
-                        ),
-                        labelText: "Address",
-                        labelStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        prefixIcon: const Icon(Icons.person_2_outlined),
-                        prefixIconColor: Colors.black,
-                      ),
-                      controller: TextEditingController(),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('Booking Date'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                          child: Text(
-                            "${selectedDate.toLocal()}".split(' ')[0],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text('Booking Time'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _selectTime(context);
-                          },
-                          child: Text("${selectedTime.format(context)}"),
-                        ),
-                      ],
-                    ),
-                  ],
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 5, bottom: 5, right: 16, left: 16),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey, // Border color
-                width: 1.0,         // Border width
+              Divider(thickness: 1.5),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Text('\$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  ),
+                ],
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Divider(thickness: 1.5),
+              SizedBox(height: 10),
+              Text(
+                'Upload Prescription (optional)',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: pickFile,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30), // Adjust the radius as needed
+                      ),
+                    ),
+                    child: Text('$brwoseFileButtonName'),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      if (fileChosen) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Preview File'),
+                              content: Container(
+                                child: getFilePreviewWidget(selectedFilePath),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Close'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Colors.grey[300],
+                      ),
+                      width: 250, // Set a constant width
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            fileChosen
+                                ? Text(
+                              '$selectedFileName',
+                            )
+                                : Text('No file chosen'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Text('Upload only jpg, png, or pdf files'),
+              SizedBox(height: 20),
+              TextField(
+                readOnly: false,
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                    borderSide: const BorderSide(
+                      width: 2,
+                      color: Colors.black,
+                    ),
+                  ),
+                  labelText: "Full Name",
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  prefixIcon: const Icon(Icons.person_2_outlined),
+                  prefixIconColor: Colors.black,
+                ),
+                controller: _fullNameController,
+              ),
+              SizedBox(height: 8),
+              TextField(
+                readOnly: false,
+                cursorColor: Colors.black,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width * 0.25),
+                    borderSide: const BorderSide(
+                      width: 2,
+                      color: Colors.black,
+                    ),
+                  ),
+                  labelText: "Address",
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontSize: 14,
+                  ),
+                  prefixIcon: const Icon(Icons.add_location),
+                  prefixIconColor: Colors.black,
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.my_location),
+                    onPressed: () {
+                      // Add your location fetch logic here
+                    },
+                    color: Colors.black,
+                  ),
+                ),
+                controller: _addressController,
+              ),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('Booking Date'),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.4, // Set the desired width for the button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectDate(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30), // Adjust the radius as needed
+                        ),
+                      ),
+                      child: Text(
+                        "${selectedDate.toLocal()}".split(' ')[0],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('Booking Time'),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.4, // Set the desired width for the button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _selectTime(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30), // Adjust the radius as needed
+                        ),
+                      ),
+                      child: Text("${selectedTime.format(context)}"),
+                    ),
+                  ),
+                ],
+              ),
+              Divider(thickness: 1.5),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Payable amount', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('\$$totalAmount', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Payable amount', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                        Text('\$$totalAmount', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width*0.4, // Set the desired width for the button
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Implement checkout logic here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.black, // Set the button background color to black
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30), // Adjust the radius as needed
+                          ),
+                        ),
+                        child: Text('Checkout', style: TextStyle(fontSize: 15, color: Colors.white),),
+                      ),
+                    ),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Implement checkout logic here
-                  },
-                  child: Text('Checkout'),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         initialIndex: _selectedIndex,
@@ -337,7 +409,7 @@ class _CartScreenState extends State<CartScreen> {
 
       setState(() {
         selectedFilePath = newFile.path;
-        brwoseFileButtonName = "Browse Again";
+        brwoseFileButtonName = "Change File";
         selectedFileName = result.files.single.name;
         fileChosen = true;
       });
