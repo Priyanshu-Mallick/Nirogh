@@ -355,6 +355,7 @@ class AuthService {
           topRight: Radius.circular(30),
         ),
       ),
+
       builder: (BuildContext context) {
         return SingleChildScrollView(
           child: Container(
@@ -389,7 +390,7 @@ class AuthService {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.03,
+                          vertical: screenHeight * 0.02,
                           horizontal: buttonWidth * 0.3,
                         ),
                         minimumSize: Size(buttonWidth, 0),
@@ -444,7 +445,7 @@ class AuthService {
                           borderRadius: BorderRadius.circular(30),
                         ),
                         padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * 0.03,
+                          vertical: screenHeight * 0.02,
                           horizontal: buttonWidth * 0.3,
                         ),
                         minimumSize: Size(buttonWidth, 0),
