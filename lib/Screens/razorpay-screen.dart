@@ -49,7 +49,7 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
 
   void openCheckout() {
     var options = {
-      'key': 'YOUR_RAZORPAY_API_KEY',
+      'key': 'rzp_test_SjSuDM9Ev1LOLf',
       'amount': 1000, // Payment amount in paisa (e.g., 1000 paisa = 10 INR)
       'name': 'Your App Name',
       'description': 'Sample Payment',

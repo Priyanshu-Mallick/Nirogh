@@ -12,6 +12,7 @@ import 'Screens/booking-confirmed.dart';
 import 'Screens/chatbot_screen.dart';
 import 'Screens/post_splash_screen.dart';
 import 'Screens/phone_verify.dart';
+import 'Screens/razorpay-screen.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -45,8 +46,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      // home: SplashScreen(),
-      home: PaidBookingConfirmationScreen(bookingId: '21BCSF11', cashDue: 1000),
+      home: SplashScreen(),
+      // home: PaidBookingConfirmationScreen(bookingId: '21BCSF11', cashDue: 1000),
+      // home: RazorpayPaymentScreen(),
     );
   }
 }
