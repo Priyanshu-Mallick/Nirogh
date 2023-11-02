@@ -13,6 +13,7 @@ class _NotificationsState extends State<Notifications> {
       appBar: AppBar(
         title: const Text('Notificaations'),
         backgroundColor: Colors.cyan[300],
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(CupertinoIcons.arrow_left),
           onPressed: () {

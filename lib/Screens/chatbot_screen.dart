@@ -20,6 +20,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       appBar: AppBar(
         backgroundColor: Colors.cyan[300],
         title: const Text('Chatbot Screen'),
+        centerTitle: true,
       ),
       body: Column(
         children: <Widget>[

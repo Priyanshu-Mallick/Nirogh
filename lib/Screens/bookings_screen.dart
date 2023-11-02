@@ -60,18 +60,9 @@ class _BookingScreenState extends State<BookingScreen> {
         home: bookings.isNotEmpty
             ? Scaffold(
           appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(CupertinoIcons.square_grid_2x2, color: Colors.black),
-            ),
             title: const Text('My Bookings', style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.cyan[300],
+            centerTitle: true,
           ),
           body: Container(
             color: Colors.black12,

@@ -47,8 +47,6 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
       home: SplashScreen(),
-      // home: PaidBookingConfirmationScreen(bookingId: '21BCSF11', cashDue: 1000),
-      // home: RazorpayPaymentScreen(),
     );
   }
 }
