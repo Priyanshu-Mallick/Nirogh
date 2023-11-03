@@ -10,7 +10,6 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
   BottomNavigationBarWidget({required this.initialIndex}); // Provide a default value
   @override
-
   _BottomNavigationBarWidgetState createState() =>
       _BottomNavigationBarWidgetState(initialIndex: initialIndex);
 }
@@ -53,21 +52,27 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.white,
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 6,
-      elevation: 30,
-      height: 70, // Increased the height to accommodate the text
-      child: Row(
-        // mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          buildNavigationItem(CupertinoIcons.home, 'Home', 0),
-          buildNavigationItem(CupertinoIcons.calendar, 'Book', 1),
-          buildNavigationItem(CupertinoIcons.cart, 'Cart', 2),
-          buildNavigationItem(CupertinoIcons.chat_bubble, 'Chat', 3),
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30.0), // Adjust the radius as needed
+        topRight: Radius.circular(30.0), // Adjust the radius as needed
+      ),
+      child: BottomAppBar(
+        color: Colors.cyan,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 6,
+        elevation: 30,
+        height: 65, // Increased the height to accommodate the text
+        child: Row(
+          // mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            buildNavigationItem(CupertinoIcons.home, 'Home', 0),
+            buildNavigationItem(CupertinoIcons.calendar, 'Book', 1),
+            buildNavigationItem(CupertinoIcons.cart, 'Cart', 2),
+            buildNavigationItem(CupertinoIcons.chat_bubble, 'Chat', 3),
+          ],
+        ),
       ),
     );
   }
@@ -84,14 +89,14 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 30, // Set the size of the touchable area
+            width: 70, // Set the size of the touchable area
             height: 30, // Set the size of the touchable area
             child: Icon(
               iconData,
-              color: isSelected ? Colors.cyan : Colors.black,
+              color: isSelected ? Colors.white : Colors.black,
             ),
           ),
-          Text(label, style: TextStyle(color: isSelected ? Colors.cyan : Colors.black)),
+          Text(label, style: TextStyle(color: isSelected ? Colors.white : Colors.black)),
         ],
       ),
     );

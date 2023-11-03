@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nirogh/Screens/cart_screen.dart';
+import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/paid-booking-confirmation.dart';
 import 'package:nirogh/firebase_options.dart';
 
@@ -46,7 +47,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      home: SplashScreen(),
+      // home: SplashScreen(),
+      home: HomeScreen(),
     );
   }
 }

@@ -264,6 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: 5, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
                 itemBuilder: (context, index) {
                   if (index == 0) {

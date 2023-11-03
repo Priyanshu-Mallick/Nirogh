@@ -51,7 +51,7 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
     var options = {
       'key': 'rzp_test_SjSuDM9Ev1LOLf',
       'amount': 1000, // Payment amount in paisa (e.g., 1000 paisa = 10 INR)
-      'name': 'Your App Name',
+      'name': 'NIROGH',
       'description': 'Sample Payment',
       'prefill': {
         'contact': '1234567890',
