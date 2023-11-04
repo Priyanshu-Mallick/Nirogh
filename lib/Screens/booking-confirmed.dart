@@ -53,8 +53,8 @@ class BookingConfirmationScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8, bottom: 8, right: 15, left: 15),
+              child: const Padding(
+                padding: EdgeInsets.only(top: 8, bottom: 8, right: 15, left: 15),
                 child: Text(
                   "Track",
                   style: TextStyle(color: Colors.white, fontSize: 20.0),
