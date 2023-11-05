@@ -25,10 +25,10 @@ class BookingConfirmationScreen extends StatelessWidget {
               color: Colors.green,
               size: 300.0,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             Text(
               "Booking ID: $bookingId",
-              style: TextStyle(fontSize: 20.0),
+              style: const TextStyle(fontSize: 20.0),
             ),
             SizedBox(height: 8.0),
             Text(
