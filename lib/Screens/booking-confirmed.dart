@@ -10,7 +10,7 @@ class BookingConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Appointment Booked",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -20,7 +20,7 @@ class BookingConfirmationScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(
+            const Icon(
               Icons.check_circle,
               color: Colors.green,
               size: 300.0,
@@ -30,17 +30,17 @@ class BookingConfirmationScreen extends StatelessWidget {
               "Booking ID: $bookingId",
               style: const TextStyle(fontSize: 20.0),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Text(
               "Cash due: $cashDue",
-              style: TextStyle(fontSize: 20.0),
+              style: const TextStyle(fontSize: 20.0),
             ),
-            SizedBox(height: 16.0),
-            Text(
+            const SizedBox(height: 16.0),
+            const Text(
               "Allocating Phlebotomist",
               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 30.0),
+            const SizedBox(height: 30.0),
             ElevatedButton(
               onPressed: () {
                 // Implement your tracking logic here.
