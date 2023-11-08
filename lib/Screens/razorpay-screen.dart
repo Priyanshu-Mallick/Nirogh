@@ -73,13 +73,13 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Payment Screen'),
+        title: const Text('Payment Screen'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Total Amount: ₹10.00',
               style: TextStyle(fontSize: 24),
             ),
@@ -88,7 +88,7 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
               onPressed: () {
                 openCheckout();
               },
-              child: Text('Pay Now'),
+              child: const Text('Pay Now'),
             ),
           ],
         ),
