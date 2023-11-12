@@ -306,8 +306,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // Code to execute on button press
         },
         elevation: 10,
-        backgroundColor: Colors.cyan,
-        child: const Icon(Icons.call),
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.call,color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBarWidget(initialIndex: _selectedIndex),

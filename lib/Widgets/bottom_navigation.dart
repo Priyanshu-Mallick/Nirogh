@@ -82,8 +82,6 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     return InkWell(
       onTap: () {
         _changeScreen(index); // Call the function to change the screen
-        print(index);
-        print(_selectedIndex);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
