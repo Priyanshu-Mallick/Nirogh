@@ -11,14 +11,37 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          child: Text(
-            'Popular Tests',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Popular Tests',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  print('Explore clicked');
+                  // Handle the click event here
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      'Explore >',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    // Icon(Icons.chevron_right, color: Colors.blue),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Container(

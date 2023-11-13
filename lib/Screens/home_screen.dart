@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Builder(
                     builder: (context) => IconButton(
-                      icon: Icon(CupertinoIcons.square_grid_2x2),
+                      icon: Icon(CupertinoIcons.square_grid_2x2, size: 30),
                       onPressed: () {
                         Scaffold.of(context).openDrawer();
                       },
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             sAdd.isNotEmpty ? sAdd : 'Home', // Show location if available, otherwise show 'Home'
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       IconButton(
-                        icon: const Icon(CupertinoIcons.bell_fill),
+                        icon: const Icon(CupertinoIcons.bell_fill, size: 30),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -270,13 +270,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (index == 0) {
                     // The first item in the list
                     return const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                       child: HorizontalCard(),
                     );
                   } else if (index == 1) {
                     // The second item in the list (Popular Labs section)
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                       child: PopularLabsWidget(),
                     );
                   } else if (index == 2) {

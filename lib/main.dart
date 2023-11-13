@@ -14,6 +14,7 @@ import 'Screens/chatbot_screen.dart';
 import 'Screens/post_splash_screen.dart';
 import 'Screens/phone_verify.dart';
 import 'Screens/razorpay-screen.dart';
+import 'Screens/search_lab.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
