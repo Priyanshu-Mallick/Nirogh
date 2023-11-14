@@ -209,25 +209,42 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Stack(
                 children: [
-                  Text(
-                    userName != null
-                        ? 'Hi ${userName?.split(' ').first}!'
-                        : 'Welcome!',
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userName != null
+                            ? 'Hi ${userName?.split(' ').first}!'
+                            : 'Welcome!',
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Text(
+                          _getGreetingMessage(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      _getGreetingMessage(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey,
+                  Positioned(
+                    top: 0, // Adjust top position as needed
+                    right: 0, // Adjust right position as needed
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4, // Set desired width
+                      height: MediaQuery.of(context).size.width * 0.18 *  // Maintain aspect ratio
+                          (467 / 534), // Replace with actual aspect ratio
+                      child: Image.asset(
+                        'lib/Assets/home_img.png', // Assuming the image path is correct
+                        fit: BoxFit.fitHeight, // Maintain aspect ratio to fit width
                       ),
                     ),
                   ),
