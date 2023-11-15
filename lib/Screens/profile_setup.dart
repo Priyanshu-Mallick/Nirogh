@@ -388,7 +388,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   side: BorderSide.none,
                   shape: const StadiumBorder(),
                 ),
-                child: Text(
+                child: const Text(
                   'OK',
                   style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
