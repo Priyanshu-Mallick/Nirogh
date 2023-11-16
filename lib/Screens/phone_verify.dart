@@ -88,14 +88,14 @@ class _MyVerifyState extends State<MyVerify> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'lib/Assets/verify.png',
-                width: screenWidth * 0.4,
-                height: screenHeight * 0.2,
-              ),
-              SizedBox(
-                height: screenHeight * 0.04,
-              ),
+              // Image.asset(
+              //   'lib/Assets/verify.png',
+              //   width: screenWidth * 0.4,
+              //   height: screenHeight * 0.2,
+              // ),
+              // SizedBox(
+              //   height: screenHeight * 0.04,
+              // ),
               Text(
                 "Phone Verification",
                 style: TextStyle(fontSize: screenHeight * 0.035, fontWeight: FontWeight.bold),
