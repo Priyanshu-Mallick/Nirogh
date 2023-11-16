@@ -81,7 +81,9 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
     final isSelected = _selectedIndex == index;
     return InkWell(
       onTap: () {
-        _changeScreen(index); // Call the function to change the screen
+        if (!isSelected) {
+          _changeScreen(index); // Call the function to change the screen only if it's not already selected
+        }
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,

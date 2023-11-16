@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nirogh/Screens/drawer_content.dart';
 import 'package:nirogh/Widgets/bottom_navigation.dart';
+import 'package:nirogh/Widgets/call_us_card.dart';
 import 'package:nirogh/Widgets/horizontal_card1.dart';
 import 'package:nirogh/Widgets/popular_lab.dart';
 import 'package:nirogh/Widgets/popular_test.dart';
@@ -218,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           userName != null
                               ? 'Hi ${userName?.split(' ').first}!'
-                              : 'Welcome!',
+                              : 'Hi Welcome!',
                           style: const TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
@@ -262,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Expanded(
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
-            itemCount: 5, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
+            itemCount: 7, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
             itemBuilder: (context, index) {
               if (index == 0) {
                 // The first item in the list
@@ -274,13 +275,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 // The second item in the list (Popular Labs section)
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                  child: PopularLabsWidget(),
+                  child: CallUsCard(),
                 );
               } else if (index == 2) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  child: PopularLabsWidget(),
+                );
+              } else if (index == 3) {
+                // The thired item in the list (Popular Tests section)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
                   child: PopularTestsWidget(),
+                );
+              } else if (index == 4) {
+                // The thired item in the list (Popular Tests section)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  child: HorizontalCard(),
+                );
+              } else if (index == 5) {
+                // The thired item in the list (Popular Tests section)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  child: HorizontalCard(),
+                );
+              } else if (index == 6) {
+                // The thired item in the list (Popular Tests section)
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  child: HorizontalCard(),
                 );
               }
               else {
