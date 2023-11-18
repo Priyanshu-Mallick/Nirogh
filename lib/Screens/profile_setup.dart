@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:nirogh/Screens/phone_verify.dart';
 import 'package:http/http.dart' as http;
+import 'package:nirogh/Widgets/loader.dart';
 
 import '../services/auth_service.dart';
 
@@ -49,6 +50,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   TextEditingController _phoneNumberController = TextEditingController();
   // File? _image;
   late AuthService authService;
+  // Define a boolean variable to track whether data is being fetched
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -69,7 +72,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       try {
         // Send a GET request to your backend API to fetch user data
         final response = await http.get(
-          Uri.parse("https://43.204.149.138/api/user/${user.uid}"),
+          Uri.parse("https://nirogh.com/bapi/user/${user.uid}"),
           headers: {
             "Content-Type": "application/json",
           },
@@ -77,18 +80,23 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
         if (response.statusCode == 200) {
           final userData = json.decode(response.body);
-
+          print("Data is Fetching");
+          print(userData);
           setState(() {
             // Assign the retrieved data to the corresponding variables
-            userProfilePic = userData['profilePictureUrl'] ?? '';
-            email = userData['email'] ?? '';
-            userName = userData['fullName'] ?? '';
-            _phoneNumberController.text = userData['phoneNumber'] ?? '';
-            selectedAge = userData['age'] ?? '';
-            selectedSex = userData['sex'] ?? '';
-            selectedBlood = userData['bloodGroup'] ?? '';
+            userProfilePic = userData['data']['profilePictureUrl'] ?? '';
+            email = userData['data']['email'] ?? '';
+            userName = userData['data']['name'] ?? '';
+            _phoneNumberController.text = userData['data']['phone'] ?? '';
+            selectedAge = userData['data']['age'].toString() ?? '';
+            selectedSex = userData['data']['gender'] ?? '';
+            selectedBlood = userData['data']['blood_grp'] ?? '';
             // Add other fields if needed
+
+            // Data fetching is completed, set isLoading to false
+            isLoading = false;
           });
+          print(email+", "+userName+", "+_phoneNumberController.text+", "+selectedAge+", "+selectedSex+", "+selectedBlood);
         } else {
           print('Failed to fetch user data. Status code: ${response.statusCode}');
           print('Response body: ${response.body}');
@@ -104,66 +112,86 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-      final userSnapshot = await userRef.get();
+      try {
+        // Fetch user data from your own backend API
+        final response = await http.get(
+          Uri.parse('https://nirogh.com/bapi/user/${user.uid}'),
+          headers: {
+            'Content-Type': 'application/json',
+            // Add any other necessary headers
+          },
+        );
 
-        final userData = userSnapshot.data();
-        final savedPhoneNumber = userData?['phoneNumber'] ?? '';
+        if (response.statusCode == 200) {
+          final userData = json.decode(response.body);
 
-        bool isRegistered = savedPhoneNumber == phoneNumber;
+          // Extract the phone number from the retrieved user data
+          final savedPhoneNumber = userData['phoneNumber'] ?? '';
 
-        if (!isRegistered) {
-          // Phone number is not registered, send OTP and proceed to OTP verification
-          String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => MyVerify(
-                userName: userName,
-                email: email,
-                uid: uid,
-                phoneNumber: phoneNumber,
-                verificationId: verificationId,
-                userProfilePic: userProfilePic,
-                selectedAge: selectedAge,
-                selectedSex: selectedSex,
-                selectedBlood: selectedBlood,
+          bool isRegistered = savedPhoneNumber == phoneNumber;
+
+          if (!isRegistered) {
+            // Phone number is not registered, send OTP and proceed to OTP verification
+            String verificationId = await AuthService().sendOTPToPhone(phoneNumber);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) => MyVerify(
+                  userName: userName,
+                  email: email,
+                  uid: uid,
+                  phoneNumber: phoneNumber,
+                  verificationId: verificationId,
+                  userProfilePic: userProfilePic,
+                  selectedAge: selectedAge,
+                  selectedSex: selectedSex,
+                  selectedBlood: selectedBlood,
+                ),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(1.0, 0.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOut;
+
+                  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  var offsetAnimation = animation.drive(tween);
+
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
               ),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                const begin = Offset(1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+            );
+          } else {
+            // Phone number is registered, update user data
+            await AuthService().updateUserData(
+              userData['data']['uid'],
+              userData['data']['email'],
+              userData['data']['name'],
+              userData['data']['phone'],
+              userData['age'],
+              userData['data']['gender'],
+              userData['data']['blood_grp'],
+            );
 
-                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                var offsetAnimation = animation.drive(tween);
-
-                return SlideTransition(
-                  position: offsetAnimation,
-                  child: child,
-                );
-              },
-            ),
-          );
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+            );
+          }
         } else {
-          // Phone number is registered, save user data and navigate to HomeScreen
-          AuthService().SaveUserData(
-            widget.uid,
-            email,
-            userName,
-            phoneNumber,
-            selectedAge,
-            selectedSex,
-            selectedBlood,
-          );
-
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
-          );
+          print('Failed to fetch user data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+          // Handle the error or show an appropriate message to the user
         }
+      } catch (e) {
+        print('Error fetching user data: $e');
+        // Handle the error or show an appropriate message to the user
+      }
     }
   }
+
 
 
   Future _getImage(ImageSource source) async {
@@ -467,8 +495,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         color: Colors.black,
                       ),
                     ),
+                    centerTitle: true,
                   ),
-                  body: Container(
+                  body: isLoading
+                      ? Center(
+                    child: LoadDialogBox(), // Show a circular progress indicator while loading
+                  )
+                      : Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -702,7 +735,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                 height: 42,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    CheckPhoneNumber(_phoneNumberController.text);
+                                    // CheckPhoneNumber(_phoneNumberController.text);
+                                    AuthService().SaveUserData(
+                                      widget.uid,
+                                      email,
+                                      userName,
+                                      _phoneNumberController.text,
+                                      selectedAge,
+                                      selectedSex,
+                                      selectedBlood,
+                                    );
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => HomeScreen(),
+                                      ),
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.greenAccent,

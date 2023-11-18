@@ -86,7 +86,7 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                   },
                   child: Container(
                     width: 130,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),

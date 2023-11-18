@@ -1,10 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:nirogh/Screens/post_splash_screen.dart';
 import 'package:nirogh/Screens/profile_setup.dart';
 import 'package:nirogh/Widgets/profile_menu.dart';
 import 'package:nirogh/services/auth_service.dart';
+import 'package:http/http.dart' as http;
 
 class DrawerContent extends StatefulWidget {
   const DrawerContent({super.key});
@@ -35,17 +37,32 @@ class _DrawerContent extends State<DrawerContent> {
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-      final userSnapshot = await userRef.get();
-      if (userSnapshot.exists) {
-        final userData = userSnapshot.data();
-        setState(() {
-          // Assign the retrieved data to the corresponding variables
-          // Update the variables you use here based on the actual field names in Firestore
-          userProfilePic = userData?['profilePictureUrl'] ?? '';
-          userName = userData?['fullName'] ?? '';
-          email = userData?['email'] ?? '';
-        });
+      try {
+        // Send a GET request to your backend API to fetch user data
+        final response = await http.get(
+          Uri.parse("https://nirogh.com/bapi/user/${user.uid}"),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final userData = json.decode(response.body);
+          print("Data is Fetching");
+          print(userData);
+          setState(() {
+            // Assign the retrieved data to the corresponding variables
+            userProfilePic = userData['data']['profilePictureUrl'] ?? '';
+            email = userData['data']['email'] ?? '';
+            userName = userData['data']['name'] ?? '';
+            // Add other fields if needed
+          });
+        } else {
+          print('Failed to fetch user data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
       }
     }
   }

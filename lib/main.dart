@@ -48,8 +48,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.cyan,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),
-      // home: SplashScreen(),
-      home: HomeScreen(),
+      home: SplashScreen(),
+      // home: HomeScreen(),
     );
   }
 }

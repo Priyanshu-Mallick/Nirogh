@@ -68,7 +68,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                   },
                   child: Container(
                     width: 130,
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
@@ -103,9 +103,9 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            backgroundColor: Colors.cyan,
+                            backgroundColor: Colors.black,
                           ),
-                          child: Text('Book Now'),
+                          child: Text('Book Now', style: TextStyle(color: Colors.white),),
                         ),
                       ],
                     ),
@@ -124,7 +124,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
       case 0:
         return 'Lapid Profile';
       case 1:
-        return 'Kidney Functional Test';
+        return 'Kidney Functional';
       case 2:
         return 'Covid Test';
       case 3:

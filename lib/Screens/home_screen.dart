@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +13,7 @@ import 'package:nirogh/Widgets/call_us_card.dart';
 import 'package:nirogh/Widgets/horizontal_card1.dart';
 import 'package:nirogh/Widgets/popular_lab.dart';
 import 'package:nirogh/Widgets/popular_test.dart';
+import 'package:http/http.dart' as http;
 
 import 'notification_screen.dart';
 
@@ -55,13 +58,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final userRef = FirebaseFirestore.instance.collection('user').doc(user.uid);
-      final userSnapshot = await userRef.get();
-      if (userSnapshot.exists) {
-        final userData = userSnapshot.data();
-        setState(() {
-          userName = userData?['fullName'] ?? '';
-        });
+      try {
+        // Send a GET request to your backend API to fetch user data
+        final response = await http.get(
+          Uri.parse("https://nirogh.com/bapi/user/${user.uid}"),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final userData = json.decode(response.body);
+          setState(() {
+            // Assign the retrieved data to the corresponding variables
+            userName = userData['data']['name'] ?? '';
+            // Add other fields if needed
+          });
+        } else {
+          print('Failed to fetch user data. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+      } catch (e) {
+        print('Error fetching user data: $e');
       }
     }
   }
@@ -268,43 +286,43 @@ class _HomeScreenState extends State<HomeScreen> {
               if (index == 0) {
                 // The first item in the list
                 return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: HorizontalCard(),
                 );
               } else if (index == 1) {
                 // The second item in the list (Popular Labs section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: CallUsCard(),
                 );
               } else if (index == 2) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0,),
                   child: PopularLabsWidget(),
                 );
               } else if (index == 3) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                   child: PopularTestsWidget(),
                 );
               } else if (index == 4) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: HorizontalCard(),
                 );
               } else if (index == 5) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: HorizontalCard(),
                 );
               } else if (index == 6) {
                 // The thired item in the list (Popular Tests section)
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
                   child: HorizontalCard(),
                 );
               }
@@ -339,7 +357,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
@@ -348,7 +366,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(left: 20),
+              padding: EdgeInsets.only(left: 10),
               child: Icon(CupertinoIcons.search),
             ),
             Expanded(
@@ -357,7 +375,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
                 child: TextField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Search',
+                    hintText: 'Search lab or test',
                   ),
                 ),
               ),

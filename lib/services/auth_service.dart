@@ -121,7 +121,7 @@ class AuthService {
 
         // Send a POST request to your backend API
         final response = await http.post(
-          Uri.parse("https://43.204.149.138/api/user/"),
+          Uri.parse("https://nirogh.com/bapi/user/"),
           headers: {
             "Content-Type": "application/json",
           },
@@ -469,6 +469,42 @@ class AuthService {
       },
     );
   }
+
+  // Function to update user data based on UID
+  Future<void> updateUserData(String uid, String email, String name, String phoneNumber, String selectedAge, String selectedSex, String selectedBlood) async {
+    try {
+      // Make an HTTP PUT request to update user data at your backend API endpoint
+      final response = await http.put(
+        Uri.parse('https://nirogh.com/bapi/user/$uid'), // Endpoint to update user data
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other necessary headers
+        },
+        body: json.encode({
+          'email': email,
+          'name': name,
+          'phone': phoneNumber,
+          'age': selectedAge,
+          'gender': selectedSex,
+          'blood_grp': selectedBlood,
+          // Add other fields as needed for updating user data
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('User data updated successfully');
+        // Handle success scenario after updating user data
+      } else {
+        print('Failed to update user data. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        // Handle failure scenario after updating user data
+      }
+    } catch (e) {
+      print('Error updating user data: $e');
+      // Handle error scenario
+    }
+  }
+
 
   static Future<bool> isLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
