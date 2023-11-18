@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:nirogh/Screens/search_lab.dart';
+import 'package:http/http.dart' as http;
+
+import '../services/shared_preference_services.dart'; // Add the appropriate HTTP package for fetching data
 
 class PopularLabsWidget extends StatefulWidget {
   @override
@@ -7,61 +11,57 @@ class PopularLabsWidget extends StatefulWidget {
 }
 
 class _PopularLabsWidgetState extends State<PopularLabsWidget> {
+  List<Map<String, dynamic>> labs = []; // List to store lab data fetched from the backend
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch lab data when the widget initializes
+    fetchLabData();
+    retrieveCachedLabs();
+  }
+
+  Future<void> fetchLabData() async {
+    final apiUrl = 'https://nirogh.com/bapi/diagnostics/';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        // Check if 'data' is a List
+        if (data['data'] is List) {
+          setState(() {
+            // Update the labs list with fetched data as an array of strings
+            labs = (data['data'] as List).map((labName) {
+              return {
+                'name': labName,
+                'logoUrl': '', // Replace with actual logic to get the logo URL if available
+              };
+            }).toList();
+          });
+        }
+        await SharedPreferencesService.saveLabsToCache(labs);
+      } else {
+        // Handle error if the request fails
+        print('Failed to fetch data: ${response.statusCode}');
+        print('Failed to fetch data: ${response.body}');
+      }
+    } catch (error) {
+      // Handle any exceptions that occur during the process
+      print('Error fetching data: $error');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Popular Labs',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => SearchPage(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        const begin = Offset(1.0, 0.0);
-                        const end = Offset.zero;
-                        const curve = Curves.easeInOut;
+        // Your existing UI code for 'Popular Labs' text and Explore button...
 
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                        var offsetAnimation = animation.drive(tween);
-
-                        return SlideTransition(
-                          position: offsetAnimation,
-                          child: child,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Explore >',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    // Icon(Icons.chevron_right, color: Colors.grey, size: 17,),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -78,7 +78,7 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
             height: 130,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 4,
+              itemCount: labs.length, // Use the fetched labs data count
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
@@ -94,14 +94,14 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'lib/Assets/lab${index + 1}.png',
+                        Image.network(
+                          labs[index]['logoUrl'], // Use the fetched logo URL
                           width: 60,
                           height: 60,
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          getLabName(index),
+                          labs[index]['name'], // Use the fetched lab name
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 12,
@@ -120,24 +120,19 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
     );
   }
 
-  String getLabName(int index) {
-    switch (index) {
-      case 0:
-        return 'Dr Lal Patho Lab';
-      case 1:
-        return 'BP Laboratory';
-      case 2:
-        return 'Cure Well Labs';
-      case 3:
-        return 'Agilus Diagnostics';
-      default:
-        return '';
+  Future<void> retrieveCachedLabs() async {
+    final cachedLabs = await SharedPreferencesService.retrieveLabsFromCache();
+    if (cachedLabs.isNotEmpty) {
+      setState(() {
+        labs = cachedLabs;
+      });
+    } else {
+      fetchLabData(); // Fetch the labs data if it's not available in cache
     }
   }
-
   void _handleLabClick(BuildContext context, int index) {
+    print('Lab ${labs[index]['name']} clicked');
     // Handle the click event here
-    print('Lab ${index + 1} clicked');
     // You can navigate to another page or perform any action you want
   }
 }

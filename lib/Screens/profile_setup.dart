@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:nirogh/Widgets/loader.dart';
 
 import '../services/auth_service.dart';
+import '../services/shared_preference_services.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   final String email;
@@ -56,6 +57,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
+    loadUserDataFromCache();
     _fetchUserData();
     _phoneNumberController = TextEditingController();
     authService = AuthService();
@@ -64,6 +66,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     userProfilePic = widget.userProfilePic;
     userName = widget.userName;
     uid = widget.uid;
+
   }
 
   Future<void> _fetchUserData() async {
@@ -80,8 +83,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
         if (response.statusCode == 200) {
           final userData = json.decode(response.body);
-          print("Data is Fetching");
-          print(userData);
+
+          // Save fetched data to SharedPreferences using the service class
+          await SharedPreferencesService.saveProfileDataToCache(userData['data']);
           setState(() {
             // Assign the retrieved data to the corresponding variables
             userProfilePic = userData['data']['profilePictureUrl'] ?? '';
@@ -96,7 +100,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             // Data fetching is completed, set isLoading to false
             isLoading = false;
           });
-          print(email+", "+userName+", "+_phoneNumberController.text+", "+selectedAge+", "+selectedSex+", "+selectedBlood);
+
         } else {
           print('Failed to fetch user data. Status code: ${response.statusCode}');
           print('Response body: ${response.body}');
@@ -107,6 +111,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+  // Load user data from SharedPreferences
+  Future<void> loadUserDataFromCache() async {
+    final cachedData = await SharedPreferencesService.retrieveUserDataFromCache();
+    setState(() {
+      userProfilePic = cachedData['userProfilePic'].toString();
+      email = cachedData['email'].toString();
+      userName = cachedData['userName'].toString();
+      _phoneNumberController.text = cachedData['phone'].toString();
+      selectedAge = cachedData['age'].toString();
+      selectedSex = cachedData['gender'].toString();
+      selectedBlood = cachedData['bloodGroup'].toString();
+      // Load other fields if needed
+    });
+  }
 
   void CheckPhoneNumber(String phoneNumber) async {
     final user = FirebaseAuth.instance.currentUser;

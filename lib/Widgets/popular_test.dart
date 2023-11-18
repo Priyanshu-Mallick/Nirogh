@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class PopularTestsWidget extends StatefulWidget {
   @override
@@ -6,44 +8,50 @@ class PopularTestsWidget extends StatefulWidget {
 }
 
 class _PopularTestsWidgetState extends State<PopularTestsWidget> {
+  Map<String, dynamic> testsData = {}; // Map to store test data fetched from the backend
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch test data when the widget initializes
+    fetchTestData();
+  }
+
+  Future<void> fetchTestData() async {
+    // Replace this URL with your backend API endpoint to fetch test data
+    final apiUrl = 'https://nirogh.com/bapi/mrp/list?id=1';
+
+    try {
+      // Make a GET request to fetch test data from the backend
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // If the request is successful, parse the JSON response
+        final Map<String, dynamic> data = jsonDecode(response.body);
+
+        print("Test Data:");
+        print(data);
+        setState(() {
+          // Update the testsData map with fetched data
+          testsData = data['data'];
+        });
+      } else {
+        // Handle error if the request fails
+        print('Failed to fetch test data: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Handle any exceptions that occur during the process
+      print('Error fetching data: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Popular Tests',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  print('Explore clicked');
-                  // Handle the click event here
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      'Explore >',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    // Icon(Icons.chevron_right, color: Colors.blue),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Your existing UI code for 'Popular Tests' text and Explore button...
+
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -60,11 +68,14 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
             height: 130,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 4,
+              itemCount: testsData.length,
               itemBuilder: (context, index) {
+                final testName = testsData.keys.toList()[index];
+                final testPrice = testsData.values.toList()[index];
+
                 return GestureDetector(
                   onTap: () {
-                    _handleTestClick(context, index); // Handle the click event here
+                    _handleTestClick(context, testName); // Handle the click event here
                   },
                   child: Container(
                     width: 130,
@@ -77,7 +88,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          getTestName(index),
+                          testName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 12,
@@ -86,7 +97,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          getPriceTag(index),
+                          '\u20B9 $testPrice',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Colors.red,
@@ -97,7 +108,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                         SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
-                            _handleBookNowClick(context, index); // Handle book now button click here
+                            _handleBookNowClick(context, testName); // Handle book now button click here
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -105,7 +116,10 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                             ),
                             backgroundColor: Colors.black,
                           ),
-                          child: Text('Book Now', style: TextStyle(color: Colors.white),),
+                          child: Text(
+                            'Book Now',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -119,45 +133,15 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
     );
   }
 
-  String getTestName(int index) {
-    switch (index) {
-      case 0:
-        return 'Lapid Profile';
-      case 1:
-        return 'Kidney Functional';
-      case 2:
-        return 'Covid Test';
-      case 3:
-        return 'City Scan';
-      default:
-        return '';
-    }
-  }
-
-  String getPriceTag(int index) {
-    switch (index) {
-      case 0:
-        return '\u20B9 1000'; // Rupees symbol
-      case 1:
-        return '\u20B9 1500'; // Rupees symbol
-      case 2:
-        return '\u20B9 500'; // Rupees symbol
-      case 3:
-        return '\u20B9 5000'; // Rupees symbol
-      default:
-        return '';
-    }
-  }
-
-  void _handleTestClick(BuildContext context, int index) {
+  void _handleTestClick(BuildContext context, String testName) {
+    print('Test $testName clicked');
     // Handle the test click event here
-    print('Test ${index + 1} clicked');
     // You can navigate to another page or perform any action you want
   }
 
-  void _handleBookNowClick(BuildContext context, int index) {
+  void _handleBookNowClick(BuildContext context, String testName) {
+    print('Book Now clicked for Test $testName');
     // Handle the book now button click event here
-    print('Book Now clicked for Test ${index + 1}');
     // You can navigate to another page or perform any action you want
   }
 }

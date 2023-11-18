@@ -8,6 +8,8 @@ import 'package:nirogh/Widgets/profile_menu.dart';
 import 'package:nirogh/services/auth_service.dart';
 import 'package:http/http.dart' as http;
 
+import '../services/shared_preference_services.dart';
+
 class DrawerContent extends StatefulWidget {
   const DrawerContent({super.key});
 
@@ -27,6 +29,8 @@ class _DrawerContent extends State<DrawerContent> {
     super.initState();
     // Initialize your variables or perform any other setup operations
     _fetchUserData();
+    // Fetch user data from cache when the widget initializes
+    loadDataFromCache();
   }
   @override
   void dispose() {
@@ -57,6 +61,8 @@ class _DrawerContent extends State<DrawerContent> {
             userName = userData['data']['name'] ?? '';
             // Add other fields if needed
           });
+          // Save fetched data to SharedPreferences using the service class
+          await SharedPreferencesService.saveDrawerDataToCache(userData['data']);
         } else {
           print('Failed to fetch user data. Status code: ${response.statusCode}');
           print('Response body: ${response.body}');
@@ -65,6 +71,15 @@ class _DrawerContent extends State<DrawerContent> {
         print('Error fetching user data: $e');
       }
     }
+  }
+  Future<void> loadDataFromCache() async {
+    final cachedData = await SharedPreferencesService.retrieveUserDataFromCache();
+    setState(() {
+      userProfilePic = cachedData['userProfilePic'].toString();
+      email = cachedData['email'].toString();
+      userName = cachedData['userName'].toString();
+      // Load other fields if needed
+    });
   }
 
   @override

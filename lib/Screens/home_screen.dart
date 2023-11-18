@@ -15,6 +15,8 @@ import 'package:nirogh/Widgets/popular_lab.dart';
 import 'package:nirogh/Widgets/popular_test.dart';
 import 'package:http/http.dart' as http;
 
+import '../Widgets/loader.dart';
+import '../services/shared_preference_services.dart';
 import 'notification_screen.dart';
 
 GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -31,12 +33,14 @@ class _HomeScreenState extends State<HomeScreen> {
   String address = '';
   String sAdd = '';
   String? userName = "";
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     getLatLong();
     _fetchUserData();
+    loadDataFromCache();
   }
 
   String _getGreetingMessage() {
@@ -69,11 +73,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (response.statusCode == 200) {
           final userData = json.decode(response.body);
+
+          // Introduce a delay using Future.delayed
+          await Future.delayed(Duration(seconds: 1));
+
           setState(() {
             // Assign the retrieved data to the corresponding variables
             userName = userData['data']['name'] ?? '';
+            isLoading = false;
             // Add other fields if needed
           });
+          // Save fetched data to SharedPreferences using the service class
+          await SharedPreferencesService.saveUserDataToCache(userName!, isLoading);
         } else {
           print('Failed to fetch user data. Status code: ${response.statusCode}');
           print('Response body: ${response.body}');
@@ -82,6 +93,16 @@ class _HomeScreenState extends State<HomeScreen> {
         print('Error fetching user data: $e');
       }
     }
+  }
+
+  // Inside initState or wherever you want to retrieve the cached data
+  Future<void> loadDataFromCache() async {
+    final cachedData = await SharedPreferencesService.retrieveUserDataFromCache();
+    setState(() {
+      userName = cachedData['userName'].toString();
+      isLoading = cachedData['isLoading'] as bool;
+      // Retrieve other fields if needed
+    });
   }
 
   void getLatLong() async {
@@ -144,25 +165,23 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Expanded(
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  sAdd.isNotEmpty ? sAdd : 'Home', // Show location if available, otherwise show 'Home'
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                sAdd.isNotEmpty ? sAdd : 'Home', // Show location if available, otherwise show 'Home'
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                if (sAdd.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 1.0),
-                    child: Icon(CupertinoIcons.location_solid),
-                  ),
-              ],
-            ),
+              ),
+              if (sAdd.isNotEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(left: 1.0),
+                  child: Icon(CupertinoIcons.location_solid),
+                ),
+            ],
           ),
         ),
         centerTitle: true,
@@ -223,7 +242,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: NestedScrollView(
+      body: isLoading
+          ? Center(
+        child: LoadDialogBox(), // Show a circular progress indicator while loading
+      ): NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverToBoxAdapter(
@@ -278,62 +300,60 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ];
         },
-        body: Expanded(
-          child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            itemCount: 7, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                // The first item in the list
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  child: HorizontalCard(),
-                );
-              } else if (index == 1) {
-                // The second item in the list (Popular Labs section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  child: CallUsCard(),
-                );
-              } else if (index == 2) {
-                // The thired item in the list (Popular Tests section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0,),
-                  child: PopularLabsWidget(),
-                );
-              } else if (index == 3) {
-                // The thired item in the list (Popular Tests section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-                  child: PopularTestsWidget(),
-                );
-              } else if (index == 4) {
-                // The thired item in the list (Popular Tests section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  child: HorizontalCard(),
-                );
-              } else if (index == 5) {
-                // The thired item in the list (Popular Tests section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  child: HorizontalCard(),
-                );
-              } else if (index == 6) {
-                // The thired item in the list (Popular Tests section)
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                  child: HorizontalCard(),
-                );
-              }
-              else {
-                // The rest of the list items
-                return ListTile(
-                  title: Text('Item ${index}'),
-                );
-              }
-            },
-          ),
+        body: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemCount: 7, // Replace this with the actual number of elements you want to add (10 + 1 for the HorizontalCard)
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              // The first item in the list
+              return const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                child: HorizontalCard(),
+              );
+            } else if (index == 1) {
+              // The second item in the list (Popular Labs section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                child: CallUsCard(),
+              );
+            } else if (index == 2) {
+              // The thired item in the list (Popular Tests section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0,),
+                child: PopularLabsWidget(),
+              );
+            } else if (index == 3) {
+              // The thired item in the list (Popular Tests section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                child: PopularTestsWidget(),
+              );
+            } else if (index == 4) {
+              // The thired item in the list (Popular Tests section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                child: HorizontalCard(),
+              );
+            } else if (index == 5) {
+              // The thired item in the list (Popular Tests section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                child: HorizontalCard(),
+              );
+            } else if (index == 6) {
+              // The thired item in the list (Popular Tests section)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                child: HorizontalCard(),
+              );
+            }
+            else {
+              // The rest of the list items
+              return ListTile(
+                title: Text('Item ${index}'),
+              );
+            }
+          },
         ),
       ),
       drawer: const Drawer(
