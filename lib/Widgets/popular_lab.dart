@@ -62,6 +62,35 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
       children: [
         // Your existing UI code for 'Popular Labs' text and Explore button...
 
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Popular Labs',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Handle Explore button click action
+                  // Navigate to the Explore page or perform an action
+                },
+                child: Text(
+                  'Explore >',
+                  style: TextStyle(
+                    color: Colors.grey, // Change color as needed
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

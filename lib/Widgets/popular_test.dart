@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../services/shared_preference_services.dart';
+
 class PopularTestsWidget extends StatefulWidget {
   @override
   _PopularTestsWidgetState createState() => _PopularTestsWidgetState();
@@ -14,7 +16,15 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
   void initState() {
     super.initState();
     // Fetch test data when the widget initializes
+    loadTestDataFromCache();
     fetchTestData();
+  }
+
+  Future<void> loadTestDataFromCache() async {
+    final cachedData = await SharedPreferencesService.retrieveTestDataFromCache();
+    setState(() {
+      testsData = cachedData;
+    });
   }
 
   Future<void> fetchTestData() async {
@@ -35,6 +45,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
           // Update the testsData map with fetched data
           testsData = data['data'];
         });
+        SharedPreferencesService.saveTestDataToCache(testsData);
       } else {
         // Handle error if the request fails
         print('Failed to fetch test data: ${response.statusCode}');
@@ -51,6 +62,35 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Your existing UI code for 'Popular Tests' text and Explore button...
+
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Popular Tests',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Handle Explore button click action
+                  // Navigate to the Explore page or perform an action
+                },
+                child: Text(
+                  'Explore >',
+                  style: TextStyle(
+                    color: Colors.grey, // Change color as needed
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
 
         Container(
           decoration: BoxDecoration(

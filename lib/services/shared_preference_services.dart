@@ -79,4 +79,18 @@ class SharedPreferencesService {
       // Retrieve other fields if needed
     };
   }
+
+  static Future<Map<String, dynamic>> retrieveTestDataFromCache() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final jsonData = prefs.getString('testData');
+    if (jsonData != null && jsonData.isNotEmpty) {
+      return Map<String, dynamic>.from(json.decode(jsonData));
+    }
+    return {};
+  }
+
+  static Future<void> saveTestDataToCache(Map<String, dynamic> testData) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('testData', json.encode(testData));
+  }
 }

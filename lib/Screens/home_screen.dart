@@ -313,7 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
             } else if (index == 1) {
               // The second item in the list (Popular Labs section)
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 5),
                 child: CallUsCard(),
               );
             } else if (index == 2) {
@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
             } else if (index == 3) {
               // The thired item in the list (Popular Tests section)
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                 child: PopularTestsWidget(),
               );
             } else if (index == 4) {
