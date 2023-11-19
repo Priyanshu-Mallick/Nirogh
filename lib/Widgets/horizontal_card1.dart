@@ -8,7 +8,7 @@ class HorizontalCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 100,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.only(top: 12, bottom:8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),

@@ -326,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // The thired item in the list (Popular Tests section)
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                child: PopularTestsWidget(),
+                child: PopularTestsWidget(onBookNowClick: (String , double ) {  },),
               );
             } else if (index == 4) {
               // The thired item in the list (Popular Tests section)

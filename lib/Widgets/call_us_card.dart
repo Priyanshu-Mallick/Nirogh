@@ -8,7 +8,7 @@ class CallUsCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.only(top: 12, bottom:8),
       decoration: BoxDecoration(
         color: Colors.black12,
         borderRadius: BorderRadius.circular(10),

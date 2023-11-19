@@ -24,7 +24,7 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   final List<Widget> _screens = [
     HomeScreen(),
     BookingScreen(),
-    CartScreen(),
+    CartScreen(cartItems: []),
     ChatbotScreen(),
   ];
 

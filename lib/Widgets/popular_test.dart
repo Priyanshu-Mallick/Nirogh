@@ -2,15 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../Screens/cart_screen.dart';
+import '../services/manage_cart.dart';
 import '../services/shared_preference_services.dart';
 
 class PopularTestsWidget extends StatefulWidget {
+
+  final Function(String, double) onBookNowClick;
+
+  PopularTestsWidget({required this.onBookNowClick});
+
   @override
   _PopularTestsWidgetState createState() => _PopularTestsWidgetState();
 }
 
 class _PopularTestsWidgetState extends State<PopularTestsWidget> {
   Map<String, dynamic> testsData = {}; // Map to store test data fetched from the backend
+  List<CartItem> cartItems = [];
+  // Assuming you have a reference to CartScreen
 
   @override
   void initState() {
@@ -39,8 +48,6 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
         // If the request is successful, parse the JSON response
         final Map<String, dynamic> data = jsonDecode(response.body);
 
-        print("Test Data:");
-        print(data);
         setState(() {
           // Update the testsData map with fetched data
           testsData = data['data'];
@@ -84,7 +91,6 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                   'Explore >',
                   style: TextStyle(
                     color: Colors.grey, // Change color as needed
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -148,7 +154,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                         SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
-                            _handleBookNowClick(context, testName); // Handle book now button click here
+                            _handleBookNowClick(testName, testPrice); // Handle book now button click here
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -179,9 +185,15 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
     // You can navigate to another page or perform any action you want
   }
 
-  void _handleBookNowClick(BuildContext context, String testName) {
+  void _handleBookNowClick(String testName, double testPrice) {
     print('Book Now clicked for Test $testName');
-    // Handle the book now button click event here
-    // You can navigate to another page or perform any action you want
+
+    // Create a CartItem with the test details
+    CartItem newCartItem = CartItem(testName, testPrice);
+
+    setState(() {
+      // Add the selected test to the cart
+      widget.onBookNowClick(testName, testPrice);
+    });
   }
 }

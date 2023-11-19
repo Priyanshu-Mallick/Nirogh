@@ -11,15 +11,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import '../Widgets/bottom_navigation.dart';
 import '../Widgets/file_viewer.dart';
-
-class CartItem {
-  final String itemName;
-  final double itemPrice;
-
-  CartItem(this.itemName, this.itemPrice);
-}
+import '../services/manage_cart.dart';
 
 class CartScreen extends StatefulWidget {
+
+  final List<CartItem> cartItems;
+
+  CartScreen({required this.cartItems});
+
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -39,22 +38,22 @@ class _CartScreenState extends State<CartScreen> {
   double? long;
   String? address;
 
-  final List<CartItem> cartItems = [
-    CartItem('Item 1', 25.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    CartItem('Item 2', 30.0),
-    CartItem('Item 3', 15.0),
-    // Add more items as needed
-  ];
+  // final List<CartItem> cartItems = [
+  //   CartItem('Item 1', 25.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   CartItem('Item 2', 30.0),
+  //   CartItem('Item 3', 15.0),
+  //   // Add more items as needed
+  // ];
 
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -230,7 +229,7 @@ class _CartScreenState extends State<CartScreen> {
         .of(context)
         .size;
 
-    if (cartItems.isEmpty) {
+    if (widget.cartItems.isEmpty) {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan[300],
@@ -280,17 +279,17 @@ class _CartScreenState extends State<CartScreen> {
               Container(
                 height: screenSize.height * 0.3,
                 child: Scrollbar(
-                  controller: _scrollController,
                   thumbVisibility: true,
-                  child: ListView(
+                  child: ListView.builder(
                     physics: BouncingScrollPhysics(),
-                    children: cartItems.map((item) {
+                    itemCount: widget.cartItems.length,
+                    itemBuilder: (context, index) {
+                      final CartItem item = widget.cartItems[index];
                       return ListTile(
-                        leading: Text(item.itemName),
-                        trailing: Text(
-                            '\$${item.itemPrice.toStringAsFixed(2)}'),
+                        leading: Text(item.testName),
+                        trailing: Text('\$${item.testPrice.toStringAsFixed(2)}'),
                       );
-                    }).toList(),
+                    },
                   ),
                 ),
               ),

@@ -83,7 +83,6 @@ class _PopularLabsWidgetState extends State<PopularLabsWidget> {
                   'Explore >',
                   style: TextStyle(
                     color: Colors.grey, // Change color as needed
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
