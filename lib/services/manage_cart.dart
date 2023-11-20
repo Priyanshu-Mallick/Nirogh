@@ -1,6 +1,12 @@
-class CartItem {
-  final String testName;
-  final double testPrice;
+import 'package:flutter/cupertino.dart';
 
-  CartItem(this.testName, this.testPrice);
+import 'cart_item_class.dart';
+
+class CartModel extends ChangeNotifier {
+  List<CartItem> cartItems = [];
+
+  void addCartItem(String testName, double testPrice) {
+    cartItems.add(CartItem(testName, testPrice, isAdded: true));
+    notifyListeners();
+  }
 }

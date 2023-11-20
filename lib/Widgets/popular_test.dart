@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
-import '../Screens/cart_screen.dart';
 import '../services/manage_cart.dart';
 import '../services/shared_preference_services.dart';
 
@@ -18,7 +18,7 @@ class PopularTestsWidget extends StatefulWidget {
 
 class _PopularTestsWidgetState extends State<PopularTestsWidget> {
   Map<String, dynamic> testsData = {}; // Map to store test data fetched from the backend
-  List<CartItem> cartItems = [];
+  // List<CartItem> cartItems = [];
   // Assuming you have a reference to CartScreen
 
   @override
@@ -75,7 +75,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 'Popular Tests',
                 style: TextStyle(
                   fontSize: 18,
@@ -87,7 +87,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                   // Handle Explore button click action
                   // Navigate to the Explore page or perform an action
                 },
-                child: Text(
+                child: const Text(
                   'Explore >',
                   style: TextStyle(
                     color: Colors.grey, // Change color as needed
@@ -151,7 +151,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         ElevatedButton(
                           onPressed: () {
                             _handleBookNowClick(testName, testPrice); // Handle book now button click here
@@ -162,7 +162,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
                             ),
                             backgroundColor: Colors.black,
                           ),
-                          child: Text(
+                          child: const Text(
                             'Book Now',
                             style: TextStyle(color: Colors.white),
                           ),
@@ -187,13 +187,7 @@ class _PopularTestsWidgetState extends State<PopularTestsWidget> {
 
   void _handleBookNowClick(String testName, double testPrice) {
     print('Book Now clicked for Test $testName');
-
-    // Create a CartItem with the test details
-    CartItem newCartItem = CartItem(testName, testPrice);
-
-    setState(() {
-      // Add the selected test to the cart
-      widget.onBookNowClick(testName, testPrice);
-    });
+    Provider.of<CartModel>(context, listen: false).addCartItem(testName, testPrice);
   }
+
 }

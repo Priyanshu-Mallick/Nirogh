@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return <Widget>[
             SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.only(left: 16, bottom: 16, top: 10),
                 child: Stack(
                   children: [
                     Column(

@@ -9,15 +9,13 @@ import 'package:flutter/rendering.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import '../Widgets/bottom_navigation.dart';
 import '../Widgets/file_viewer.dart';
+import '../services/cart_item_class.dart';
 import '../services/manage_cart.dart';
 
 class CartScreen extends StatefulWidget {
-
-  final List<CartItem> cartItems;
-
-  CartScreen({required this.cartItems});
 
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -37,6 +35,7 @@ class _CartScreenState extends State<CartScreen> {
   double? lat;
   double? long;
   String? address;
+
 
   // final List<CartItem> cartItems = [
   //   CartItem('Item 1', 25.0),
@@ -223,13 +222,15 @@ class _CartScreenState extends State<CartScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery
         .of(context)
         .size;
+    final cartItems = Provider.of<CartModel>(context).cartItems;
 
-    if (widget.cartItems.isEmpty) {
+    if (cartItems.isEmpty) {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.cyan[300],
@@ -279,17 +280,52 @@ class _CartScreenState extends State<CartScreen> {
               Container(
                 height: screenSize.height * 0.3,
                 child: Scrollbar(
+                  controller: _scrollController,
                   thumbVisibility: true,
-                  child: ListView.builder(
+                  child: ListView(
                     physics: BouncingScrollPhysics(),
-                    itemCount: widget.cartItems.length,
-                    itemBuilder: (context, index) {
-                      final CartItem item = widget.cartItems[index];
-                      return ListTile(
-                        leading: Text(item.testName),
-                        trailing: Text('\$${item.testPrice.toStringAsFixed(2)}'),
+                    children: cartItems.asMap().entries.map((entry) {
+                      final int index = entry.key;
+                      final CartItem item = entry.value;
+
+                      return Dismissible(
+                        key: Key(item.itemName), // Unique key for each item
+                        onDismissed: (direction) {
+                          // Remove the item from the list when dismissed
+                          setState(() {
+                            cartItems.removeAt(index);
+                          });
+                        },
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          color: Colors.red,
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: Text(item.itemName),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('\$${item.itemPrice.toStringAsFixed(2)}'),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  // Handle the delete action on tapping the delete icon
+                                  setState(() {
+                                    cartItems.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       );
-                    },
+                    }).toList(),
                   ),
                 ),
               ),

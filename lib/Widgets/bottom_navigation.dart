@@ -5,8 +5,12 @@ import 'package:nirogh/Screens/cart_screen.dart';
 import 'package:nirogh/Screens/chatbot_screen.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 
+import '../services/manage_cart.dart';
+
 class BottomNavigationBarWidget extends StatefulWidget {
   final int initialIndex; // Add this variable
+
+  // final List<CartItem> cartItems = [];
 
   BottomNavigationBarWidget({required this.initialIndex}); // Provide a default value
   @override
@@ -24,9 +28,10 @@ class _BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   final List<Widget> _screens = [
     HomeScreen(),
     BookingScreen(),
-    CartScreen(cartItems: []),
+    CartScreen(),
     ChatbotScreen(),
   ];
+
 
   // Function to change the screen based on the selected index
   void _changeScreen(int index) {

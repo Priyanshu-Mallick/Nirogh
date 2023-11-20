@@ -8,6 +8,8 @@ import 'package:nirogh/Screens/cart_screen.dart';
 import 'package:nirogh/Screens/home_screen.dart';
 import 'package:nirogh/Screens/paid-booking-confirmation.dart';
 import 'package:nirogh/firebase_options.dart';
+import 'package:nirogh/services/manage_cart.dart';
+import 'package:provider/provider.dart';
 
 import 'Screens/booking-confirmed.dart';
 import 'Screens/chatbot_screen.dart';
@@ -35,7 +37,11 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(MyApp());
+
+  runApp(ChangeNotifierProvider(
+    create: (context) => CartModel(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
